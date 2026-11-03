@@ -1,0 +1,9 @@
+{
+  "name": "Meow Decoder",
+  "short_name": "Meow",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7D9DC",
+  "theme_color": "#F7D9DC",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

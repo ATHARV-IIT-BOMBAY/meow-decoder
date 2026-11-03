@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+.claude/
+.DS_Store
+# Downloaded datasets (own licenses, fetched from Zenodo) and your taught cats
+data/
+# Trained artifacts: regenerate with `python meow.py`
+model.joblib
+base.npz
