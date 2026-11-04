@@ -147,8 +147,11 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .track { grid-column: 2 / 4; height: 10px; border-radius: 99px; background: var(--bar); overflow: hidden; }
 .fill { display: block; height: 100%; width: 0; border-radius: 99px; background: var(--plum); transition: width .7s cubic-bezier(.2,.8,.2,1); }
 .opt:first-child .fill { background: var(--amber); }
-.heard { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
-.tag { padding: 4px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 14px; }
+.signal { display: flex; gap: 12px; align-items: flex-start; background: var(--plum); color: var(--paw); border-radius: var(--radius-lg); padding: 14px 18px; margin-bottom: 14px; }
+.signal .em { font-size: 28px; line-height: 1; }
+.signal strong { font-size: 18px; }
+.signal p { margin: 2px 0 0; font-size: 15px; opacity: .9; }
+.nomeow { margin: 0 0 16px; }
 .warn { background: var(--surface); border-left: 4px solid var(--amber); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 15px; margin-bottom: 16px; }
 
 .teach { border-top: 2px solid var(--line); padding-top: 16px; }
@@ -234,11 +237,12 @@ dialog .actions { justify-content: flex-end; margin-top: 20px; }
         <input type="file" id="file" accept="audio/*,video/*" class="sr">
       </div>
       <div class="samples">
-        No cat nearby? Play a meow from the research dataset:
+        No cat nearby? Play a sound from the research datasets:
         <div class="actions">
-          <button class="btn" data-sample="hungry">🍗 Hungry cat</button>
-          <button class="btn" data-sample="brushed">😽 Cat being brushed</button>
-          <button class="btn" data-sample="alone">🙀 Cat in a new place</button>
+          <button class="btn" data-sample="hungry.wav">🍗 Hungry cat</button>
+          <button class="btn" data-sample="brushed.wav">😽 Cat being brushed</button>
+          <button class="btn" data-sample="alone.wav">🙀 Cat in a new place</button>
+          <button class="btn" data-sample="purring.mp3">😌 Purring cat</button>
         </div>
       </div>
     </section>
@@ -249,10 +253,11 @@ dialog .actions { justify-content: flex-end; margin-top: 20px; }
         <p>Record a meow and you'll see the three likeliest reasons behind it, with how sure the model is about each.</p>
       </div>
       <div id="result" hidden>
-        <div class="bubble"><p class="quote" id="quote"></p><p class="sub" id="sub"></p></div>
+        <div id="signals"></div>
+        <p class="sub nomeow" id="nomeow" hidden>There's no meow in this clip, so there's no situation to guess.</p>
+        <div class="bubble" id="bubble"><p class="quote" id="quote"></p><p class="sub" id="sub"></p></div>
         <div class="warn" id="warn" hidden>This doesn't sound much like a cat. Try again closer to the cat, away from fans and traffic.</div>
         <ul class="opts" id="opts"></ul>
-        <div class="heard" id="heard"></div>
         <div class="teach" id="teach"></div>
       </div>
       <div id="mycat"></div>
@@ -276,8 +281,8 @@ dialog .actions { justify-content: flex-end; margin-top: 20px; }
   <h2>How it works</h2>
   <p>Cats don't speak in sentences, so this doesn't translate. It hears the meow and guesses which situation it sounds like, using a model trained on 440 meows from 21 cats recorded while waiting for food, being brushed, or alone somewhere unfamiliar.</p>
   <p>On cats it has never heard, the right situation is its top guess about 2 times in 3 and in its top two about 9 times in 10. Teaching it a few meows from your own cat pushed the top guess to about 8 in 10 in our tests. Its percentages are honest: a 90% answer is right about 9 times in 10.</p>
-  <p>It also listens for purring, hissing and yowling using a general sound model. If a cat seems hurt or unwell, ask a vet, not an app.</p>
-  <p>Meow data: CatMeows by Ludovico et al., CC BY 4.0. Sound model: <span id="encoderInfo">loading…</span>.</p>
+  <p>It also recognises purring, hissing and yowling directly, using a general sound model trained on thousands of clips. You can teach it more situations, like greeting you or wanting to go out, but those only work for cats you have taught. It can't tell pain from other sounds: in our tests, models that seemed to were recognising the recording, not the cat. If a cat seems hurt or unwell, ask a vet, not an app.</p>
+  <p>Meow data: CatMeows by Ludovico et al., CC BY 4.0. Purring sample: Cat Sound Classification V2 by Pandeya et al., CC BY 4.0. Sound model: <span id="encoderInfo">loading…</span>.</p>
   <form method="dialog" class="actions"><button class="btn primary">Got it</button></form>
 </dialog>
 
@@ -285,8 +290,10 @@ dialog .actions { justify-content: flex-end; margin-top: 20px; }
 
 <script>
 const $ = (s) => document.querySelector(s);
-const CONTEXTS = { F: "🍗 Food", B: "😽 Attention", I: "🙀 Stressed" };
-const SOUNDS = { Purr: ["😌 Purring", 0.3], Hiss: ["😾 Hissing", 0.2], Caterwaul: ["🎶 Yowling", 0.2], Meow: ["🗣️ Meowing", 0.3] };
+const CONTEXTS = { F: "🍗 Food", B: "😽 Attention", I: "🙀 Stressed" };  // learned for every cat
+const PRESETS = { greet: "👋 Saying hello", out: "🚪 Wants out", play: "🧶 Wants to play", annoyed: "😾 Annoyed" };  // learned per cat once taught
+const LABELS = { ...CONTEXTS, ...PRESETS };
+const SIGNAL_MOOD = { Purr: "B", Hiss: "I", Caterwaul: "F" };  // cat face for purring, hissing, yowling
 const stored = (() => { try { return localStorage.getItem("catId") || ""; } catch { return ""; } })();
 const state = { cats: [], catId: stored, clip: null, taught: null, busy: false, share: false, config: null };
 const cat = $("#cat"), catBtn = $("#catBtn");
@@ -340,7 +347,7 @@ function renderMyCat() {
   box.querySelector("p").textContent = n ? `Learned from ${n} meow${n > 1 ? "s" : ""}. Three per situation helps most.` : "No meows taught yet. Record one, then tell the app what was happening.";
   const dots = box.querySelector(".dots");
   for (const [k, label] of Object.entries(CONTEXTS)) { const s = document.createElement("span"); s.textContent = `${label} ${Math.min(c.counts[k] || 0, 3)}/3`; dots.append(s); }
-  for (const [k, v] of Object.entries(c.counts)) if (!CONTEXTS[k]) { const s = document.createElement("span"); s.textContent = `🐾 ${k} ${v}`; dots.append(s); }
+  for (const [k, v] of Object.entries(c.counts)) if (!CONTEXTS[k]) { const s = document.createElement("span"); s.textContent = `${PRESETS[k] || "🐾 " + k} ${v}`; dots.append(s); }
   box.querySelector("button").onclick = async () => {
     if (!confirm(`Remove ${c.name} and everything the app learned from them?`)) return;
     await api(`/api/cats/${c.id}`, { method: "DELETE" }); state.catId = ""; await loadCats(); renderTeach(); toast(`Removed ${c.name}`);
@@ -405,7 +412,7 @@ catBtn.onclick = () => (rec ? stopRecording() : !state.busy && startRecording())
 $("#file").onchange = (e) => { const f = e.target.files[0]; if (f) analyse(f); e.target.value = ""; };
 document.querySelectorAll("[data-sample]").forEach((b) => b.onclick = async () => {
   if (state.busy || rec) return;
-  const blob = await (await fetch(`/samples/${b.dataset.sample}.wav`, { cache: "no-cache" })).blob();
+  const blob = await (await fetch(`/samples/${b.dataset.sample}`, { cache: "no-cache" })).blob();
   new Audio(URL.createObjectURL(blob)).play().catch(() => {});
   analyse(blob);
 });
@@ -421,13 +428,22 @@ async function analyse(blob) {
 function show(r) {
   const top = r.results[0];
   state.clip = r.clip; state.taught = null;
-  setMood(r.is_cat ? (CONTEXTS[top.key] ? top.key : "other") : "idle");
-  setStatus(r.is_cat ? `${top.emoji} ${top.title}` : "Hmm, was that a cat?", "Tap the cat to listen again.");
+  const sig = r.signals[0];  // purring, hissing or yowling outranks the meow guess: it's recognised directly
+  setMood(sig ? SIGNAL_MOOD[sig.key] : r.is_cat ? (CONTEXTS[top.key] ? top.key : "other") : "idle");
+  setStatus(sig ? `${sig.emoji} ${sig.title}` : r.is_cat ? `${top.emoji} ${top.title}` : "Hmm, was that a cat?", "Tap the cat to listen again.");
+  const sigBox = $("#signals"); sigBox.innerHTML = "";
+  for (const x of r.signals) {
+    const d = document.createElement("div"); d.className = "signal";
+    d.innerHTML = `<span class="em" aria-hidden="true"></span><div><strong></strong><p></p></div>`;
+    d.querySelector(".em").textContent = x.emoji; d.querySelector("strong").textContent = `${x.title} heard`; d.querySelector("p").textContent = x.meaning;
+    sigBox.append(d);
+  }
   $("#empty").hidden = true; $("#result").hidden = false;
   $("#quote").textContent = `“${top.line}”`;
   const who = current()?.name;
   $("#sub").textContent = `${Math.round(top.p * 100)}% likely · ${r.taught ? `tuned to ${who}` : "general model, not tuned to this cat"}`;
   $("#warn").hidden = r.is_cat;
+  $("#nomeow").hidden = r.has_meow; $("#bubble").hidden = $("#opts").hidden = !r.has_meow;
   const opts = $("#opts"); opts.innerHTML = "";
   for (const o of r.results.slice(0, 3)) {
     const li = document.createElement("li"); li.className = "opt";
@@ -436,10 +452,6 @@ function show(r) {
     li.querySelector(".pct").textContent = `${Math.round(o.p * 100)}%`;
     opts.append(li);
     requestAnimationFrame(() => requestAnimationFrame(() => (li.querySelector(".fill").style.width = `${o.p * 100}%`)));
-  }
-  const heard = $("#heard"); heard.innerHTML = "";
-  for (const [k, [label, min]] of Object.entries(SOUNDS)) if (r.sounds[k] >= min) {
-    const t = document.createElement("span"); t.className = "tag"; t.textContent = label; heard.append(t);
   }
   renderTeach();
   if (matchMedia("(max-width: 859px)").matches) catBtn.scrollIntoView({ behavior: "smooth", block: "start" }); // cat's face + quote in view
@@ -457,7 +469,7 @@ function renderTeach() {
     return box.append(h, p, b);
   }
   h.textContent = `What was ${c.name} doing?`;
-  p.textContent = state.taught ? `Saved as “${CONTEXTS[state.taught] || state.taught}”. Record another meow to keep teaching.` : "Pick what really happened and the app learns this meow.";
+  p.textContent = state.taught ? `Saved as “${LABELS[state.taught] || state.taught}”. Record another meow to keep teaching.` : "Pick what really happened and the app learns this meow.";
   const row = document.createElement("div"); row.className = "actions";
   const choose = async (label) => {
     try {
@@ -468,12 +480,12 @@ function renderTeach() {
       toast(`Saved. ${c.name} has taught it ${n} meow${n > 1 ? "s" : ""}.`); renderTeach(); renderMyCat();
     } catch (err) { toast(err.message); }
   };
-  for (const [k, label] of Object.entries(CONTEXTS)) {
+  for (const [k, label] of Object.entries(LABELS)) {
     const b = document.createElement("button"); b.className = "btn"; b.textContent = label;
     b.setAttribute("aria-pressed", String(state.taught === k)); b.disabled = !!state.taught; b.onclick = () => choose(k); row.append(b);
   }
   const other = document.createElement("form"); other.className = "other";
-  other.innerHTML = `<input aria-label="Something else" maxlength="40" placeholder="Something else, e.g. wants to go out"><button class="btn">Save</button>`;
+  other.innerHTML = `<input aria-label="Something else" maxlength="40" placeholder="Something else, e.g. wants a cuddle"><button class="btn">Save</button>`;
   other.querySelector("input").disabled = other.querySelector("button").disabled = !!state.taught;
   other.onsubmit = (e) => { e.preventDefault(); const v = other.querySelector("input").value.trim(); if (v) choose(v); };
   box.append(h, p);

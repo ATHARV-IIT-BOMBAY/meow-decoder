@@ -26,8 +26,15 @@ pytest            # fast, no model downloads
 - Keep the tests model-free so CI stays fast.
 - Keep the app's copy honest: no "translation", no accuracy claims the benchmark doesn't back.
 
-## Ideas we'd welcome
+## When a new situation ships for everyone
 
-- More situations (pain, fighting, mating calls, mother calling kittens), once there's enough data to test them on unseen cats.
+A situation (one of the quick picks, or pain, fighting, mating calls, a mother calling kittens) becomes a global prediction once:
+
+- shared meows with that label come from at least 10 different cats, and
+- held-out-cat accuracy for it beats always-guessing by a clear margin, with whole recordings never split between training and test.
+
+Until then it works only for cats whose owners teach it. `benchmark/sound_types.py` shows what happens when this rule is skipped.
+
+## Ideas we'd welcome
 - On-device inference: ONNX export so audio never leaves the phone.
 - Better handling of noisy, real-world recordings.

@@ -17,6 +17,18 @@ Every number here is measured on cats the model has never heard, because that's 
 
 <br clear="right">
 
+## What it can tell you
+
+| | What | How sure |
+|---|---|---|
+| **Learned for every cat** | 🍗 Food, please · 😽 Enjoying attention · 🙀 Stressed somewhere new | 66% first guess, 89% top two, on cats it has never heard |
+| **Recognised directly** | 😌 Purring · 😾 Hissing · 📢 Yowling | Purring: false alarm on 0.2% of ordinary meows, caught all 5 test purrs. Yowling: false alarm on 3%. Hissing: no false alarms, but no test clips to confirm it |
+| **Learned for your cat** | 👋 Saying hello · 🚪 Wants to go out · 🧶 Wants to play · 😾 Annoyed · anything you type | Depends on how many meows you teach it |
+
+**What it doesn't do (yet): pain, mating calls, fighting, a mother calling kittens.** There is a public 10-emotion cat dataset, and a model trained on it scores 80% when one clip is held out. But each emotion's clips mostly come from one or two recordings. Holding out whole recordings drops it to **17%**, near chance, and it caught **0 of 5 pain clips**. It had learned to recognise recordings, not emotions. A pain detector that's wrong most of the time could keep a hurt cat from a vet, so these wait for better data. [`benchmark/sound_types.py`](benchmark/sound_types.py) reproduces this.
+
+When you teach "Wants to go out" and share the meow, it goes into the open dataset with that label. Once enough meows from enough different cats exist to pass the unseen-cat test, that situation can ship for everyone.
+
 ## Install
 
 Needs Python 3.11+ and [ffmpeg](https://ffmpeg.org/download.html).
@@ -39,6 +51,10 @@ my-cat.m4a
    62%  🍗 Food, please: "I'm hungry. Where's my food?"
    37%  🙀 Stressed somewhere new: "I don't know this place. Where are you?"
     0%  😽 Enjoying the attention: "That feels nice, keep going."
+
+purring.mp3
+  😌 Purring: Usually relaxed and content. Cats also purr to calm themselves when stressed or hurt, so check the rest of its body language.
+  No meow in this clip, so no situation guess.
 ```
 
 ```python
@@ -47,7 +63,8 @@ from meow_decoder import Decoder
 decoder = Decoder()                      # or Decoder("ast") for commercial use
 result = decoder.predict("my-cat.m4a")   # path, bytes, or a 16 kHz numpy array
 result["results"][0]   # {'key': 'F', 'title': 'Food, please', 'p': 0.62, ...}
-result["sounds"]       # AudioSet scores for Cat, Meow, Purr, Caterwaul, Hiss
+result["signals"]      # purring / hissing / yowling if heard, with what they usually mean
+result["has_meow"]     # False for a clip with no meow: ignore "results" then
 ```
 
 `meow predict --json` prints one JSON line per file. Phones only allow the microphone over https; to use the app from a phone, run `cloudflared tunnel --url http://localhost:8000` and open the link it prints.
@@ -127,7 +144,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for what helps most.
 
 ## Limits
 
-- Three situations only. It can't detect pain or illness. If a cat seems unwell, see a vet.
+- Three learned situations plus purring, hissing and yowling. It can't detect pain or illness. If a cat seems unwell, see a vet.
 - Trained on 21 Maine Coon and European Shorthair pet cats recorded by the University of Milan. Street cats and other breeds may sound different.
 - The training audio is 8 kHz, so the models never heard anything above 4 kHz.
 
@@ -135,7 +152,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for what helps most.
 
 - Code: MIT.
 - [CatMeows](https://zenodo.org/records/4008297), Ludovico et al. 2020, CC BY 4.0. Three of its meows ship as demo samples.
-- [Cat Sound Classification Dataset V2](https://zenodo.org/records/4724180), Pandeya et al., CC BY 4.0, used only for the re-test.
+- [Cat Sound Classification Dataset V2](https://zenodo.org/records/4724180), Pandeya et al., CC BY 4.0, used for the re-tests; its purring clip ships as a demo sample.
 - [esp-aves2-sl-beats-all](https://huggingface.co/EarthSpeciesProject/esp-aves2-sl-beats-all), Earth Species Project, CC BY-NC-SA 4.0.
 - [AST fine-tuned on AudioSet](https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593), BSD-3-Clause.
 

@@ -42,6 +42,20 @@ def test_custom_label_becomes_a_new_option():
     assert "wants to go out" in taught.classes
 
 
+def test_signals_and_presets_in_results():
+    X, y = toy_data()
+    d = Decoder.__new__(Decoder)
+    d.encoder, d.head = "beats", Head.fit(X, y)
+    quiet = {"Cat": 0.9, "Meow": 0.8, "Purr": 0.0, "Caterwaul": 0.1, "Hiss": 0.0}
+    assert d.rank(X[0], quiet)["signals"] == []
+    purring = d.rank(X[0], {**quiet, "Purr": 0.87})
+    assert [s["title"] for s in purring["signals"]] == ["Purring"] and purring["is_cat"] and purring["has_meow"]
+    assert not d.rank(X[0], {**quiet, "Meow": 0.0, "Purr": 0.87})["has_meow"]
+    taught = d.head.personalized([(X[0], "out")] * 3)
+    top = d.rank(X[0], quiet, taught)["results"][0]
+    assert (top["key"], top["title"]) == ("out", "Wants to go out")
+
+
 def test_benchmark_splits_are_whole_cats():
     folds = json.loads(SPLITS.read_text())
     assert len(folds) == 21 and set(folds.values()) == {0, 1, 2, 3, 4}

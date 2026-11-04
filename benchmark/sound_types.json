@@ -1,0 +1,104 @@
+{
+ "clips": 50,
+ "classes": 10,
+ "runs_per_class": {
+  "Angry": 4,
+  "Defense": 1,
+  "Fighting": 3,
+  "Happy": 3,
+  "HuntingMind": 1,
+  "Mating": 2,
+  "MotherCall": 2,
+  "Paining": 3,
+  "Resting": 1,
+  "Warning": 3
+ },
+ "beats": {
+  "leave_one_clip_out": 0.8,
+  "leave_one_recording_out": 0.17142857142857143,
+  "recording_out_clips": 35,
+  "per_class_recording_out": {
+   "Angry": "2/5",
+   "Fighting": "2/5",
+   "Happy": "1/5",
+   "Mating": "0/5",
+   "MotherCall": "0/5",
+   "Paining": "0/5",
+   "Warning": "1/5"
+  },
+  "untestable_single_recording": [
+   "Defense",
+   "HuntingMind",
+   "Resting"
+  ]
+ },
+ "ast": {
+  "leave_one_clip_out": 0.78,
+  "leave_one_recording_out": 0.22857142857142856,
+  "recording_out_clips": 35,
+  "per_class_recording_out": {
+   "Angry": "4/5",
+   "Fighting": "3/5",
+   "Happy": "0/5",
+   "Mating": "0/5",
+   "MotherCall": "0/5",
+   "Paining": "0/5",
+   "Warning": "1/5"
+  },
+  "untestable_single_recording": [
+   "Defense",
+   "HuntingMind",
+   "Resting"
+  ]
+ },
+ "signals": {
+  "Purr": {
+   "threshold": 0.3,
+   "false_alarms_on_ordinary_meows": 0.0022727272727272726,
+   "fires_on": {
+    "Angry": 0,
+    "Defense": 0,
+    "Fighting": 0,
+    "Happy": 0,
+    "HuntingMind": 0,
+    "Mating": 0,
+    "MotherCall": 0,
+    "Paining": 0,
+    "Resting": 5,
+    "Warning": 1
+   }
+  },
+  "Hiss": {
+   "threshold": 0.2,
+   "false_alarms_on_ordinary_meows": 0.0,
+   "fires_on": {
+    "Angry": 0,
+    "Defense": 0,
+    "Fighting": 0,
+    "Happy": 0,
+    "HuntingMind": 0,
+    "Mating": 0,
+    "MotherCall": 0,
+    "Paining": 0,
+    "Resting": 0,
+    "Warning": 0
+   }
+  },
+  "Caterwaul": {
+   "threshold": 0.3,
+   "false_alarms_on_ordinary_meows": 0.031818181818181815,
+   "fires_on": {
+    "Angry": 1,
+    "Defense": 0,
+    "Fighting": 1,
+    "Happy": 0,
+    "HuntingMind": 0,
+    "Mating": 0,
+    "MotherCall": 1,
+    "Paining": 1,
+    "Resting": 0,
+    "Warning": 1
+   }
+  }
+ }
+}

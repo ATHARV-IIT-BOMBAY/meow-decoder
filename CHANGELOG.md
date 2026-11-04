@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 (2026-11-04)
+
+- Purring, hissing and yowling are now first-class results (`signals`), each with what it usually means. The cat's face reacts to them.
+- Clips with no meow (a purr, a hiss) no longer get a meaningless situation guess (`has_meow`).
+- Four quick-pick situations to teach your own cat: saying hello, wants to go out, wants to play, annoyed.
+- A purring sample in the app and notebook.
+- `benchmark/sound_types.py`: why pain, mating, fighting and mother-call detection aren't shipped (80% → 17% once whole recordings are held out) and how often each sound detector false-alarms.
+
 ## 0.2.0 (2026-11-04)
 
 - Installable package with a `meow` command (`predict`, `serve`, `train`, `benchmark`, `export-dataset`) and a Python API (`Decoder`).

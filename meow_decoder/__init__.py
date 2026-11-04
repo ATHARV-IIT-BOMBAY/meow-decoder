@@ -3,7 +3,7 @@
     from meow_decoder import Decoder
     Decoder().predict("meow.wav")["results"]
 """
-from .core import CONTEXTS, ENCODERS, Decoder, Head
+from .core import CONTEXTS, ENCODERS, PRESETS, SIGNALS, Decoder, Head
 
-__version__ = "0.2.0"
-__all__ = ["Decoder", "Head", "CONTEXTS", "ENCODERS"]
+__version__ = "0.3.0"
+__all__ = ["Decoder", "Head", "CONTEXTS", "PRESETS", "SIGNALS", "ENCODERS"]

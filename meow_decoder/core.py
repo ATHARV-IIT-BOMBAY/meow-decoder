@@ -23,15 +23,32 @@ ENCODERS = {
 }
 CAT_LABELS = ["Cat", "Meow", "Purr", "Caterwaul", "Hiss"]
 CAT_GATE = 0.05  # ~5th percentile of AST cat-sound prob on real CatMeows clips
-CONTEXTS = {  # key -> (emoji, title, what the cat might be saying)
+MEOW_MIN = 0.3   # AST "Meow" score reached by 81% of CatMeows meows
+CONTEXTS = {  # key -> (emoji, title, what the cat might be saying); learned from CatMeows for every cat
     "F": ("🍗", "Food, please", "I'm hungry. Where's my food?"),
     "B": ("😽", "Enjoying the attention", "That feels nice, keep going."),
     "I": ("🙀", "Stressed somewhere new", "I don't know this place. Where are you?"),
 }
+# Situations you can teach your own cat. No open data covers them yet, so they only exist for cats you teach;
+# shared meows with these labels are how they can become available to everyone.
+PRESETS = {
+    "greet": ("👋", "Saying hello", "Oh, you're back!"),
+    "out": ("🚪", "Wants to go out", "Open the door, please."),
+    "play": ("🧶", "Wants to play", "Play with me!"),
+    "annoyed": ("😾", "Annoyed", "Leave me alone."),
+}
+# Sounds the AudioSet model recognises directly, with thresholds from benchmark/sound_types.py:
+# purr fires on 0.2% of ordinary meows and on all 5 resting clips; yowl at 0.3 fires on 3% of ordinary meows;
+# hiss never fired on our test clips (no false alarms, but no confirmed detections either).
+SIGNALS = {  # AudioSet label -> (emoji, title, meaning, threshold)
+    "Purr": ("😌", "Purring", "Usually relaxed and content. Cats also purr to calm themselves when stressed or hurt, so check the rest of its body language.", 0.3),
+    "Hiss": ("😾", "Hissing", "Scared or defensive. Give it space and don't reach for it.", 0.2),
+    "Caterwaul": ("📢", "Yowling", "A long, intense call. Often a standoff with another cat or a mating call; it can also mean distress.", 0.3),
+}
 
 
 def describe(key: str) -> tuple[str, str, str]:
-    return CONTEXTS.get(key, ("🐾", key, key))
+    return CONTEXTS.get(key) or PRESETS.get(key) or ("🐾", key, key)
 
 
 # ---------- audio ----------
@@ -171,7 +188,12 @@ class Decoder:
         p = h.proba(emb)[0]
         results = [dict(zip(["key", "emoji", "title", "line"], [k, *describe(k)]), p=round(float(v), 4))
                    for k, v in sorted(zip(h.classes.tolist(), p), key=lambda kv: -kv[1])]
-        return {"is_cat": max(sounds.values()) >= CAT_GATE, "sounds": {k: round(v, 3) for k, v in sounds.items()}, "results": results}
+        signals = [dict(key=k, emoji=e, title=t, meaning=m, p=round(sounds[k], 3))
+                   for k, (e, t, m, th) in SIGNALS.items() if sounds[k] >= th]
+        # The situation model only knows meows: for a purr or hiss with no meow in it, its guess means nothing.
+        has_meow = sounds["Meow"] >= MEOW_MIN or not signals
+        return {"is_cat": max(sounds.values()) >= CAT_GATE, "sounds": {k: round(v, 3) for k, v in sounds.items()},
+                "signals": signals, "has_meow": has_meow, "results": results}
 
     def predict(self, audio, head: Head | None = None) -> dict:
         return self.rank(*self.embed(audio), head)

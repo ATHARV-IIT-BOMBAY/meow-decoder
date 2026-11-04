@@ -71,11 +71,13 @@ def predict(a):
             print(json.dumps({"file": f, **r}, ensure_ascii=False))
             continue
         print(f"\n{f}" + ("" if r["is_cat"] else "  (doesn't sound much like a cat)"))
+        for s in r["signals"]:
+            print(f"  {s['emoji']} {s['title']}: {s['meaning']}")
+        if not r["has_meow"]:
+            print("  No meow in this clip, so no situation guess.")
+            continue
         for x in r["results"]:
             print(f"  {x['p']:>4.0%}  {x['emoji']} {x['title']}: \"{x['line']}\"")
-        heard = [k for k, v in r["sounds"].items() if k in ("Purr", "Hiss", "Caterwaul") and v >= 0.2]
-        if heard:
-            print("  also heard:", ", ".join(heard))
 
 
 def serve(a):
