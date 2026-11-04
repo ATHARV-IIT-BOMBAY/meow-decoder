@@ -1,9 +1,11 @@
 .venv/
 __pycache__/
+*.egg-info/
+.pytest_cache/
 .claude/
 .DS_Store
-# Downloaded datasets (own licenses, fetched from Zenodo) and your taught cats
+# Downloaded datasets (own licenses, fetched from Zenodo)
 data/
-# Trained artifacts: regenerate with `python meow.py`
-model.joblib
-base.npz
+# Trained weights: `meow train`, or downloaded from Hugging Face on first use
+weights/
+hf/model/*.npz

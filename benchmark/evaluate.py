@@ -1,4 +1,4 @@
-"""Honest accuracy report for the meow model. Run: .venv/bin/python evaluate.py  -> report.json
+"""Full held-out accuracy report. Run from the repo root: python benchmark/evaluate.py  -> benchmark/report.json
 
 Everything here is measured on cats (or source clips) the model never trained on.
 """
@@ -9,11 +9,11 @@ import librosa
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix, precision_recall_fscore_support
-from sklearn.model_selection import GroupKFold, StratifiedKFold, cross_val_predict
+from sklearn.model_selection import GroupKFold, PredefinedSplit, StratifiedKFold, cross_val_predict
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from meow import CONTEXTS, SR, analyze, load
+from meow_decoder.core import CONTEXTS, SPLITS, SR, analyze, load
 
 
 def softmax(z):
@@ -42,7 +42,7 @@ cats = np.array([f.name.split("_")[1] for f in files])
 X = np.stack([analyze(w)[0] for w in waves])
 M = np.stack([mfcc(w) for w in waves])
 classes = np.array(sorted(CONTEXTS))
-unseen = GroupKFold(5)
+unseen = PredefinedSplit([json.loads(SPLITS.read_text())[c] for c in cats])  # the fixed benchmark folds
 
 P = cross_val_predict(clf(), X, y, cv=unseen, groups=cats, method="predict_proba")
 # Calibrated: temperature fitted on each round's training cats only, then applied to its unseen test cats
@@ -135,6 +135,6 @@ report = dict(
     calibration=calib, calibration_after=calib_after, ece=dict(before=gap(calib), after=gap(calib_after)), coverage=coverage, per_cat=per_cat, baselines=baselines, personalization=curve,
     paper_repro=dict(n_source=len(src_files), n_classes=len(np.unique(src_y)), aug_per_clip=AUG, leaky_random_split=leaky, honest_split_by_clip=honest, chance=1 / len(np.unique(src_y))),
 )
-Path("report.json").write_text(json.dumps(report, indent=1))
+Path("benchmark/report.json").write_text(json.dumps(report, indent=1))
 print(json.dumps({k: v for k, v in report.items() if k not in ("per_cat", "confusion")}, indent=1))
 print("confusion (rows=true, cols=pred)", classes.tolist(), report["confusion"])

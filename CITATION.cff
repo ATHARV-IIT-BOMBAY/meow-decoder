@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use Meow Decoder, please cite it and the CatMeows dataset."
+title: "Meow Decoder: cat meow situation classification evaluated on unseen cats"
+authors:
+  - family-names: "Chauhan"
+    given-names: "Atharv Pratap Singh"
+    affiliation: "Indian Institute of Technology Bombay"
+version: 0.2.0
+date-released: 2026-11-04
+license: MIT
+repository-code: "https://github.com/ATHARV-IIT-BOMBAY/meow-decoder"
+references:
+  - type: dataset
+    title: "CatMeows: A Publicly-Available Dataset of Cat Vocalizations"
+    authors:
+      - family-names: "Ludovico"
+        given-names: "Luca Andrea"
+      - family-names: "Ntalampiras"
+        given-names: "Stavros"
+      - family-names: "Presti"
+        given-names: "Giorgio"
+      - family-names: "Cannas"
+        given-names: "Simona"
+      - family-names: "Battini"
+        given-names: "Monica"
+      - family-names: "Mattiello"
+        given-names: "Silvana"
+    doi: "10.5281/zenodo.4008297"
+    year: 2020

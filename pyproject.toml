@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meow-decoder"
+version = "0.2.0"
+description = "Guess what a cat's meow is about, with honest percentages. Learns your own cat."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [{ name = "Atharv Pratap Singh Chauhan" }]
+keywords = ["cats", "bioacoustics", "audio-classification", "meow"]
+dependencies = [
+  "torch>=2.4",
+  "transformers>=4.45",
+  "avex>=1.4",
+  "huggingface_hub>=0.25",
+  "scikit-learn>=1.5",
+  "librosa>=0.10",
+  "soundfile>=0.12",
+  "numpy>=1.26",
+  "fastapi>=0.110",
+  "uvicorn>=0.30",
+  "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx>=0.27"]
+
+[project.scripts]
+meow = "meow_decoder.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/ATHARV-IIT-BOMBAY/meow-decoder"
+
+[tool.setuptools]
+packages = ["meow_decoder"]
+
+[tool.setuptools.package-data]
+meow_decoder = ["static/*", "static/samples/*", "splits.json"]

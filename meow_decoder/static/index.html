@@ -157,6 +157,8 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .teach .actions { justify-content: flex-start; margin: 0; }
 .teach .btn[aria-pressed="true"] { background: var(--plum); color: var(--paw); opacity: 1; }
 .other { display: flex; gap: 8px; margin-top: 10px; }
+.share { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 14px; font-weight: 400; font-size: 14px; color: var(--plum-soft); cursor: pointer; }
+.share input { width: 20px; height: 20px; margin: 1px 0 0; flex: none; accent-color: var(--amber); }
 .other input { flex: 1; min-width: 0; min-height: 44px; border-radius: 999px; border: 2px solid var(--line); background: var(--surface); padding: 0 16px; }
 
 .mycat > div:nth-child(2) { flex: 1; min-width: 0; }
@@ -275,7 +277,7 @@ dialog .actions { justify-content: flex-end; margin-top: 20px; }
   <p>Cats don't speak in sentences, so this doesn't translate. It hears the meow and guesses which situation it sounds like, using a model trained on 440 meows from 21 cats recorded while waiting for food, being brushed, or alone somewhere unfamiliar.</p>
   <p>On cats it has never heard, the right situation is its top guess about 2 times in 3 and in its top two about 9 times in 10. Teaching it a few meows from your own cat pushed the top guess to about 8 in 10 in our tests. Its percentages are honest: a 90% answer is right about 9 times in 10.</p>
   <p>It also listens for purring, hissing and yowling using a general sound model. If a cat seems hurt or unwell, ask a vet, not an app.</p>
-  <p>Meow data: CatMeows by Ludovico et al., CC BY 4.0. Sound model: Earth Species Project's bioacoustic encoder, CC BY-NC-SA 4.0.</p>
+  <p>Meow data: CatMeows by Ludovico et al., CC BY 4.0. Sound model: <span id="encoderInfo">loading…</span>.</p>
   <form method="dialog" class="actions"><button class="btn primary">Got it</button></form>
 </dialog>
 
@@ -285,7 +287,8 @@ dialog .actions { justify-content: flex-end; margin-top: 20px; }
 const $ = (s) => document.querySelector(s);
 const CONTEXTS = { F: "🍗 Food", B: "😽 Attention", I: "🙀 Stressed" };
 const SOUNDS = { Purr: ["😌 Purring", 0.3], Hiss: ["😾 Hissing", 0.2], Caterwaul: ["🎶 Yowling", 0.2], Meow: ["🗣️ Meowing", 0.3] };
-const state = { cats: [], catId: localStorage.getItem("catId") || "", clip: null, taught: null, busy: false };
+const stored = (() => { try { return localStorage.getItem("catId") || ""; } catch { return ""; } })();
+const state = { cats: [], catId: stored, clip: null, taught: null, busy: false, share: false, config: null };
 const cat = $("#cat"), catBtn = $("#catBtn");
 
 function setMood(m) { cat.dataset.mood = m; }
@@ -294,8 +297,13 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.ad
 function avatar(el, c) { el.textContent = c?.photo ? "" : (c ? "🐱" : "🐾"); el.style.backgroundImage = c?.photo ? `url("${c.photo}")` : ""; }
 const current = () => state.cats.find((c) => c.id === state.catId);
 
-async function api(path, opts) {
-  const r = await fetch(path, opts);
+// A random id kept in this browser, so on a shared demo each visitor sees only their own cats.
+const owner = (() => {
+  const make = () => (crypto.randomUUID?.() || String(Math.random()).slice(2)).replace(/-/g, "");
+  try { let o = localStorage.getItem("meowOwner"); if (!o) { o = make(); localStorage.setItem("meowOwner", o); } return o; } catch { return make(); }
+})();
+async function api(path, opts = {}) {
+  const r = await fetch(path, { ...opts, headers: { ...(opts.headers || {}), "X-Meow-Owner": owner } });
   const body = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(body.detail || "Something went wrong. Try again.");
   return body;
@@ -397,7 +405,7 @@ catBtn.onclick = () => (rec ? stopRecording() : !state.busy && startRecording())
 $("#file").onchange = (e) => { const f = e.target.files[0]; if (f) analyse(f); e.target.value = ""; };
 document.querySelectorAll("[data-sample]").forEach((b) => b.onclick = async () => {
   if (state.busy || rec) return;
-  const blob = await (await fetch(`/samples/${b.dataset.sample}`, { cache: "no-cache" })).blob();
+  const blob = await (await fetch(`/samples/${b.dataset.sample}.wav`, { cache: "no-cache" })).blob();
   new Audio(URL.createObjectURL(blob)).play().catch(() => {});
   analyse(blob);
 });
@@ -453,8 +461,9 @@ function renderTeach() {
   const row = document.createElement("div"); row.className = "actions";
   const choose = async (label) => {
     try {
-      const updated = await api("/api/teach", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cat_id: c.id, clip: state.clip, label }) });
+      const updated = await api("/api/teach", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cat_id: c.id, clip: state.clip, label, share: state.share && !!state.config?.contrib }) });
       Object.assign(c, updated); state.taught = label; navigator.vibrate?.(10);
+      if (state.share && state.config?.contrib) toast("Thanks! This meow is now part of the open dataset.");
       const n = Object.values(c.counts).reduce((a, b) => a + b, 0);
       toast(`Saved. ${c.name} has taught it ${n} meow${n > 1 ? "s" : ""}.`); renderTeach(); renderMyCat();
     } catch (err) { toast(err.message); }
@@ -467,10 +476,18 @@ function renderTeach() {
   other.innerHTML = `<input aria-label="Something else" maxlength="40" placeholder="Something else, e.g. wants to go out"><button class="btn">Save</button>`;
   other.querySelector("input").disabled = other.querySelector("button").disabled = !!state.taught;
   other.onsubmit = (e) => { e.preventDefault(); const v = other.querySelector("input").value.trim(); if (v) choose(v); };
-  box.append(h, p, row, other);
+  box.append(h, p);
+  if (state.config?.contrib && !state.taught) {
+    const lab = document.createElement("label"); lab.className = "share";
+    lab.innerHTML = `<input type="checkbox" id="shareMeow"><span>Also add this meow to the open cat dataset (CC BY 4.0). Only the sound and what you pick are shared, never your cat's name or photo.</span>`;
+    const cb = lab.querySelector("input"); cb.checked = state.share; cb.onchange = () => { state.share = cb.checked; };
+    box.append(lab);
+  }
+  box.append(row, other);
 }
 
 loadCats().catch(() => setStatus("Can't reach the decoder", "Make sure the server is running, then reload."));
+api("/api/config").then((c) => { state.config = c; $("#encoderInfo").textContent = c.encoder_info; }).catch(() => {});
 </script>
 </body>
 </html>
