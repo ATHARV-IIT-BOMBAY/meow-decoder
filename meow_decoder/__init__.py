@@ -5,5 +5,5 @@
 """
 from .core import CONTEXTS, ENCODERS, PRESETS, SIGNALS, Decoder, Head
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 __all__ = ["Decoder", "Head", "CONTEXTS", "PRESETS", "SIGNALS", "ENCODERS"]

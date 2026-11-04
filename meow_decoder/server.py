@@ -64,6 +64,12 @@ def build_app(decoder: Decoder, home: Path, contrib: bool = True) -> FastAPI:
 
     app = FastAPI(title="Meow Decoder")
 
+    @app.middleware("http")
+    async def revalidate(request, call_next):  # after an upgrade, browsers must not keep the old page
+        response = await call_next(request)
+        response.headers.setdefault("Cache-Control", "no-cache")
+        return response
+
     @app.get("/api/config")
     def config():
         return {"encoder": decoder.encoder, "encoder_info": ENCODERS[decoder.encoder], "contrib": contrib}

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1 (2026-11-04)
+
+- Fixed: for a clip with no meow (a purr), the situation bars still showed under "no situation to guess".
+- The server tells browsers to re-check the page, so an upgrade never leaves an old version on screen.
+- README rewritten to cover everything: the app, teaching, the CLI, Python and HTTP APIs, settings and privacy, full accuracy breakdown, encoders, deployment, troubleshooting and roadmap.
+- The demo GIF now ends with the purring screen.
+
 ## 0.3.0 (2026-11-04)
 
 - Purring, hissing and yowling are now first-class results (`signals`), each with what it usually means. The cat's face reacts to them.
