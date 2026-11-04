@@ -10,7 +10,8 @@
 - Opt-in sharing of taught meows for an open CC BY 4.0 dataset, with `meow export-dataset`.
 - Each browser only sees its own cats, so a shared server or demo keeps cats private.
 - Models load at startup instead of on the first meow.
-- Tests and CI; demo Space on Hugging Face.
+- Tests and CI.
+- Free "Try it" Colab notebook: samples, upload, record in the browser, or open the full app. (Hugging Face Docker Spaces now need a paid plan; `hf/space/` is ready if that changes.)
 
 ## 0.1.0 (2026-11-04)
 

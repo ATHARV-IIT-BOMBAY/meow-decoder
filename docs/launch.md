@@ -24,7 +24,7 @@ I reproduced this on the 50 public clips of a 10-emotion cat dataset. Same model
 
 **What it can't do.** Translate. Detect pain. Read food meows well: it catches only 30% of them, because to the model they sound like attention meows.
 
-It's open source, with a browser demo, a `pip install`, the benchmark and the re-test: https://github.com/ATHARV-IIT-BOMBAY/meow-decoder
+It's open source, with a free Colab demo, a `pip install`, the benchmark and the re-test: https://github.com/ATHARV-IIT-BOMBAY/meow-decoder
 
 The real bottleneck is data: every open cat model learns from the same 21 European pet cats. If you have a cat, the app can share labelled meows to an open CC BY dataset.
 
@@ -34,7 +34,7 @@ The real bottleneck is data: every open cat model learns from the same 21 Europe
 
 **Title:** Show HN: Meow Decoder – honest cat meow classifier, tested on cats it has never heard
 
-**Text:** I built this to understand the cats in my hostel. Commercial cat translators claim ~90%. Holding out whole cats, the best model I could build gets 66% on three situations (50% baseline) and 89% in its top two, with calibrated percentages. Most published 90% figures come from augmenting before a random split; I reproduce that effect (99.8% vs 84.4% on the same clips). Teaching it four meows of your own cat gets you to 81%. Open source, browser demo, pip install, fixed benchmark folds, and an opt-in way to share labelled meows to an open dataset.
+**Text:** I built this to understand the cats in my hostel. Commercial cat translators claim ~90%. Holding out whole cats, the best model I could build gets 66% on three situations (50% baseline) and 89% in its top two, with calibrated percentages. Most published 90% figures come from augmenting before a random split; I reproduce that effect (99.8% vs 84.4% on the same clips). Teaching it four meows of your own cat gets you to 81%. Open source, free Colab demo, pip install, fixed benchmark folds, and an opt-in way to share labelled meows to an open dataset.
 
 ---
 

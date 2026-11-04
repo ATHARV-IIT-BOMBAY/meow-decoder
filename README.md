@@ -1,7 +1,7 @@
 # Meow Decoder
 
 [![CI](https://github.com/ATHARV-IIT-BOMBAY/meow-decoder/actions/workflows/ci.yml/badge.svg)](https://github.com/ATHARV-IIT-BOMBAY/meow-decoder/actions/workflows/ci.yml)
-[![Demo](https://img.shields.io/badge/%F0%9F%A4%97-Try%20the%20demo-yellow)](https://huggingface.co/spaces/AtharvIITB/meow-decoder)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ATHARV-IIT-BOMBAY/meow-decoder/blob/main/notebooks/try_meow_decoder.ipynb)
 [![Weights](https://img.shields.io/badge/%F0%9F%A4%97-Weights-blue)](https://huggingface.co/AtharvIITB/meow-decoder)
 [![License: MIT](https://img.shields.io/badge/code-MIT-green.svg)](LICENSE)
 
@@ -13,7 +13,7 @@ Cats don't meow in sentences, so this doesn't translate. It tells you which situ
 
 Every number here is measured on cats the model has never heard, because that's the situation you're in with a new cat. Most cat translators skip this test, which is how they get to 90%.
 
-**[Try it in your browser](https://huggingface.co/spaces/AtharvIITB/meow-decoder)** · [How good is it?](#how-good-is-it) · [Help build the open cat dataset](#help-build-the-open-cat-dataset)
+**[Try it free in Colab](https://colab.research.google.com/github/ATHARV-IIT-BOMBAY/meow-decoder/blob/main/notebooks/try_meow_decoder.ipynb)** (no install: play samples, upload or record a meow, or open the full app) · [How good is it?](#how-good-is-it) · [Help build the open cat dataset](#help-build-the-open-cat-dataset)
 
 <br clear="right">
 
