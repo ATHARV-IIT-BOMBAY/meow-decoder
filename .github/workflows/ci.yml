@@ -44,7 +44,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu && pip install -e .
+      # torch, torchaudio and torchvision must come from the same index or their native libraries won't load
+      - run: pip install torch torchaudio torchvision --index-url https://download.pytorch.org/whl/cpu && pip install -e .
       - uses: actions/cache@v4
         with:
           path: |
