@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "meow-decoder"
-version = "0.3.1"
+version = "0.4.0"
 description = "Guess what a cat's meow is about, with honest percentages. Learns your own cat."
 readme = "README.md"
 license = "MIT"
@@ -17,7 +17,6 @@ dependencies = [
   "avex>=1.4",
   "huggingface_hub>=0.25",
   "scikit-learn>=1.5",
-  "librosa>=0.10",
   "soundfile>=0.12",
   "numpy>=1.26",
   "fastapi>=0.110",
@@ -26,7 +25,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "httpx>=0.27"]
+train = ["librosa>=0.10"]  # meow train, meow benchmark --data, benchmark/*.py
+dev = ["librosa>=0.10", "pytest>=8", "httpx>=0.27", "ruff>=0.6", "playwright>=1.45"]
 
 [project.scripts]
 meow = "meow_decoder.cli:main"
@@ -38,4 +38,13 @@ Homepage = "https://github.com/ATHARV-IIT-BOMBAY/meow-decoder"
 packages = ["meow_decoder"]
 
 [tool.setuptools.package-data]
-meow_decoder = ["static/*", "static/samples/*", "splits.json"]
+meow_decoder = ["static/*", "static/samples/*", "splits.json", "NOTICE"]
+
+[tool.ruff]
+line-length = 140
+target-version = "py311"
+extend-exclude = ["benchmark/probes", "*.md"]  # README examples are aligned by hand
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E731", "B905"]  # one-line named lambdas are deliberate; zips pair arrays of equal length by construction

@@ -9,3 +9,5 @@ data/
 # Trained weights: `meow train`, or downloaded from Hugging Face on first use
 weights/
 hf/model/*.npz
+# Personal drafts (launch posts, outreach): kept locally, not published
+drafts/

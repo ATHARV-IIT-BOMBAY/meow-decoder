@@ -1,13 +1,67 @@
 name: CI
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 4 * * 1"  # Mondays: also check the real models still give the published numbers
+  workflow_dispatch:
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      # Tests fake the audio models, so skip torch/transformers/avex.
+      - run: pip install --no-deps -e . && pip install numpy scikit-learn soundfile fastapi uvicorn python-multipart httpx pytest ruff
+      - run: ruff check . && ruff format --check .
+      - run: pytest -q
+
+  page:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      # Tests fake the audio models, so skip torch/transformers/avex.
-      - run: pip install --no-deps -e . && pip install numpy scikit-learn soundfile fastapi uvicorn python-multipart httpx pytest
-      - run: pytest -q
+      - run: pip install --no-deps -e . && pip install numpy scikit-learn soundfile fastapi uvicorn python-multipart httpx pytest playwright
+      - run: python -m playwright install --with-deps chromium
+      - run: pytest -q tests/test_page.py
+
+  models:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: pip install torch --index-url https://download.pytorch.org/whl/cpu && pip install -e .
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/huggingface
+            ~/.cache/esp
+          key: models-v1
+      - name: Published benchmark still reproduces from the published weights
+        run: |
+          meow benchmark --from-weights | tee bench.txt
+          python -c "import json; r = json.loads(open('bench.txt').read().split('\n', 1)[1]); assert abs(r['top1'] - 0.6591) < 0.002, r['top1']"
+      - name: Real models give the expected answers on the bundled samples
+        run: |
+          meow predict --json meow_decoder/static/samples/*.wav meow_decoder/static/samples/*.mp3 | tee out.jsonl
+          python - <<'EOF'
+          import json
+          r = {x["file"].rsplit("/", 1)[-1]: x for x in map(json.loads, open("out.jsonl"))}
+          assert r["hungry.wav"]["results"][0]["key"] == "F"
+          assert r["brushed.wav"]["results"][0]["key"] == "B"
+          assert r["alone.wav"]["results"][0]["key"] == "I"
+          assert r["purring.mp3"]["signals"][0]["key"] == "Purr" and not r["purring.mp3"]["has_meow"]
+          EOF

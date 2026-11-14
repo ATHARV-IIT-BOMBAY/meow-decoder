@@ -8,6 +8,7 @@
 <title>Meow Decoder</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
@@ -153,6 +154,12 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .signal strong { font-size: 18px; }
 .signal p { margin: 2px 0 0; font-size: 15px; opacity: .9; }
 .nomeow { margin: 0 0 16px; }
+.teach .btn.suggest { border-color: var(--amber); background: var(--amber); color: #2E1A2F; }
+.teach .btn.suggest:disabled { opacity: .45; }
+#shareWhere { min-height: 40px; border-radius: 999px; border: 2px solid var(--line); background: var(--surface); padding: 0 14px; margin: -4px 0 14px 30px; }
+.teach p .link, .taught .link { padding: 0 2px; font-size: inherit; }
+.pattern { font-weight: 600; color: var(--plum) !important; }
+.taught { list-style: none; padding: 0; margin: 8px 0 0; font-size: 14px; display: grid; gap: 2px; }
 .warn { background: var(--surface); border-left: 4px solid var(--amber); padding: 10px 14px; border-radius: var(--radius-sm); font-size: 15px; margin-bottom: 16px; }
 
 .teach { border-top: 2px solid var(--line); padding-top: 16px; }
@@ -281,7 +288,7 @@ dialog .actions { justify-content: flex-end; margin-top: 20px; }
 <dialog id="aboutDlg">
   <h2>How it works</h2>
   <p>Cats don't speak in sentences, so this doesn't translate. It hears the meow and guesses which situation it sounds like, using a model trained on 440 meows from 21 cats recorded while waiting for food, being brushed, or alone somewhere unfamiliar.</p>
-  <p>On cats it has never heard, the right situation is its top guess about 2 times in 3 and in its top two about 9 times in 10. Teaching it a few meows from your own cat pushed the top guess to about 8 in 10 in our tests. Its percentages are honest: a 90% answer is right about 9 times in 10.</p>
+  <p>On cats it has never heard, the right situation is its top guess about 2 times in 3 and in its top two about 9 times in 10, on clean recordings. Through a phone's microphone and in noisy rooms it does a few points worse. Teaching it 3 meows per situation from your own cat raised its top guess from about 65% to 72% on recordings made another day. Its percentages are honest on clean recordings: a 90% answer is right about 9 times in 10. When it isn't sure, it says so.</p>
   <p>It also recognises purring, hissing and yowling directly, using a general sound model trained on thousands of clips. You can teach it more situations, like greeting you or wanting to go out, but those only work for cats you have taught. It can't tell pain from other sounds: in our tests, models that seemed to were recognising the recording, not the cat. If a cat seems hurt or unwell, ask a vet, not an app.</p>
   <p>Meow data: CatMeows by Ludovico et al., CC BY 4.0. Purring sample: Cat Sound Classification V2 by Pandeya et al., CC BY 4.0. Sound model: <span id="encoderInfo">loading…</span>.</p>
   <form method="dialog" class="actions"><button class="btn primary">Got it</button></form>
@@ -295,17 +302,24 @@ const CONTEXTS = { F: "🍗 Food", B: "😽 Attention", I: "🙀 Stressed" };  /
 const PRESETS = { greet: "👋 Saying hello", out: "🚪 Wants out", play: "🧶 Wants to play", annoyed: "😾 Annoyed" };  // learned per cat once taught
 const LABELS = { ...CONTEXTS, ...PRESETS };
 const SIGNAL_MOOD = { Purr: "B", Hiss: "I", Caterwaul: "F" };  // cat face for purring, hissing, yowling
+const LEARNED_AFTER = 3;   // a label taught fewer times than this shows "learning" instead of a percentage
+const UNSURE_BELOW = 0.5;  // top answer under this: say it's between the top two
 const stored = (() => { try { return localStorage.getItem("catId") || ""; } catch { return ""; } })();
-const state = { cats: [], catId: stored, clip: null, taught: null, busy: false, share: false, config: null };
+const state = { cats: [], catId: stored, clip: null, last: null, taught: null, sampleId: null, busy: false, starting: false, share: false, where: "", config: null };
+const session = (crypto.randomUUID?.() || String(Math.random()).slice(2)).replace(/-/g, "");  // one per visit, for dataset splits
 const cat = $("#cat"), catBtn = $("#catBtn");
 
 function setMood(m) { cat.dataset.mood = m; }
 function setStatus(title, note = "") { $("#status").innerHTML = ""; const s = document.createElement("strong"); s.textContent = title; const n = document.createElement("span"); n.textContent = note; $("#status").append(s, n); }
-function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2600); }
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 3200); }
 function avatar(el, c) { el.textContent = c?.photo ? "" : (c ? "🐱" : "🐾"); el.style.backgroundImage = c?.photo ? `url("${c.photo}")` : ""; }
 const current = () => state.cats.find((c) => c.id === state.catId);
+const labelText = (k) => LABELS[k] || `🐾 ${k}`;
+const learning = (k) => !CONTEXTS[k] && ((current()?.counts[k] || 0) < LEARNED_AFTER);
+const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+const hourText = (h) => `${h % 12 || 12} ${h < 12 ? "am" : "pm"}`;
 
-// A random id kept in this browser, so on a shared demo each visitor sees only their own cats.
+// A random id kept in this browser, so on a shared server each visitor sees only their own cats.
 const owner = (() => {
   const make = () => (crypto.randomUUID?.() || String(Math.random()).slice(2)).replace(/-/g, "");
   try { let o = localStorage.getItem("meowOwner"); if (!o) { o = make(); localStorage.setItem("meowOwner", o); } return o; } catch { return make(); }
@@ -316,12 +330,18 @@ async function api(path, opts = {}) {
   if (!r.ok) throw new Error(body.detail || "Something went wrong. Try again.");
   return body;
 }
+const postJSON = (path, data) => api(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
 
 /* ---------- cats ---------- */
 async function loadCats() {
   state.cats = await api("/api/cats");
   if (state.catId && !current()) state.catId = "";
   renderCats();
+}
+function pickCat(id) {
+  state.catId = id; try { localStorage.setItem("catId", id); } catch {}
+  renderCats();
+  if (state.clip) rerank(); else renderTeach();
 }
 function renderCats() {
   const nav = $("#cats"); nav.innerHTML = "";
@@ -330,7 +350,7 @@ function renderCats() {
     b.setAttribute("aria-pressed", String((c?.id || "") === state.catId));
     const av = document.createElement("span"); av.className = "av"; avatar(av, c);
     b.append(av, c ? c.name : "Any cat");
-    b.onclick = () => { state.catId = c?.id || ""; try { localStorage.setItem("catId", state.catId); } catch {} renderCats(); renderTeach(); };
+    b.onclick = () => pickCat(c?.id || "");
     return b;
   };
   nav.append(mk(null), ...state.cats.map(mk));
@@ -338,21 +358,48 @@ function renderCats() {
   nav.append(add);
   renderMyCat();
 }
+function pattern(c) {  // e.g. "Most food meows around 7 pm", from taught meows that carry the local hour
+  let best = null;
+  for (const label of Object.keys(c.counts)) {
+    const hours = c.samples.filter((s) => s.label === label && s.hour != null).map((s) => s.hour);
+    if (hours.length < 5) continue;
+    const near = (h) => hours.filter((x) => Math.min(Math.abs(x - h), 24 - Math.abs(x - h)) <= 1).length;
+    const h = [...Array(24).keys()].reduce((a, b) => (near(b) > near(a) ? b : a), 0);
+    if (near(h) / hours.length >= 0.5 && (!best || near(h) > best.n)) best = { label, h, n: near(h), of: hours.length };
+  }
+  return best && `Most ${labelText(best.label).replace(/^\S+ /, "").toLowerCase()} meows come around ${hourText(best.h)} (${best.n} of ${best.of}).`;
+}
 function renderMyCat() {
   const c = current(), box = $("#mycat"); box.innerHTML = "";
   if (!c) return;
   const n = Object.values(c.counts).reduce((a, b) => a + b, 0);
-  box.innerHTML = `<div class="mycat"><div class="av"></div><div><h3></h3><p></p><div class="dots"></div></div><button class="link">Remove</button></div>`;
+  box.innerHTML = `<div class="mycat"><div class="av"></div><div><h3></h3><p></p><div class="dots"></div><p class="pattern"></p><ul class="taught"></ul></div><button class="link">Remove</button></div>`;
   avatar(box.querySelector(".av"), c);
   box.querySelector("h3").textContent = c.name;
   box.querySelector("p").textContent = n ? `Learned from ${n} meow${n > 1 ? "s" : ""}. Three per situation helps most.` : "No meows taught yet. Record one, then tell the app what was happening.";
   const dots = box.querySelector(".dots");
   for (const [k, label] of Object.entries(CONTEXTS)) { const s = document.createElement("span"); s.textContent = `${label} ${Math.min(c.counts[k] || 0, 3)}/3`; dots.append(s); }
-  for (const [k, v] of Object.entries(c.counts)) if (!CONTEXTS[k]) { const s = document.createElement("span"); s.textContent = `${PRESETS[k] || "🐾 " + k} ${v}`; dots.append(s); }
-  box.querySelector("button").onclick = async () => {
+  for (const [k, v] of Object.entries(c.counts)) if (!CONTEXTS[k]) { const s = document.createElement("span"); s.textContent = `${labelText(k)} ${v}`; dots.append(s); }
+  const pat = pattern(c); box.querySelector(".pattern").textContent = pat || ""; box.querySelector(".pattern").hidden = !pat;
+  const list = box.querySelector(".taught");
+  for (const s of c.samples.slice(0, 5)) {
+    const li = document.createElement("li"), x = document.createElement("button");
+    li.textContent = `${labelText(s.label)}${s.at ? " · " + new Date(s.at).toLocaleDateString(undefined, { day: "numeric", month: "short" }) : ""}`;
+    x.className = "link"; x.textContent = "Remove"; x.setAttribute("aria-label", `Remove this ${labelText(s.label)} meow`);
+    x.onclick = () => removeSample(c, s.id);
+    li.append(" ", x); list.append(li);
+  }
+  box.querySelector(".mycat > .link").onclick = async () => {
     if (!confirm(`Remove ${c.name} and everything the app learned from them?`)) return;
     await api(`/api/cats/${c.id}`, { method: "DELETE" }); state.catId = ""; await loadCats(); renderTeach(); toast(`Removed ${c.name}`);
   };
+}
+async function removeSample(c, id) {
+  try {
+    Object.assign(c, await api(`/api/cats/${c.id}/samples/${id}`, { method: "DELETE" }));
+    if (state.sampleId === id) { state.taught = null; state.sampleId = null; }
+    renderMyCat(); renderTeach(); toast("Removed that meow.");
+  } catch (err) { toast(err.message); }
 }
 
 let photoData = "";
@@ -371,8 +418,7 @@ $("#addForm").onsubmit = async (e) => {
   const fd = new FormData(); fd.append("name", $("#catName").value); fd.append("photo", photoData);
   try {
     const c = await api("/api/cats", { method: "POST", body: fd });
-    $("#addDlg").close(); state.catId = c.id; try { localStorage.setItem("catId", c.id); } catch {}
-    await loadCats(); renderTeach(); toast(`${c.name} added. Now record a meow.`);
+    $("#addDlg").close(); state.cats.push(c); pickCat(c.id); toast(`${c.name} added. Now record a meow.`);
   } catch (err) { toast(err.message); }
 };
 $("#aboutBtn").onclick = () => $("#aboutDlg").showModal();
@@ -380,34 +426,36 @@ $("#aboutBtn").onclick = () => $("#aboutDlg").showModal();
 /* ---------- listening ---------- */
 let rec = null;
 async function startRecording() {
+  if (state.starting) return;  // a second tap while the permission prompt is open
   if (!navigator.mediaDevices?.getUserMedia) {
     return setStatus("Microphone isn't available here", "Browsers only allow the mic on https or localhost. Upload a recording instead.");
   }
+  state.starting = true;
   let stream;
   try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false } }); }
-  catch { return setStatus("Microphone is blocked", "Allow microphone access for this site in your browser settings, or upload a recording."); }
+  catch { state.starting = false; return setStatus("Microphone is blocked", "Allow microphone access for this site in your browser settings, or upload a recording."); }
+  state.starting = false;
   const ctx = new AudioContext(), an = ctx.createAnalyser(); an.fftSize = 1024;
   ctx.createMediaStreamSource(stream).connect(an);
   const buf = new Float32Array(an.fftSize), chunks = [];
   const mr = new MediaRecorder(stream);
   mr.ondataavailable = (e) => chunks.push(e.data);
   const started = Date.now();
-  rec = { mr, ctx, stream };
+  rec = { mr, ctx, stream, stop: setTimeout(stopRecording, 8000) };  // a timer keeps running when the tab is hidden
   const tick = () => {
     if (!rec) return;
     an.getFloatTimeDomainData(buf);
     let sum = 0; for (const v of buf) sum += v * v;
     catBtn.style.setProperty("--level", Math.min(1, Math.sqrt(sum / buf.length) * 6).toFixed(3));
-    const left = Math.max(0, 8 - Math.floor((Date.now() - started) / 1000));
-    setStatus(`Listening… ${left}s`, "Tap the cat again when the meow is done.");
-    if (left === 0) stopRecording(); else requestAnimationFrame(tick);
+    setStatus(`Listening… ${Math.max(0, 8 - Math.floor((Date.now() - started) / 1000))}s`, "Tap the cat again when the meow is done.");
+    requestAnimationFrame(tick);
   };
   mr.onstop = () => { stream.getTracks().forEach((t) => t.stop()); ctx.close(); analyse(new Blob(chunks, { type: mr.mimeType })); };
   mr.start(); setMood("listening"); catBtn.setAttribute("aria-label", "Stop listening"); navigator.vibrate?.(15); tick();
 }
 function stopRecording() {
   if (!rec) return;
-  const r = rec; rec = null; catBtn.style.setProperty("--level", 0); catBtn.setAttribute("aria-label", "Start listening"); r.mr.stop();
+  const r = rec; rec = null; clearTimeout(r.stop); catBtn.style.setProperty("--level", 0); catBtn.setAttribute("aria-label", "Start listening"); r.mr.stop();
 }
 catBtn.onclick = () => (rec ? stopRecording() : !state.busy && startRecording());
 $("#file").onchange = (e) => { const f = e.target.files[0]; if (f) analyse(f); e.target.value = ""; };
@@ -421,17 +469,23 @@ document.querySelectorAll("[data-sample]").forEach((b) => b.onclick = async () =
 async function analyse(blob) {
   state.busy = true; setMood("thinking"); setStatus("Thinking…", "Comparing this meow with hundreds of others.");
   const fd = new FormData(); fd.append("audio", blob, "meow"); fd.append("cat_id", state.catId);
-  try { show(await api("/api/predict", { method: "POST", body: fd })); }
+  try { state.taught = null; state.sampleId = null; state.share = false; show(await api("/api/predict", { method: "POST", body: fd })); }
   catch (err) { setMood("idle"); setStatus("Couldn't hear that one", err.message); }
   finally { state.busy = false; }
 }
+async function rerank() {  // the same recording, ranked for the cat just picked
+  try { state.taught = null; state.sampleId = null; show(await postJSON("/api/rerank", { clip: state.clip, cat_id: state.catId }), false); }
+  catch { state.clip = null; $("#result").hidden = true; $("#empty").hidden = false; setMood("idle"); setStatus("Tap the cat to listen", "Pick a cat, then record a meow."); }
+}
 
-function show(r) {
-  const top = r.results[0];
-  state.clip = r.clip; state.taught = null;
+function show(r, scroll = true) {
+  const [top, second] = r.results;
+  state.clip = r.clip; state.last = r;
+  const unsure = r.has_meow && top.p < UNSURE_BELOW && second;
+  const short = (o) => (LABELS[o.key] || o.title).replace(/^\S+ /, "").toLowerCase();
   const sig = r.signals[0];  // purring, hissing or yowling outranks the meow guess: it's recognised directly
-  setMood(sig ? SIGNAL_MOOD[sig.key] : r.is_cat ? (CONTEXTS[top.key] ? top.key : "other") : "idle");
-  setStatus(sig ? `${sig.emoji} ${sig.title}` : r.is_cat ? `${top.emoji} ${top.title}` : "Hmm, was that a cat?", "Tap the cat to listen again.");
+  setMood(sig ? SIGNAL_MOOD[sig.key] : !r.is_cat ? "idle" : unsure ? "thinking" : CONTEXTS[top.key] ? top.key : "other");
+  setStatus(sig ? `${sig.emoji} ${sig.title}` : !r.is_cat ? "Hmm, was that a cat?" : unsure ? `🤔 ${cap(short(top))} or ${short(second)}?` : `${top.emoji} ${top.title}`, "Tap the cat to listen again.");
   const sigBox = $("#signals"); sigBox.innerHTML = "";
   for (const x of r.signals) {
     const d = document.createElement("div"); d.className = "signal";
@@ -440,22 +494,29 @@ function show(r) {
     sigBox.append(d);
   }
   $("#empty").hidden = true; $("#result").hidden = false;
-  $("#quote").textContent = `“${top.line}”`;
   const who = current()?.name;
-  $("#sub").textContent = `${Math.round(top.p * 100)}% likely · ${r.taught ? `tuned to ${who}` : "general model, not tuned to this cat"}`;
+  if (unsure) {
+    $("#quote").textContent = `It's between ${short(top)} and ${short(second)}.`;
+    $("#sub").textContent = `Not sure: ${Math.round(top.p * 100)}% vs ${Math.round(second.p * 100)}%${who ? `. Telling it which one helps it learn ${who}.` : "."}`;
+  } else {
+    $("#quote").textContent = `“${top.line}”`;
+    $("#sub").textContent = learning(top.key) ? `Still learning “${short(top)}” for ${who}: teach it ${LEARNED_AFTER - (current()?.counts[top.key] || 0)} more` :
+      `${Math.round(top.p * 100)}% likely · ${r.taught ? `tuned to ${who}` : "general model, not tuned to this cat"}`;
+  }
   $("#warn").hidden = r.is_cat;
-  $("#nomeow").hidden = r.has_meow; $("#bubble").hidden = $("#opts").hidden = !r.has_meow;
+  $("#nomeow").hidden = r.has_meow || !r.is_cat;
+  $("#bubble").hidden = $("#opts").hidden = !r.has_meow;
   const opts = $("#opts"); opts.innerHTML = "";
   for (const o of r.results.slice(0, 3)) {
     const li = document.createElement("li"); li.className = "opt";
     li.innerHTML = `<span class="em" aria-hidden="true"></span><span class="t"></span><span class="pct"></span><span class="track"><span class="fill"></span></span>`;
     li.querySelector(".em").textContent = o.emoji; li.querySelector(".t").textContent = o.title;
-    li.querySelector(".pct").textContent = `${Math.round(o.p * 100)}%`;
+    li.querySelector(".pct").textContent = learning(o.key) ? "learning" : `${Math.round(o.p * 100)}%`;
     opts.append(li);
     requestAnimationFrame(() => requestAnimationFrame(() => (li.querySelector(".fill").style.width = `${o.p * 100}%`)));
   }
   renderTeach();
-  if (matchMedia("(max-width: 859px)").matches) catBtn.scrollIntoView({ behavior: "smooth", block: "start" }); // cat's face + quote in view
+  if (scroll && matchMedia("(max-width: 859px)").matches) catBtn.scrollIntoView({ behavior: "smooth", block: "start" }); // cat's face + quote in view
 }
 
 /* ---------- teaching ---------- */
@@ -469,20 +530,29 @@ function renderTeach() {
     const b = document.createElement("button"); b.className = "btn primary"; b.textContent = "+ Add a cat"; b.onclick = openAdd;
     return box.append(h, p, b);
   }
-  h.textContent = `What was ${c.name} doing?`;
-  p.textContent = state.taught ? `Saved as “${LABELS[state.taught] || state.taught}”. Record another meow to keep teaching.` : "Pick what really happened and the app learns this meow.";
+  const r = state.last, unsure = r?.has_meow && r.results[0].p < UNSURE_BELOW && r.results[1];
+  const suggested = unsure ? [r.results[0].key, r.results[1].key] : [];
+  h.textContent = unsure ? `Was it one of these, ${c.name}?` : `What was ${c.name} doing?`;
+  if (state.taught) {
+    p.textContent = `Saved as “${labelText(state.taught)}”. `;
+    const undo = document.createElement("button"); undo.className = "link"; undo.textContent = "Undo";
+    undo.onclick = () => removeSample(c, state.sampleId);
+    p.append(undo, " · Record another meow to keep teaching.");
+  } else p.textContent = unsure ? "It wasn't sure. Telling it which one teaches it the most." : "Pick what really happened and the app learns this meow.";
   const row = document.createElement("div"); row.className = "actions";
   const choose = async (label) => {
+    const share = state.share && !!state.config?.contrib;
     try {
-      const updated = await api("/api/teach", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cat_id: c.id, clip: state.clip, label, share: state.share && !!state.config?.contrib }) });
-      Object.assign(c, updated); state.taught = label; navigator.vibrate?.(10);
-      if (state.share && state.config?.contrib) toast("Thanks! This meow is now part of the open dataset.");
+      const u = await postJSON("/api/teach", { cat_id: c.id, clip: state.clip, label, share, session, hour: new Date().getHours(), where: share ? state.where : "" });
+      Object.assign(c, u); state.taught = u.samples.find((s) => s.id === u.sample_id)?.label || label; state.sampleId = u.sample_id; navigator.vibrate?.(10);
       const n = Object.values(c.counts).reduce((a, b) => a + b, 0);
-      toast(`Saved. ${c.name} has taught it ${n} meow${n > 1 ? "s" : ""}.`); renderTeach(); renderMyCat();
+      toast(u.shared ? `Saved, and added to the open dataset (ID ${u.contribution_id}).` : u.share_note ? `Saved for ${c.name}. ${u.share_note}` : `Saved. ${c.name} has taught it ${n} meow${n > 1 ? "s" : ""}.`);
+      renderTeach(); renderMyCat();
     } catch (err) { toast(err.message); }
   };
-  for (const [k, label] of Object.entries(LABELS)) {
-    const b = document.createElement("button"); b.className = "btn"; b.textContent = label;
+  const order = [...suggested, ...Object.keys(LABELS).filter((k) => !suggested.includes(k))];
+  for (const k of order) {
+    const b = document.createElement("button"); b.className = suggested.includes(k) ? "btn suggest" : "btn"; b.textContent = labelText(k);
     b.setAttribute("aria-pressed", String(state.taught === k)); b.disabled = !!state.taught; b.onclick = () => choose(k); row.append(b);
   }
   const other = document.createElement("form"); other.className = "other";
@@ -492,15 +562,20 @@ function renderTeach() {
   box.append(h, p);
   if (state.config?.contrib && !state.taught) {
     const lab = document.createElement("label"); lab.className = "share";
-    lab.innerHTML = `<input type="checkbox" id="shareMeow"><span>Also add this meow to the open cat dataset (CC BY 4.0). Only the sound and what you pick are shared, never your cat's name or photo.</span>`;
-    const cb = lab.querySelector("input"); cb.checked = state.share; cb.onchange = () => { state.share = cb.checked; };
-    box.append(lab);
+    lab.innerHTML = `<input type="checkbox" id="shareMeow"><span>Also add this meow to the open cat dataset (CC BY 4.0). Only the sound, what you pick and roughly when and where are shared, never your cat's name or photo. You'll get an ID to ask for removal later.</span>`;
+    const cb = lab.querySelector("input"); cb.checked = state.share;
+    const where = document.createElement("select"); where.id = "shareWhere"; where.setAttribute("aria-label", "Where was this recorded?");
+    for (const [v, t] of [["", "Where was this? (optional)"], ["home", "At home"], ["outdoors", "Outdoors"], ["vet", "At the vet"], ["car", "In a car"], ["other", "Somewhere else"]]) where.append(new Option(t, v));
+    where.value = state.where; where.hidden = !state.share; where.onchange = () => { state.where = where.value; };
+    cb.onchange = () => { state.share = cb.checked; where.hidden = !cb.checked; };
+    box.append(lab, where);
   }
   box.append(row, other);
 }
 
 loadCats().catch(() => setStatus("Can't reach the decoder", "Make sure the server is running, then reload."));
-api("/api/config").then((c) => { state.config = c; $("#encoderInfo").textContent = c.encoder_info; }).catch(() => {});
+api("/api/config").then((c) => { state.config = c; $("#encoderInfo").textContent = c.encoder_info; renderTeach(); }).catch(() => {});
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 </script>
 </body>
 </html>

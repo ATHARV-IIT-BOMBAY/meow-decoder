@@ -5,8 +5,8 @@ authors:
   - family-names: "Chauhan"
     given-names: "Atharv Pratap Singh"
     affiliation: "Indian Institute of Technology Bombay"
-version: 0.2.0
-date-released: 2026-11-04
+version: 0.4.0
+date-released: 2026-11-14
 license: MIT
 repository-code: "https://github.com/ATHARV-IIT-BOMBAY/meow-decoder"
 references:

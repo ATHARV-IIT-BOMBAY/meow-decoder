@@ -1,0 +1,21 @@
+Meow Decoder bundles four short demo recordings in static/samples/. They are not covered by the MIT licence of
+the code; each keeps its own licence below.
+
+hungry.wav    CatMeows: F_BLE01_EU_FN_DEL01_102.wav
+brushed.wav   CatMeows: B_CAN01_EU_FN_GIA01_309.wav
+alone.wav     CatMeows: I_BRA01_MC_MN_SIM01_301.wav
+    Luca Andrea Ludovico, Stavros Ntalampiras, Giorgio Presti, Simona Cannas, Monica Battini, Silvana Mattiello.
+    "CatMeows: A Publicly-Available Dataset of Cat Vocalizations", 2020. https://doi.org/10.5281/zenodo.4008297
+    Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Files unchanged.
+
+purring.mp3   Cat Sound Classification Dataset V2: Resting/cat_coll0106.mp3
+    Yagya Raj Pandeya. Cat Sound Classification Dataset V2, 2021. https://zenodo.org/records/4724180
+    Licence: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). File unchanged.
+    The authors ask that work using the dataset cites:
+      Y. R. Pandeya, D. Kim, J. Lee. Domestic Cat Sound Classification Using Learned Features from Deep Neural Nets.
+      Applied Sciences 8(10):1949, 2018.
+      Y. R. Pandeya, J. Lee. Domestic Cat Sound Classification Using Transfer Learning. IJFIS 18(2):154, 2018.
+
+The classifier weights downloaded from https://huggingface.co/AtharvIITB/meow-decoder carry the licence stated
+on that page: beats.npz follows the Earth Species Project encoder (CC BY-NC-SA 4.0, non-commercial);
+ast.npz follows CatMeows (CC BY 4.0).

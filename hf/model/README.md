@@ -13,18 +13,26 @@ Small logistic-regression heads that turn a meow's audio embedding into the like
 waiting for food, enjoying attention, or stressed somewhere new. Used by
 [meow-decoder](https://github.com/ATHARV-IIT-BOMBAY/meow-decoder), which downloads them automatically.
 
-| File | Encoder | First guess right (unseen cats) | Top two | Calibration error | License |
-|---|---|---|---|---|---|
-| `beats.npz` | Earth Species Project `esp_aves2_sl_beats_all` | 65.9% | 89.1% | 2.2% | CC BY-NC-SA 4.0 (follows the encoder) |
-| `ast.npz` | MIT AST fine-tuned on AudioSet | 61.8% | 84.1% | 4.7% | CC BY 4.0 (follows the CatMeows data) |
+| File | Encoder | First guess right (unseen cats) | Top two | Macro recall | Calibration error | License |
+|---|---|---|---|---|---|---|
+| `beats.npz` | Earth Species Project `esp_aves2_sl_beats_all` | 65.9% (57–74%) | 89.1% | 58.1% | 2.2% | CC BY-NC-SA 4.0 (follows the encoder) |
+| `ast.npz` | MIT AST fine-tuned on AudioSet | 61.8% (52–72%) | 84.1% | 53.2% | 4.7% | CC BY 4.0 (follows the CatMeows data) |
 
-Always guessing the most common situation scores 50.2%. Scores are 5-fold cross-validation over whole cats
-(`splits.json` in the code repo), so every test meow comes from a cat the head never saw.
+Always guessing the most common situation scores 50.2% (macro recall 33%). Scores are 5-fold cross-validation over
+whole cats (`splits.json` in the code repo), so every test meow comes from a cat the head never saw. The range is a
+95% interval from resampling cats: with 21 cats, the benchmark is small.
+
+Re-run the benchmark from these files alone, in seconds, with no audio or audio models:
+
+```bash
+meow benchmark --from-weights
+```
 
 ## Format
 
 Plain NumPy arrays, no pickle: `classes`, `mean`, `scale`, `coef`, `intercept` (standardize, then multinomial
-logistic regression), plus `X`, `y` (the 440 training embeddings, kept so the app can refit with your own cat's meows).
+logistic regression), plus `X`, `y` (the 440 training embeddings, kept so the app can refit with your own cat's meows),
+`cats` (which cat each embedding came from) and `train_only` (marks augmented copies; none in this release).
 
 ```python
 from meow_decoder import Decoder

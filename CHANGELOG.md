@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.4.0 (2026-11-14)
+
+An independent review of 0.3.1 found claims that didn't hold up and a list of bugs. This release corrects the
+claims first.
+
+**Corrected numbers**
+- Teaching a cat: 66% → 81% was measured on meows from the same recording session as the taught ones. On a
+  different session it is 65% → 72% (3 per situation). README, app and model card updated.
+- Every headline score now has a 95% interval from resampling cats (65.9%, 57.0–74.3%) and macro recall (58.1%).
+- New: accuracy under real recording conditions (browser codec 61.8%, heavy noise 59.3%, meow inside an 8 s
+  recording 61.4%), and a test of how much is the room: background only 60.9%, meow only 63.9%.
+
+**Tested and not shipped**, with numbers in the README: cutting clips to the meow, band-limiting to 4 kHz,
+level normalisation (each lowered accuracy), and training on noisy copies (+1 point, inside the noise, 4× slower
+teaching).
+
+**App**
+- Says "It's between X and Y" when its top answer is under 50%, and asks which one it was.
+- Undo a taught meow, or remove any from the cat's card. Teaching the same recording twice relabels it.
+- Taught-only labels show "learning" instead of a percentage until taught 3 times.
+- Switching cats re-ranks the last recording for the new cat.
+- A cat's card points out time-of-day patterns once there are enough taught meows.
+- Sharing: unticked for every meow, asks where it was recorded, gives a contribution ID, refuses clips with
+  talking or no cat, and keeps typed labels out of exports unless you opt in. `meow contribute` sends shared
+  meows to the new open dataset as a pull request.
+- Installs properly on phones (PNG icons, service worker) and opens offline.
+- Fixed: recording could run past 8 s when the tab was hidden; a double tap during the permission prompt
+  started two recordings; "not a cat" still showed a confident quote; the "shared" toast was never seen.
+
+**Server and safety**
+- Predictions run off the request loop, one at a time, so one upload can't freeze the app for others.
+- Uploads over 10 MB are refused from their header; 30 predictions a minute per address; up to 20 cats and
+  200 taught meows per cat.
+- `cats.json` is written atomically under a lock, with embeddings stored compactly; browser IDs stored hashed.
+- Off 127.0.0.1 the server requires each browser's ID and `meow serve` warns there are no logins.
+- ffmpeg reads uploads with file and network access off and a 20 s timeout; labels and names are cleaned.
+- Purring, hissing and yowling are listened for across the whole clip, not just the first 10 s.
+- All model downloads pinned to exact revisions.
+
+**Project**
+- `meow benchmark --from-weights` (seconds, no audio), `--teaching`, `--robust`, `--predictions` (score your
+  own model). Weights now store cat IDs.
+- `meow predict` carries on past unreadable files.
+- Tests 8 → 18, plus 4 browser tests of the real page; CI on Python 3.11–3.13, ruff, and a weekly check of the
+  real models.
+- librosa is now optional (`[train]`); version read from one place; requirements.txt fixed; NOTICE credits
+  the bundled samples; code of conduct, security policy, pull-request template; tags for past releases.
+
 ## 0.3.1 (2026-11-04)
 
 - Fixed: for a clip with no meow (a purr), the situation bars still showed under "no situation to guess".

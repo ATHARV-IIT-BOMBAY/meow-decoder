@@ -12,17 +12,22 @@ Train anything you like, then score it on the fixed unseen-cat folds in `meow_de
 
 - No cat may appear in both training and test. Split by cat, never by clip.
 - Augment after splitting, never before.
-- Report first-guess accuracy, top-two accuracy, log-loss and calibration error (`meow_decoder.core.benchmark` computes all four).
+- Report first-guess accuracy with its interval, top-two accuracy, macro recall, log-loss and calibration error.
+  The easiest way: save your out-of-fold probabilities as a CSV (`file_name,F,B,I`) and run
+  `meow benchmark --predictions your.csv`, which computes all of them.
+- Also report `meow benchmark --robust` if your model runs on audio: clean files flatter every model.
 - Say if you used data beyond CatMeows.
 
 ## 3. Code
 
 ```bash
 pip install -e ".[dev]"
-pytest            # fast, no model downloads
+pytest                    # fast, no model downloads
+ruff check . && ruff format --check .
 ```
 
-- Any change that touches predictions needs `meow benchmark` numbers before and after in the PR.
+- Any change that touches predictions needs `meow benchmark` (and `--robust`) numbers before and after in the PR.
+- Teaching results must be tested on a different recording session than the taught meows (`teaching_curve` does this).
 - Keep the tests model-free so CI stays fast.
 - Keep the app's copy honest: no "translation", no accuracy claims the benchmark doesn't back.
 
