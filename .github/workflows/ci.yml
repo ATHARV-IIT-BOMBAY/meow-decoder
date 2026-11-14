@@ -10,6 +10,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python: ["3.11", "3.12", "3.13"]
     steps:
@@ -19,7 +20,7 @@ jobs:
           python-version: ${{ matrix.python }}
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       # Tests fake the audio models, so skip torch/transformers/avex.
-      - run: pip install --no-deps -e . && pip install numpy scikit-learn soundfile fastapi uvicorn python-multipart httpx pytest ruff
+      - run: pip install --no-deps -e . && pip install numpy scikit-learn soundfile fastapi uvicorn python-multipart httpx huggingface_hub pytest ruff
       - run: ruff check . && ruff format --check .
       - run: pytest -q
 
