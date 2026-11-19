@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.1 (2026-11-19)
+
+- New real-world test: 56 openly licensed cat recordings from Wikimedia Commons, labelled from what their
+  uploaders wrote (`benchmark/wild.py`, `benchmark/wild_labels.csv`). Purring caught 14 of 18 with no false alarms;
+  people saying "meow" were never called a cat. The situation model leaned towards "stressed" (15 of 29 meows) and
+  got 1 of 5 situation-labelled meows right: too few to measure, enough to show it doesn't transfer well yet.
+- Fixed: hissing was never detected. AudioSet scores real hisses around 0.02, below the old 0.2 threshold. The new
+  threshold (0.01, 0.2% false alarms on CatMeows) caught 3 of 4 real hisses with no false alarms.
+- The accuracy report page shows the corrected v0.4.0 numbers.
+
 ## 0.4.0 (2026-11-14)
 
 An independent review of 0.3.1 found claims that didn't hold up and a list of bugs. This release corrects the

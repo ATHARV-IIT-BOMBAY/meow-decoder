@@ -43,9 +43,12 @@ PRESETS = {
     "play": ("🧶", "Wants to play", "Play with me!"),
     "annoyed": ("😾", "Annoyed", "Leave me alone."),
 }
-# Sounds the AudioSet model recognises directly, with thresholds from benchmark/sound_types.py:
-# purr fires on 0.2% of ordinary meows and on all 5 resting clips; yowl at 0.3 fires on 3% of ordinary meows;
-# hiss never fired on our test clips (no false alarms, but no confirmed detections either).
+# Sounds the AudioSet model recognises directly. Thresholds are set on CatMeows' 440 ordinary meows
+# (benchmark/sound_types.py) and checked on real recordings from the internet (benchmark/wild.py):
+# purr 0.3: 0.2% false alarms on ordinary meows; caught 14 of 18 real purrs, 0 false alarms on 38 other clips.
+# hiss 0.01: 0.2% false alarms on ordinary meows. AudioSet scores even clear hisses low (about 0.02), so the
+#   earlier 0.2 never fired; 0.01 caught 3 of 4 real hisses with no false alarms (revised after seeing them).
+# yowl 0.3: 3% false alarms on ordinary meows; caught 4 of 8 real fights, and fires on some loud demanding meows.
 SIGNALS = {  # AudioSet label -> (emoji, title, meaning, threshold)
     "Purr": (
         "😌",
@@ -53,7 +56,7 @@ SIGNALS = {  # AudioSet label -> (emoji, title, meaning, threshold)
         "Usually relaxed and content. Cats also purr to calm themselves when stressed or hurt, so check the rest of its body language.",
         0.3,
     ),
-    "Hiss": ("😾", "Hissing", "Scared or defensive. Give it space and don't reach for it.", 0.2),
+    "Hiss": ("😾", "Hissing", "Scared or defensive. Give it space and don't reach for it.", 0.01),
     "Caterwaul": (
         "📢",
         "Yowling",

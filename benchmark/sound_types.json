@@ -69,12 +69,12 @@
    }
   },
   "Hiss": {
-   "threshold": 0.2,
-   "false_alarms_on_ordinary_meows": 0.0,
+   "threshold": 0.01,
+   "false_alarms_on_ordinary_meows": 0.0022727272727272726,
    "fires_on": {
     "Angry": 0,
     "Defense": 0,
-    "Fighting": 0,
+    "Fighting": 1,
     "Happy": 0,
     "HuntingMind": 0,
     "Mating": 0,

@@ -1,0 +1,1712 @@
+{
+ "encoder": "beats",
+ "clips": 56,
+ "situations": {
+  "labelled": 6,
+  "scored": 5,
+  "top1": 0.2,
+  "top2": 0.4,
+  "confidence": 0.57162,
+  "majority": 0.6,
+  "by_label": {
+   "F": "0/3",
+   "B": "1/2",
+   "I": "0/0"
+  }
+ },
+ "cat_detected_on_cats": "45/51",
+ "humans_called_cat": "0/5",
+ "predicted_stressed_share": 0.5172413793103449,
+ "purr": {
+  "caught": "14/18",
+  "false_alarms": "0/38"
+ },
+ "hiss": {
+  "caught": "3/4",
+  "false_alarms": "0/52"
+ },
+ "yowl": {
+  "caught": "4/8",
+  "false_alarms": "4/43"
+ },
+ "clips_detail": [
+  {
+   "title": "File:Black cat sound begging the foods.flac",
+   "label": "F",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.717,
+    "Meow": 0.405,
+    "Purr": 0.002,
+    "Caterwaul": 0.198,
+    "Hiss": 0.001,
+    "Speech": 0.055
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.4697
+    ],
+    [
+     "I",
+     0.2966
+    ],
+    [
+     "F",
+     0.2337
+    ]
+   ]
+  },
+  {
+   "title": "File:Weibliche Britisch Kurzhaar will Futter C1277 MIAUEN.wav",
+   "label": "F",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.903,
+    "Meow": 0.867,
+    "Purr": 0.005,
+    "Caterwaul": 0.276,
+    "Hiss": 0.002,
+    "Speech": 0.024
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.5953
+    ],
+    [
+     "B",
+     0.3288
+    ],
+    [
+     "F",
+     0.0758
+    ]
+   ]
+  },
+  {
+   "title": "File:Rury Feeds the Faculty of Biology Cats.webm",
+   "label": "F",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.065,
+    "Meow": 0.013,
+    "Purr": 0.003,
+    "Caterwaul": 0.014,
+    "Hiss": 0.003,
+    "Speech": 0.662
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.7085
+    ],
+    [
+     "F",
+     0.1657
+    ],
+    [
+     "I",
+     0.1258
+    ]
+   ]
+  },
+  {
+   "title": "File:Spring Belly Rub.webm",
+   "label": "B",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.077,
+    "Meow": 0.003,
+    "Purr": 0.193,
+    "Caterwaul": 0.003,
+    "Hiss": 0.002,
+    "Speech": 0.516
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6808
+    ],
+    [
+     "F",
+     0.2192
+    ],
+    [
+     "I",
+     0.1
+    ]
+   ]
+  },
+  {
+   "title": "File:2015-11-24.νιαούρισμα.Νιάου.noise reduced.flac",
+   "label": "B",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.315,
+    "Meow": 0.715,
+    "Purr": 0.001,
+    "Caterwaul": 0.017,
+    "Hiss": 0.0,
+    "Speech": 0.099
+   },
+   "signals": [],
+   "results": [
+    [
+     "F",
+     0.4038
+    ],
+    [
+     "I",
+     0.3302
+    ],
+    [
+     "B",
+     0.266
+    ]
+   ]
+  },
+  {
+   "title": "File:Reismand met kat die onraad ruikt en er zo snel mogelijk weer uit wil.ogg",
+   "label": "I",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.002,
+    "Meow": 0.001,
+    "Purr": 0.001,
+    "Caterwaul": 0.0,
+    "Hiss": 0.001,
+    "Speech": 0.118
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.5759
+    ],
+    [
+     "I",
+     0.3434
+    ],
+    [
+     "F",
+     0.0808
+    ]
+   ]
+  },
+  {
+   "title": "File:Meow of a pleading cat.oga",
+   "label": "out",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.752,
+    "Meow": 0.707,
+    "Purr": 0.001,
+    "Caterwaul": 0.125,
+    "Hiss": 0.002,
+    "Speech": 0.051
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.98
+    ],
+    [
+     "B",
+     0.0168
+    ],
+    [
+     "F",
+     0.0032
+    ]
+   ]
+  },
+  {
+   "title": "File:GettingOutImpatient.ogg",
+   "label": "out",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.923,
+    "Meow": 0.835,
+    "Purr": 0.002,
+    "Caterwaul": 0.356,
+    "Hiss": 0.002,
+    "Speech": 0.049
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.9655
+    ],
+    [
+     "B",
+     0.0291
+    ],
+    [
+     "F",
+     0.0054
+    ]
+   ]
+  },
+  {
+   "title": "File:NoTrip.ogg",
+   "label": "out",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.929,
+    "Meow": 0.87,
+    "Purr": 0.003,
+    "Caterwaul": 0.303,
+    "Hiss": 0.001,
+    "Speech": 0.638
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.6528
+    ],
+    [
+     "B",
+     0.1888
+    ],
+    [
+     "F",
+     0.1583
+    ]
+   ]
+  },
+  {
+   "title": "File:Felis silvestris catus meows.ogg",
+   "label": "wants_attention",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.942,
+    "Meow": 0.846,
+    "Purr": 0.008,
+    "Caterwaul": 0.209,
+    "Hiss": 0.001,
+    "Speech": 0.114
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.5087
+    ],
+    [
+     "B",
+     0.4347
+    ],
+    [
+     "F",
+     0.0566
+    ]
+   ]
+  },
+  {
+   "title": "File:Audio file of cat meowing.ogg",
+   "label": "heat",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.945,
+    "Meow": 0.793,
+    "Purr": 0.003,
+    "Caterwaul": 0.29,
+    "Hiss": 0.003,
+    "Speech": 0.021
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.812
+    ],
+    [
+     "B",
+     0.1656
+    ],
+    [
+     "F",
+     0.0224
+    ]
+   ]
+  },
+  {
+   "title": "File:Cat making noises at the birds outside.webm",
+   "label": "chirp",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.603,
+    "Meow": 0.465,
+    "Purr": 0.005,
+    "Caterwaul": 0.103,
+    "Hiss": 0.004,
+    "Speech": 0.122
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.7102
+    ],
+    [
+     "B",
+     0.1662
+    ],
+    [
+     "F",
+     0.1236
+    ]
+   ]
+  },
+  {
+   "title": "File:Cat Purring.ogg",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.811,
+    "Meow": 0.012,
+    "Purr": 0.929,
+    "Caterwaul": 0.019,
+    "Hiss": 0.006,
+    "Speech": 0.026
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.9138
+    ],
+    [
+     "F",
+     0.0471
+    ],
+    [
+     "I",
+     0.0391
+    ]
+   ]
+  },
+  {
+   "title": "File:Cat in front of open fire purring.ogg",
+   "label": "purr",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.015,
+    "Meow": 0.0,
+    "Purr": 0.018,
+    "Caterwaul": 0.001,
+    "Hiss": 0.0,
+    "Speech": 0.005
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6585
+    ],
+    [
+     "F",
+     0.1976
+    ],
+    [
+     "I",
+     0.1439
+    ]
+   ]
+  },
+  {
+   "title": "File:Cat purring (Mimi).ogg",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.604,
+    "Meow": 0.016,
+    "Purr": 0.843,
+    "Caterwaul": 0.013,
+    "Hiss": 0.001,
+    "Speech": 0.02
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.4364
+    ],
+    [
+     "I",
+     0.4026
+    ],
+    [
+     "F",
+     0.161
+    ]
+   ]
+  },
+  {
+   "title": "File:Cat purring.ogg",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.285,
+    "Meow": 0.003,
+    "Purr": 0.318,
+    "Caterwaul": 0.013,
+    "Hiss": 0.001,
+    "Speech": 0.003
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.7648
+    ],
+    [
+     "F",
+     0.1249
+    ],
+    [
+     "I",
+     0.1103
+    ]
+   ]
+  },
+  {
+   "title": "File:Felis silvestris catus purrs.ogg",
+   "label": "purr",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.003,
+    "Meow": 0.003,
+    "Purr": 0.004,
+    "Caterwaul": 0.0,
+    "Hiss": 0.0,
+    "Speech": 0.02
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.7924
+    ],
+    [
+     "I",
+     0.1096
+    ],
+    [
+     "F",
+     0.098
+    ]
+   ]
+  },
+  {
+   "title": "File:Gatita (ronroneo).ogg",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.921,
+    "Meow": 0.218,
+    "Purr": 0.958,
+    "Caterwaul": 0.116,
+    "Hiss": 0.001,
+    "Speech": 0.056
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.8039
+    ],
+    [
+     "F",
+     0.1068
+    ],
+    [
+     "I",
+     0.0893
+    ]
+   ]
+  },
+  {
+   "title": "File:Jupey purring.wav",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.814,
+    "Meow": 0.008,
+    "Purr": 0.91,
+    "Caterwaul": 0.01,
+    "Hiss": 0.001,
+    "Speech": 0.008
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.7503
+    ],
+    [
+     "I",
+     0.1948
+    ],
+    [
+     "F",
+     0.0549
+    ]
+   ]
+  },
+  {
+   "title": "File:Purr (10 sec loopable).ogg",
+   "label": "purr",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.001,
+    "Meow": 0.0,
+    "Purr": 0.002,
+    "Caterwaul": 0.0,
+    "Hiss": 0.0,
+    "Speech": 0.002
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.9034
+    ],
+    [
+     "F",
+     0.0647
+    ],
+    [
+     "I",
+     0.0319
+    ]
+   ]
+  },
+  {
+   "title": "File:Purring cat.oga",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.433,
+    "Meow": 0.004,
+    "Purr": 0.837,
+    "Caterwaul": 0.005,
+    "Hiss": 0.001,
+    "Speech": 0.003
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.8196
+    ],
+    [
+     "I",
+     0.1123
+    ],
+    [
+     "F",
+     0.0681
+    ]
+   ]
+  },
+  {
+   "title": "File:Purring cat bertie.ogg",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.199,
+    "Meow": 0.002,
+    "Purr": 0.665,
+    "Caterwaul": 0.004,
+    "Hiss": 0.001,
+    "Speech": 0.002
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.9045
+    ],
+    [
+     "F",
+     0.0535
+    ],
+    [
+     "I",
+     0.042
+    ]
+   ]
+  },
+  {
+   "title": "File:Ronroneo (Chabelita).ogg",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.669,
+    "Meow": 0.004,
+    "Purr": 0.943,
+    "Caterwaul": 0.013,
+    "Hiss": 0.001,
+    "Speech": 0.014
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.9333
+    ],
+    [
+     "I",
+     0.0343
+    ],
+    [
+     "F",
+     0.0324
+    ]
+   ]
+  },
+  {
+   "title": "File:Schnurren einer Hauskatze (schnell).ogg",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.793,
+    "Meow": 0.01,
+    "Purr": 0.925,
+    "Caterwaul": 0.049,
+    "Hiss": 0.001,
+    "Speech": 0.008
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.9629
+    ],
+    [
+     "I",
+     0.025
+    ],
+    [
+     "F",
+     0.0121
+    ]
+   ]
+  },
+  {
+   "title": "File:Whiskers' purr.ogg",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.788,
+    "Meow": 0.508,
+    "Purr": 0.936,
+    "Caterwaul": 0.161,
+    "Hiss": 0.001,
+    "Speech": 0.038
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.7306
+    ],
+    [
+     "I",
+     0.2074
+    ],
+    [
+     "F",
+     0.062
+    ]
+   ]
+  },
+  {
+   "title": "File:Bachgasse Wiki Lina Gebhardt and Anna Muck Cats Purring - Katzenschnurren.ogg",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.896,
+    "Meow": 0.021,
+    "Purr": 0.968,
+    "Caterwaul": 0.026,
+    "Hiss": 0.005,
+    "Speech": 0.006
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.763
+    ],
+    [
+     "I",
+     0.1842
+    ],
+    [
+     "F",
+     0.0527
+    ]
+   ]
+  },
+  {
+   "title": "File:猫咪呼噜声.ogg",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.015,
+    "Meow": 0.001,
+    "Purr": 0.062,
+    "Caterwaul": 0.001,
+    "Hiss": 0.0,
+    "Speech": 0.045
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6002
+    ],
+    [
+     "I",
+     0.2052
+    ],
+    [
+     "F",
+     0.1947
+    ]
+   ]
+  },
+  {
+   "title": "File:Purring and meowing.ogg",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.912,
+    "Meow": 0.017,
+    "Purr": 0.967,
+    "Caterwaul": 0.209,
+    "Hiss": 0.002,
+    "Speech": 0.004
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.9042
+    ],
+    [
+     "I",
+     0.0585
+    ],
+    [
+     "F",
+     0.0373
+    ]
+   ]
+  },
+  {
+   "title": "File:Amelia -cat purrs and kneads.webm",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.756,
+    "Meow": 0.008,
+    "Purr": 0.909,
+    "Caterwaul": 0.011,
+    "Hiss": 0.001,
+    "Speech": 0.015
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.6559
+    ],
+    [
+     "F",
+     0.1892
+    ],
+    [
+     "I",
+     0.1549
+    ]
+   ]
+  },
+  {
+   "title": "File:Orange tabby cat grooming and purring close-up.webm",
+   "label": "purr",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.629,
+    "Meow": 0.005,
+    "Purr": 0.781,
+    "Caterwaul": 0.014,
+    "Hiss": 0.001,
+    "Speech": 0.006
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.8149
+    ],
+    [
+     "F",
+     0.1088
+    ],
+    [
+     "I",
+     0.0762
+    ]
+   ]
+  },
+  {
+   "title": "File:Cat hissing - Zabuhailo.wav",
+   "label": "hiss",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.001,
+    "Meow": 0.0,
+    "Purr": 0.0,
+    "Caterwaul": 0.0,
+    "Hiss": 0.018,
+    "Speech": 0.027
+   },
+   "signals": [
+    "Hiss"
+   ],
+   "results": [
+    [
+     "B",
+     0.6864
+    ],
+    [
+     "F",
+     0.1581
+    ],
+    [
+     "I",
+     0.1555
+    ]
+   ]
+  },
+  {
+   "title": "File:Gruñido gato (Chacha).ogg",
+   "label": "hiss",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.782,
+    "Meow": 0.067,
+    "Purr": 0.12,
+    "Caterwaul": 0.333,
+    "Hiss": 0.005,
+    "Speech": 0.257
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.9137
+    ],
+    [
+     "I",
+     0.0657
+    ],
+    [
+     "F",
+     0.0206
+    ]
+   ]
+  },
+  {
+   "title": "File:Black and white cat growl and hiss.webm",
+   "label": "hiss",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.907,
+    "Meow": 0.088,
+    "Purr": 0.198,
+    "Caterwaul": 0.507,
+    "Hiss": 0.021,
+    "Speech": 0.419
+   },
+   "signals": [
+    "Hiss",
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.9245
+    ],
+    [
+     "I",
+     0.0636
+    ],
+    [
+     "F",
+     0.0118
+    ]
+   ]
+  },
+  {
+   "title": "File:Black and white cat growl and hiss 2.webm",
+   "label": "hiss",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.83,
+    "Meow": 0.067,
+    "Purr": 0.14,
+    "Caterwaul": 0.534,
+    "Hiss": 0.019,
+    "Speech": 0.039
+   },
+   "signals": [
+    "Hiss",
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.8498
+    ],
+    [
+     "I",
+     0.1355
+    ],
+    [
+     "F",
+     0.0147
+    ]
+   ]
+  },
+  {
+   "title": "File:Felis silvestris catus, aggressie, 2023-08-19 02h06, a.mp3",
+   "label": "yowl",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.946,
+    "Meow": 0.817,
+    "Purr": 0.008,
+    "Caterwaul": 0.421,
+    "Hiss": 0.006,
+    "Speech": 0.013
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.6477
+    ],
+    [
+     "I",
+     0.2716
+    ],
+    [
+     "F",
+     0.0807
+    ]
+   ]
+  },
+  {
+   "title": "File:Felis silvestris catus, aggressie, 2023-08-19 02h06, b.mp3",
+   "label": "yowl",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.968,
+    "Meow": 0.773,
+    "Purr": 0.011,
+    "Caterwaul": 0.638,
+    "Hiss": 0.002,
+    "Speech": 0.167
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.5632
+    ],
+    [
+     "I",
+     0.3367
+    ],
+    [
+     "F",
+     0.1001
+    ]
+   ]
+  },
+  {
+   "title": "File:Felis silvestris catus, aggressie, 2023-08-19 02h06, c.mp3",
+   "label": "yowl",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.742,
+    "Meow": 0.588,
+    "Purr": 0.002,
+    "Caterwaul": 0.2,
+    "Hiss": 0.002,
+    "Speech": 0.006
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.5393
+    ],
+    [
+     "B",
+     0.4404
+    ],
+    [
+     "F",
+     0.0203
+    ]
+   ]
+  },
+  {
+   "title": "File:Felis silvestris catus, aggressie, 2023-08-19 02h06, d.mp3",
+   "label": "yowl",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.948,
+    "Meow": 0.842,
+    "Purr": 0.005,
+    "Caterwaul": 0.59,
+    "Hiss": 0.002,
+    "Speech": 0.018
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.8413
+    ],
+    [
+     "I",
+     0.1378
+    ],
+    [
+     "F",
+     0.0208
+    ]
+   ]
+  },
+  {
+   "title": "File:Felis silvestris catus, aanval, 2023-08-28 04h39, a.mp3",
+   "label": "yowl",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.296,
+    "Meow": 0.119,
+    "Purr": 0.003,
+    "Caterwaul": 0.126,
+    "Hiss": 0.004,
+    "Speech": 0.006
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.7536
+    ],
+    [
+     "F",
+     0.139
+    ],
+    [
+     "I",
+     0.1074
+    ]
+   ]
+  },
+  {
+   "title": "File:Tomcat calling.webm",
+   "label": "yowl",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.905,
+    "Meow": 0.458,
+    "Purr": 0.011,
+    "Caterwaul": 0.16,
+    "Hiss": 0.001,
+    "Speech": 0.004
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.7625
+    ],
+    [
+     "B",
+     0.175
+    ],
+    [
+     "F",
+     0.0625
+    ]
+   ]
+  },
+  {
+   "title": "File:Tomcats conflict.webm",
+   "label": "yowl",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.556,
+    "Meow": 0.123,
+    "Purr": 0.004,
+    "Caterwaul": 0.067,
+    "Hiss": 0.001,
+    "Speech": 0.122
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.5503
+    ],
+    [
+     "I",
+     0.3999
+    ],
+    [
+     "F",
+     0.0498
+    ]
+   ]
+  },
+  {
+   "title": "File:Domestic catfight.webm",
+   "label": "yowl",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.944,
+    "Meow": 0.577,
+    "Purr": 0.032,
+    "Caterwaul": 0.36,
+    "Hiss": 0.004,
+    "Speech": 0.134
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.9258
+    ],
+    [
+     "F",
+     0.0375
+    ],
+    [
+     "I",
+     0.0366
+    ]
+   ]
+  },
+  {
+   "title": "File:Maullido de gata hembra.ogg",
+   "label": "meow",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.834,
+    "Meow": 0.881,
+    "Purr": 0.001,
+    "Caterwaul": 0.138,
+    "Hiss": 0.001,
+    "Speech": 0.209
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.8656
+    ],
+    [
+     "B",
+     0.0861
+    ],
+    [
+     "F",
+     0.0483
+    ]
+   ]
+  },
+  {
+   "title": "File:Maullido de gata hembra joven.ogg",
+   "label": "meow",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.065,
+    "Meow": 0.218,
+    "Purr": 0.0,
+    "Caterwaul": 0.018,
+    "Hiss": 0.001,
+    "Speech": 0.096
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.5558
+    ],
+    [
+     "F",
+     0.3137
+    ],
+    [
+     "I",
+     0.1305
+    ]
+   ]
+  },
+  {
+   "title": "File:Meow domestic cat.ogg",
+   "label": "meow",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.876,
+    "Meow": 0.922,
+    "Purr": 0.002,
+    "Caterwaul": 0.074,
+    "Hiss": 0.0,
+    "Speech": 0.028
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.9468
+    ],
+    [
+     "B",
+     0.0376
+    ],
+    [
+     "F",
+     0.0156
+    ]
+   ]
+  },
+  {
+   "title": "File:Meow of a Siamese cat - freemaster2.wav",
+   "label": "meow",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.006,
+    "Meow": 0.024,
+    "Purr": 0.0,
+    "Caterwaul": 0.002,
+    "Hiss": 0.0,
+    "Speech": 0.019
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.5902
+    ],
+    [
+     "I",
+     0.2268
+    ],
+    [
+     "F",
+     0.183
+    ]
+   ]
+  },
+  {
+   "title": "File:Meow.ogg",
+   "label": "meow",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.582,
+    "Meow": 0.732,
+    "Purr": 0.002,
+    "Caterwaul": 0.039,
+    "Hiss": 0.001,
+    "Speech": 0.067
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.6661
+    ],
+    [
+     "B",
+     0.2273
+    ],
+    [
+     "F",
+     0.1066
+    ]
+   ]
+  },
+  {
+   "title": "File:Miaulementcornisg.ogg",
+   "label": "meow",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.88,
+    "Meow": 0.453,
+    "Purr": 0.001,
+    "Caterwaul": 0.4,
+    "Hiss": 0.002,
+    "Speech": 0.008
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.8421
+    ],
+    [
+     "B",
+     0.14
+    ],
+    [
+     "F",
+     0.018
+    ]
+   ]
+  },
+  {
+   "title": "File:Siamese Cat 01.flac",
+   "label": "meow",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.938,
+    "Meow": 0.682,
+    "Purr": 0.015,
+    "Caterwaul": 0.481,
+    "Hiss": 0.002,
+    "Speech": 0.125
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.8167
+    ],
+    [
+     "B",
+     0.1046
+    ],
+    [
+     "F",
+     0.0787
+    ]
+   ]
+  },
+  {
+   "title": "File:Socks Clinton meow.wav",
+   "label": "meow",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.711,
+    "Meow": 0.771,
+    "Purr": 0.003,
+    "Caterwaul": 0.077,
+    "Hiss": 0.006,
+    "Speech": 0.053
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.8972
+    ],
+    [
+     "B",
+     0.0758
+    ],
+    [
+     "F",
+     0.0271
+    ]
+   ]
+  },
+  {
+   "title": "File:Felis silvestris catus.ogg",
+   "label": "meow",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.918,
+    "Meow": 0.734,
+    "Purr": 0.022,
+    "Caterwaul": 0.186,
+    "Hiss": 0.001,
+    "Speech": 0.04
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.5948
+    ],
+    [
+     "I",
+     0.2887
+    ],
+    [
+     "F",
+     0.1165
+    ]
+   ]
+  },
+  {
+   "title": "File:De-Miau.ogg",
+   "label": "human",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.006,
+    "Meow": 0.023,
+    "Purr": 0.0,
+    "Caterwaul": 0.0,
+    "Hiss": 0.001,
+    "Speech": 0.827
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.626
+    ],
+    [
+     "B",
+     0.2871
+    ],
+    [
+     "F",
+     0.0869
+    ]
+   ]
+  },
+  {
+   "title": "File:En-au-meow.ogg",
+   "label": "human",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.008,
+    "Meow": 0.016,
+    "Purr": 0.0,
+    "Caterwaul": 0.001,
+    "Hiss": 0.0,
+    "Speech": 0.792
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.7533
+    ],
+    [
+     "B",
+     0.157
+    ],
+    [
+     "F",
+     0.0897
+    ]
+   ]
+  },
+  {
+   "title": "File:MeowUSA.wav",
+   "label": "human",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.006,
+    "Meow": 0.019,
+    "Purr": 0.0,
+    "Caterwaul": 0.001,
+    "Hiss": 0.0,
+    "Speech": 0.758
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.7867
+    ],
+    [
+     "F",
+     0.1267
+    ],
+    [
+     "B",
+     0.0866
+    ]
+   ]
+  },
+  {
+   "title": "File:LL-Q1860 (eng)-Simplificationalizer-meow.wav",
+   "label": "human",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.001,
+    "Meow": 0.002,
+    "Purr": 0.0,
+    "Caterwaul": 0.0,
+    "Hiss": 0.0,
+    "Speech": 0.665
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.6348
+    ],
+    [
+     "F",
+     0.2669
+    ],
+    [
+     "B",
+     0.0983
+    ]
+   ]
+  },
+  {
+   "title": "File:LL-Q809 (pol)-Olaf-miau.wav",
+   "label": "human",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.003,
+    "Meow": 0.004,
+    "Purr": 0.0,
+    "Caterwaul": 0.001,
+    "Hiss": 0.0,
+    "Speech": 0.726
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.5319
+    ],
+    [
+     "F",
+     0.3006
+    ],
+    [
+     "B",
+     0.1674
+    ]
+   ]
+  }
+ ]
+}

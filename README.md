@@ -26,6 +26,7 @@ An independent review of v0.3.1 tested our own claims harder than we had. What c
 - **Every headline number now has an uncertainty range.** With 21 cats the benchmark is small: 65.9% is really "somewhere between 57% and 74%".
 - **We measured what the app actually hears.** Through a browser microphone's codec it's 61.8%. With heavy background noise it's 59%.
 - **Part of the signal may be the room.** A model that sees only the quietest fifth of each clip, with as little meow as possible, scores 61%. Cutting clips down to just the meow keeps 64%, so the meow carries signal too. This data can't fully separate the two.
+- **On real recordings from the internet, it leans towards "stressed".** In v0.4.1 we tested it on 56 openly licensed clips whose uploaders said what was happening. It called 15 of 29 meows "stressed", and got 1 of 5 situation-labelled meows right. Too few to measure accuracy, but enough to show the situation model doesn't transfer well yet. [Details](#tested-on-real-recordings-from-the-internet).
 
 The full analysis is in [How good is it?](#how-good-is-it). The [changelog](CHANGELOG.md) lists every fix.
 
@@ -56,7 +57,7 @@ The full analysis is in [How good is it?](#how-good-is-it). The [changelog](CHAN
 | | What | How sure |
 |---|---|---|
 | **Learned for every cat** | 🍗 Food, please · 😽 Enjoying attention · 🙀 Stressed somewhere new | First guess right 66% of the time (57–74%), right answer in the top two 89%, on cats it has never heard, clean recordings |
-| **Recognised directly** | 😌 Purring · 😾 Hissing · 📢 Yowling | Purring: false alarm on 0.2% of ordinary meows, caught all 5 test purrs. Yowling: false alarm on 3%. Hissing: no false alarms, but no test clips to confirm detections |
+| **Recognised directly** | 😌 Purring · 😾 Hissing · 📢 Yowling | On real recordings from the internet: caught 14 of 18 purrs, 3 of 4 hisses and 4 of 8 fights. Purring and hissing gave no false alarms; yowling also fires on some loud, demanding meows |
 | **Learned for your cat** | 👋 Saying hello · 🚪 Wants to go out · 🧶 Wants to play · 😾 Annoyed · anything you type | Depends on what you teach it. Shown as "learning" until you've taught it 3 times |
 
 What each sound usually means is shown with it. Purring, for example, usually means relaxed and content, but cats also purr to calm themselves when stressed or hurt. For a clip with no meow in it, like a purr, or one that doesn't sound like a cat at all, it doesn't guess a situation. When its top answer is under 50%, it says "It's between food and attention" instead of picking one.
@@ -84,7 +85,7 @@ sudo apt install ffmpeg        # Ubuntu / Debian
 ```
 
 ```bash
-pip install "meow-decoder @ git+https://github.com/ATHARV-IIT-BOMBAY/meow-decoder@v0.4.0"
+pip install "meow-decoder @ git+https://github.com/ATHARV-IIT-BOMBAY/meow-decoder@v0.4.1"
 ```
 
 The first run downloads about 1 GB of models from Hugging Face (AST, the bioacoustic BEATs encoder and the 5 MB classifier weights), then works offline. Every download is pinned to an exact revision, so an install keeps getting the same models. It runs fine on a laptop CPU (on Apple Silicon, AST also uses the GPU). A prediction takes about 0.2 seconds.
@@ -286,6 +287,26 @@ CatMeows recorded "alone somewhere unfamiliar" in a different place from the oth
 
 Both halves carry signal, and this dataset can't separate them. Recordings where situation and room aren't tied together would settle it, which is one reason the [open dataset](#help-build-the-open-cat-dataset) asks where each meow was recorded.
 
+### Tested on real recordings from the internet
+
+CatMeows was recorded in controlled conditions. To see what happens with ordinary recordings, we collected 56 openly licensed clips from Wikimedia Commons whose uploaders described what was happening ("begging for food", "asking to get out", "purring while being petted", "hissing at another cat"), plus plain meows and people saying "meow". [`benchmark/wild_labels.csv`](benchmark/wild_labels.csv) lists every clip with its author, licence and the words behind its label. These labels come from what an uploader wrote, so this is a test set only, never training data.
+
+| Test | Result |
+|---|---|
+| Recognised as a cat (51 cat recordings) | 45 |
+| People saying "meow" called a cat | 0 of 5 |
+| 😌 Purring | caught 14 of 18; false alarms 0 of 38 |
+| 😾 Hissing | caught 3 of 4; false alarms 0 of 52 |
+| 📢 Yowling in fights | caught 4 of 8; false alarms 4 of 43 (loud "let me out" and Siamese meows) |
+| Food / attention / stressed, first guess | 1 of 5 (food 0 of 3) |
+| Meows it called "stressed" | 15 of 29 |
+
+The sound detectors hold up. The situation model doesn't: only 6 clips said clearly which of its three situations it was, and it leaned heavily towards "stressed", often at 80–95% confidence. That fits the [cat-or-room](#is-it-the-cat-or-the-room) concern: it may have learned what CatMeows' "stressed" recordings sounded like, not what stressed cats sound like. Meows asking to be let out were all called "stressed", which suggests a cat that wants out sounds distressed.
+
+The hiss threshold changed in v0.4.1 because of this test. AudioSet scores even clear hisses low (about 0.02), so the old threshold of 0.2 never fired. The new 0.01 was chosen on CatMeows (0.2% false alarms on ordinary meows, the same rule as purring), but only after seeing the hisses here fail, and only 4 hisses were available.
+
+Most clips with a stated situation are purrs and fights. Few uploaders describe why a cat meowed, which is why owner-labelled meows in the [open dataset](#help-build-the-open-cat-dataset) matter. Freesound has far more clips but needs an API key; adding it is a good next step.
+
 ### Every cat is different
 
 Accuracy on a single unseen cat ranges from 20% to 95%. Some cats meow the way the training cats did and some don't, which is why [teaching your cat](#teach-it-your-cat) helps.
@@ -334,6 +355,7 @@ meow benchmark --from-weights      # headline numbers from the published weights
 meow benchmark --teaching --robust # from the audio: teaching curve and real-world conditions
 python benchmark/evaluate.py       # everything above -> benchmark/report.json
 python benchmark/sound_types.py    # why pain etc. aren't shipped, sound-detector false alarms -> benchmark/sound_types.json
+python benchmark/wild.py download && python benchmark/wild.py evaluate   # the real-world test -> benchmark/wild_report.json
 ```
 
 ## Encoders and commercial use
@@ -406,6 +428,8 @@ meow_decoder/
 benchmark/
   evaluate.py        the full held-out report  -> report.json
   sound_types.py     extra sound types and detector false alarms  -> sound_types.json
+  wild.py            real recordings from Wikimedia Commons: search, download, evaluate  -> wild_report.json
+  wild_labels.csv    those clips: source, author, licence, label and the words behind it
 notebooks/           the Colab "Try it" notebook
 tests/               model-free tests, plus a browser test of the real page
 hf/model/            the Hugging Face model card
@@ -442,7 +466,7 @@ Use `--encoder ast` for a commercial deployment, and `--no-contrib` if you won't
 - Three learned situations, plus purring, hissing and yowling. It can't detect pain or illness. **If a cat seems unwell, see a vet.**
 - Trained on 21 Maine Coon and European Shorthair pet cats recorded by the University of Milan. Street cats and other breeds may sound different.
 - The training audio is 8 kHz, so the models never heard anything above 4 kHz.
-- All accuracy figures come from clean recordings plus simulated real-world conditions. None yet come from real phone recordings of new cats.
+- Situation accuracy comes from clean recordings plus simulated real-world conditions. On a small set of real recordings from the internet it leaned heavily towards "stressed" and got 1 of 5 right; nobody has yet tested it on enough real phone recordings of new cats.
 - Part of what it learned may be the rooms the training meows were recorded in (see [Is it the cat or the room?](#is-it-the-cat-or-the-room)).
 
 ## Roadmap
