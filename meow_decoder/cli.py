@@ -117,6 +117,12 @@ def predict(a):
             print(f"  Not sure: it's between {top['title'].lower()} and {second['title'].lower()}.")
         for x in r["results"]:
             print(f'  {x["p"]:>4.0%}  {x["emoji"]} {x["title"]}: "{x["line"]}"')
+    if not a.json:
+        print(
+            "\nSituation percentages are from cats recorded in a lab. On real home recordings the first guess was right"
+            " about 1 time in 7 (README: Tested on real recordings). Purring, hissing and yowling are more reliable.",
+            file=sys.stderr,
+        )
     if failed:
         sys.exit(f"meow: {failed} of {len(a.files)} files couldn't be read")
 

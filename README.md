@@ -85,7 +85,7 @@ sudo apt install ffmpeg        # Ubuntu / Debian
 ```
 
 ```bash
-pip install "meow-decoder @ git+https://github.com/ATHARV-IIT-BOMBAY/meow-decoder@v0.4.2"
+pip install "meow-decoder @ git+https://github.com/ATHARV-IIT-BOMBAY/meow-decoder@v0.4.3"
 ```
 
 The first run downloads about 1 GB of models from Hugging Face (AST, the bioacoustic BEATs encoder and the 5 MB classifier weights), then works offline. Every download is pinned to an exact revision, so an install keeps getting the same models. It runs fine on a laptop CPU (on Apple Silicon, AST also uses the GPU). A prediction takes about 0.2 seconds.
@@ -306,7 +306,30 @@ CatMeows was recorded in controlled conditions. To see what happens with ordinar
 
 Our best explanation is the [cat-or-room](#is-it-the-cat-or-the-room) concern. In CatMeows every "food" meow came from the cat's home just before a meal, recorded close up by a collar microphone, and the model seems to have learned that recording setup at least as much as the meow. A phone across the kitchen sounds nothing like that, so it falls back on the other two. This is the strongest case yet for [teaching your cat](#teach-it-your-cat), which learns from your microphone and your room, and for an [open dataset](#help-build-the-open-cat-dataset) recorded on ordinary phones.
 
-The sound detectors hold up better, because they come from AudioSet, which was trained on millions of YouTube clips rather than one lab's recordings. The hiss threshold changed in v0.4.1 after the first Commons hisses failed; on 9 new Freesound hisses it caught 2, so hissing is still often missed even if it rarely false-alarms.
+**What we tried to fix it (v0.4.3).** None of it is good enough to ship. Each was scored on the same 58 meows, so
+these are small numbers, and anything chosen this way would be tuned to the test. Scripts are in
+[`benchmark/probes/`](benchmark/probes/).
+
+| Tried | Real meows, first guess | Food meows called food | CatMeows, unseen cats |
+|---|---|---|---|
+| As shipped | 14% | 2 of 48 | 65.9% |
+| Low-pass real clips to 4 kHz, like the training audio | 14% | 1 of 48 | – |
+| … and cut to the loudest meow | 19% | 5 of 48 | – |
+| Re-centre embeddings on other uploaders' real recordings | 24% | 7 of 48 | – |
+| Train with 2 copies of each meow through simulated rooms (reverb, distance, noise) | 22% | 7 of 48 | 62.7% |
+| Commercial-safe AST encoder instead of BEATs | 9% | – | 61.8% |
+| Add the real meows to training (tested on uploaders left out) | 79% | 45 of 48 | – |
+
+The last row looks like a fix and isn't: it learned "sounds like a home recording, so food", and got 0 of 4
+attention and 1 of 6 stressed meows. We also tried flagging recordings that sound unlike the training data, so the
+app could say "I can't tell": it flagged only a third of real meows when set to flag 5% of CatMeows ones.
+
+What does work is teaching. With CatMeows meows played through a simulated room, teaching 3 per situation from one
+session took first-guess accuracy on the cat's other sessions from 48% to 60%. So the app now says, under every
+untaught guess, that it's a rough guess and was right about 1 time in 7 on home recordings, and asks you to teach it.
+`meow predict` prints the same note.
+
+The sound detectors hold up better, because they come from AudioSet, which was trained on millions of YouTube clips rather than one lab's recordings. The hiss threshold changed in v0.4.1 after the first Commons hisses failed; on 9 new Freesound hisses it caught 2, so hissing is still often missed even if it rarely false-alarms. Moving thresholds can't fix hissing or yowling: real hisses score 0.000–0.036 and ordinary meows up to 0.02, and fight yowls score 0.00–0.64 while loud begging meows reach 0.63. Fixing these needs labelled hisses and fights to train on.
 
 ### Every cat is different
 

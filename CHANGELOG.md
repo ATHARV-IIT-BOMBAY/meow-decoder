@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.3 (2026-11-21)
+
+- The app now says under every untaught situation guess that it's a rough guess (right about 1 time in 7 on real
+  home recordings) and asks you to teach it. `meow predict` prints the same note.
+- Tried to make the situation model work on real recordings: low-pass, cutting to the meow, re-centring, training
+  through simulated rooms, the AST encoder, and adding real meows to training. None is good enough to ship; numbers
+  in the README, scripts in `benchmark/probes/`. Teaching under a simulated room change: 48% → 60%.
+- Hissing and yowling thresholds left as they are: on real recordings their scores overlap ordinary meows.
+
 ## 0.4.2 (2026-11-21)
 
 - The real-world test now has 179 clips: 123 more from Freesound (`wild.py search --source freesound`, free API key),

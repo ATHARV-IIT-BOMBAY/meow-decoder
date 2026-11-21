@@ -304,6 +304,7 @@ const LABELS = { ...CONTEXTS, ...PRESETS };
 const SIGNAL_MOOD = { Purr: "B", Hiss: "I", Caterwaul: "F" };  // cat face for purring, hissing, yowling
 const LEARNED_AFTER = 3;   // a label taught fewer times than this shows "learning" instead of a percentage
 const UNSURE_BELOW = 0.5;  // top answer under this: say it's between the top two
+const UNTAUGHT = "Rough guess: untaught, it was right about 1 time in 7 on real home recordings. Teach it a few meows to fix that.";  // benchmark/wild.py, v0.4.2
 const stored = (() => { try { return localStorage.getItem("catId") || ""; } catch { return ""; } })();
 const state = { cats: [], catId: stored, clip: null, last: null, taught: null, sampleId: null, busy: false, starting: false, share: false, where: "", config: null };
 const session = (crypto.randomUUID?.() || String(Math.random()).slice(2)).replace(/-/g, "");  // one per visit, for dataset splits
@@ -497,11 +498,11 @@ function show(r, scroll = true) {
   const who = current()?.name;
   if (unsure) {
     $("#quote").textContent = `It's between ${short(top)} and ${short(second)}.`;
-    $("#sub").textContent = `Not sure: ${Math.round(top.p * 100)}% vs ${Math.round(second.p * 100)}%${who ? `. Telling it which one helps it learn ${who}.` : "."}`;
+    $("#sub").textContent = r.taught ? `Not sure: ${Math.round(top.p * 100)}% vs ${Math.round(second.p * 100)}%${who ? `. Telling it which one helps it learn ${who}.` : "."}` : UNTAUGHT;
   } else {
     $("#quote").textContent = `“${top.line}”`;
     $("#sub").textContent = learning(top.key) ? `Still learning “${short(top)}” for ${who}: teach it ${LEARNED_AFTER - (current()?.counts[top.key] || 0)} more` :
-      `${Math.round(top.p * 100)}% likely · ${r.taught ? `tuned to ${who}` : "general model, not tuned to this cat"}`;
+      r.taught ? `${Math.round(top.p * 100)}% likely · tuned to ${who}` : UNTAUGHT;
   }
   $("#warn").hidden = r.is_cat;
   $("#nomeow").hidden = r.has_meow || !r.is_cat;

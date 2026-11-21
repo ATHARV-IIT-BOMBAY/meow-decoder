@@ -218,7 +218,7 @@ class Head:
 
     def personalized(self, samples: list[tuple[np.ndarray, str]], weight: float = 20) -> Head:
         """Refit on the base meows plus one cat's (embedding, label) pairs, each weighted `weight` times.
-        3 meows per situation took unseen-cat accuracy from 66% to 80% in the benchmark."""
+        3 meows per situation took unseen-cat accuracy from 65% to 72% on another recording session."""
         if not samples:
             return self
         X = np.vstack([self.X, [e for e, _ in samples]])
