@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "meow-decoder"
-version = "0.5.0"
+version = "0.5.1"
 description = "Guess what a cat's meow is about, with honest percentages. Learns your own cat."
 readme = "README.md"
 license = "MIT"
@@ -38,7 +38,7 @@ Homepage = "https://github.com/ATHARV-IIT-BOMBAY/meow-decoder"
 packages = ["meow_decoder"]
 
 [tool.setuptools.package-data]
-meow_decoder = ["static/*", "static/samples/*", "splits.json", "NOTICE", "pitch.npz", "detectors.npz"]
+meow_decoder = ["static/*", "static/samples/*", "splits.json", "NOTICE", "pitch.npz", "detectors.npz", "detectors_ast.npz"]
 
 [tool.ruff]
 line-length = 140

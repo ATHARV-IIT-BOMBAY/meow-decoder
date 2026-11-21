@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.1 (2026-11-21)
+
+- AST mode (commercial use) gets a yowl detector on AudioSet's 527 scores, trained only on CC0 and CC BY audio
+  (`meow_decoder/detectors_ast.npz`): real fights and mating calls caught 12 → 20 of 24, false alarms 16 → 20 of 142.
+  Hiss and purr detectors trained the same way didn't beat AudioSet's scores on the real-world test, so AST mode
+  keeps those.
+- `benchmark/detectors.py` takes `--encoder`, filters training audio by licence for AST mode, and decides what ships
+  by a fixed rule: catch more than AudioSet, with more extra catches than extra false alarms.
+- `benchmark/wild.py evaluate --encoder ast` writes `wild_report_ast.json`.
+
 ## 0.5.0 (2026-11-21)
 
 **Situation guess for cats nobody has taught yet now comes from the meow's pitch contour.** On 179 real recordings from

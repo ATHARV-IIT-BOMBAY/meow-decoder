@@ -7,6 +7,11 @@ and CatMeows. Nothing from an uploader in the real-world test (benchmark/wild_la
 
     python benchmark/detectors.py features   # embed everything once (cached in data/detectors/)
     python benchmark/detectors.py build      # -> meow_decoder/detectors.npz, benchmark/detector_report.json
+    python benchmark/detectors.py features --encoder ast && python benchmark/detectors.py build --encoder ast
+        # -> detectors_ast.npz for the commercial-safe mode, trained only on CC0 / CC BY audio
+
+A detector ships when, on the real-world test, the extra clips it catches outnumber the extra false alarms it raises
+compared with AudioSet's score (with BEATs: hissing and yowling; purring caught 3 more but raised 6 more).
 """
 
 import argparse
@@ -28,9 +33,6 @@ from meow_decoder import bench, core  # noqa: E402
 DATA, FSD = Path("data/detectors"), Path("data/fsd50k")
 EXTRA = Path(__file__).with_name("detector_labels.csv")
 TARGET_FALSE_ALARMS = 0.01  # on training negatives, out of fold
-# Shipped: hissing and yowling, which beat AudioSet's scores on the real-world test. Purring stays with AudioSet: the detector
-# caught 29 of 30 real purrs (AudioSet 26) but with 15 false alarms instead of 9, so it isn't clearly better.
-SHIP = {"Hiss", "Caterwaul"}
 # detector -> (positive labels, labels left out of training and scoring for it: they contain the sound or imitate it)
 TASKS = {
     "Purr": ({"purr"}, {"human"}),
@@ -58,7 +60,8 @@ def fsd_clips(test_ids, test_uploaders, n_other=300, n_hiss=150):
             label, n["other"] = "not_cat", n["other"] + 1
         else:
             continue
-        out.append({"id": f"fsd:{r['fname']}", "label": label, "uploader": up, "source": "fsd50k", "fsd": (r["fname"], split)})
+        out.append({"id": f"fsd:{r['fname']}", "label": label, "uploader": up, "source": "fsd50k", "fsd": (r["fname"], split),
+                    "license": info[r["fname"]]["license"]})  # fmt: skip
     return out
 
 
@@ -77,10 +80,11 @@ def clip_list():
             fsd_ids[r["freesound_id"]]["label"] = r["label"]
             continue
         clips.append({"id": "extra:" + r["freesound_id"], "label": r["label"], "uploader": r["uploader"], "source": "freesound",
+                      "license": r["license"],
                       "url": cand[r["freesound_id"]]["url"], "path": str(DATA / "audio" / f"{r['freesound_id']}.wav")})  # fmt: skip
     files, y, cats, _ = bench.catmeows("data/dataset")
-    clips += [{"id": "catmeows:" + f.name, "label": "catmeows", "uploader": "catmeows:" + c, "source": "catmeows", "path": str(f)}
-              for f, c in zip(files, cats)]  # fmt: skip
+    clips += [{"id": "catmeows:" + f.name, "label": "catmeows", "uploader": "catmeows:" + c, "source": "catmeows", "path": str(f),
+               "license": "CC BY 4.0"} for f, c in zip(files, cats)]  # fmt: skip
     return clips
 
 
@@ -94,7 +98,12 @@ def ast_all(wave):
     return torch.sigmoid(logits).max(0).values.cpu().numpy()
 
 
-def features(_):
+def commercial(lic: str) -> bool:
+    lic = lic.lower()
+    return "publicdomain/zero" in lic or "/licenses/by/" in lic or lic in ("cc0", "cc by", "cc by 4.0")
+
+
+def features(a):
     from huggingface_hub import hf_hub_download
 
     DATA.mkdir(parents=True, exist_ok=True)
@@ -102,8 +111,8 @@ def features(_):
     cache = dict(np.load(cache_file, allow_pickle=False)) if cache_file.exists() else {}
     clips = clip_list()
     for i, c in enumerate(clips):
-        if f"beats|{c['id']}" in cache:
-            continue
+        if f"ast|{c['id']}" in cache and (a.encoder != "beats" or f"beats|{c['id']}" in cache):
+            continue  # "ast|" holds AudioSet's 527 scores, which AST mode's detectors use
         if "fsd" in c:
             path = Path(hf_hub_download("Fhrozen/FSD50k", f"clips/{c['fsd'][1]}/{c['fsd'][0]}.wav", repo_type="dataset"))
         else:
@@ -113,7 +122,9 @@ def features(_):
                 subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-user_agent", UA, "-i", c["url"], "-t", "30", "-vn", "-ac", "1",
                                 "-ar", "16000", str(path)], check=True, timeout=120)  # fmt: skip
         wave = core.load(path) if c["source"] == "catmeows" else core.decode(path.read_bytes())
-        cache[f"beats|{c['id']}"], cache[f"ast|{c['id']}"] = core.embedding(wave, "beats"), ast_all(wave)
+        cache[f"ast|{c['id']}"] = ast_all(wave)
+        if a.encoder == "beats":
+            cache[f"beats|{c['id']}"] = core.embedding(wave, "beats")
         if i % 25 == 0:
             np.savez(cache_file, **cache)
             print(i, len(clips), flush=True)
@@ -145,23 +156,40 @@ def threshold(X, yb, groups):
     return float(np.quantile(oof[~yb], 1 - TARGET_FALSE_ALARMS))
 
 
-def build(_):
+def build(a):
     from sklearn.model_selection import GroupKFold
     from transformers import AutoConfig
 
     clips = json.loads((DATA / "clips.json").read_text())
     cache = np.load(DATA / "features.npz")
-    B = np.array([cache[f"beats|{c['id']}"] for c in clips])
     A = np.array([cache[f"ast|{c['id']}"] for c in clips])
+    # BEATs mode: its embedding. AST mode: AudioSet's 527 scores as log-odds (as raw probabilities they caught only
+    # 2 of 13 hisses and 5 of 24 yowls). Both are computed for every clip anyway.
+    features = "embedding" if a.encoder == "beats" else "audioset"
+    B = (
+        np.array([cache[f"beats|{c['id']}"] for c in clips])
+        if a.encoder == "beats"
+        else np.log(np.clip(A, 1e-6, 1) / np.clip(1 - A, 1e-6, 1))
+    )
     lab, src, up = (np.array([c[k] for c in clips]) for k in ("label", "source", "uploader"))
     col = {v: int(k) for k, v in AutoConfig.from_pretrained(core.AST_ID, revision=core.AST_REVISION).id2label.items()}
     train, test = src != "wild", src == "wild"
-    saved, report = {}, {"training_clips": {s: int((src == s).sum()) for s in np.unique(src[train])}, "detectors": {}}
+    if a.encoder == "ast":  # keep the commercial-safe mode commercial-safe
+        train &= np.array([commercial(c.get("license", "")) for c in clips])
+    saved, report = (
+        {"features": features},
+        {"features": features, "training_clips": {s: int((src == s).sum()) for s in np.unique(src[train])}, "detectors": {}},
+    )
     for key, (pos, ignore) in TASKS.items():
         yb, use = np.isin(lab, list(pos)), ~np.isin(lab, list(ignore))
         t = train & use
         model, th = fit(B[t], yb[t]), threshold(B[t], yb[t], up[t])
-        if key in SHIP:
+        fired = score(model, B) > th
+        rule = A[:, col[key]] >= core.SIGNALS[key][3]
+        w = test & use
+        gain = int((fired & w & yb).sum()) - int((rule & w & yb).sum())
+        cost = int((fired & w & ~yb).sum()) - int((rule & w & ~yb).sum())
+        if gain > 0 and gain > cost:  # catches more, and the extra catches outnumber the extra false alarms
             saved.update({f"{key}_{n}": v for n, v in zip(("mean", "scale", "coef", "intercept"), model)} | {f"{key}_threshold": th})
         # held-out checks inside the training sources: each uploader (or CatMeows cat) scored by a model that never heard it
         oof = np.zeros(len(yb))
@@ -170,12 +198,9 @@ def build(_):
             m_ = fit(B[idx[tr]], yb[idx[tr]])
             th_ = threshold(B[idx[tr]], yb[idx[tr]], up[idx[tr]])
             oof[idx[te]] = score(m_, B[idx[te]]) - th_
-        fired = score(model, B) > th
-        rule = A[:, col[key]] >= core.SIGNALS[key][3]
-        w = test & use
         rate = lambda m, sel: f"{int(m[sel].sum())}/{int(sel.sum())}"  # noqa: E731
         report["detectors"][key] = {
-            "shipped": key in SHIP,
+            "shipped": gain > 0 and gain > cost,
             "threshold": th,
             "real_world_test": {"caught": rate(fired, w & yb), "false_alarms": rate(fired, w & ~yb),
                                 "audioset_rule_caught": rate(rule, w & yb), "audioset_rule_false_alarms": rate(rule, w & ~yb)},
@@ -187,15 +212,18 @@ def build(_):
             "non_cat_audioset_rule_false_alarms": rate(rule, t & np.isin(lab, ["not_cat", "not_cat_hiss"])),
         }  # fmt: skip
         print(key, json.dumps(report["detectors"][key]))
-    np.savez_compressed(core.DETECTORS, **saved)
-    Path(__file__).with_name("detector_report.json").write_text(json.dumps(report, indent=1))
+    np.savez_compressed(core.DETECTORS[a.encoder], **saved)
+    name = "detector_report.json" if a.encoder == "beats" else f"detector_report_{a.encoder}.json"
+    Path(__file__).with_name(name).write_text(json.dumps(report, indent=1))
 
 
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(required=True)
-    sub.add_parser("features").set_defaults(fn=features)
-    sub.add_parser("build").set_defaults(fn=build)
+    for name, fn in (("features", features), ("build", build)):
+        p = sub.add_parser(name)
+        p.add_argument("--encoder", choices=list(core.ENCODERS), default="beats")
+        p.set_defaults(fn=fn)
     a = ap.parse_args()
     a.fn(a)
 

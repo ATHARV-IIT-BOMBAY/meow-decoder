@@ -1,4 +1,5 @@
 {
+ "features": "embedding",
  "training_clips": {
   "catmeows": 440,
   "freesound": 16,

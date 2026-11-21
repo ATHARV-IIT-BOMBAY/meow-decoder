@@ -91,7 +91,7 @@ sudo apt install ffmpeg        # Ubuntu / Debian
 ```
 
 ```bash
-pip install "meow-decoder @ git+https://github.com/ATHARV-IIT-BOMBAY/meow-decoder@v0.5.0"
+pip install "meow-decoder @ git+https://github.com/ATHARV-IIT-BOMBAY/meow-decoder@v0.5.1"
 ```
 
 The first run downloads about 1 GB of models from Hugging Face (AST, the bioacoustic BEATs encoder and the 5 MB classifier weights), then works offline. Every download is pinned to an exact revision, so an install keeps getting the same models. It runs fine on a laptop CPU (on Apple Silicon, AST also uses the GPU). A prediction takes about 0.2 seconds.
@@ -337,7 +337,7 @@ Treat the 45% with care. Only 5 stressed and 3 attention meows have a clear labe
 
 Adding real meows looks like a fix and isn't: it learned "sounds like a home recording, so food", and got 0 of 4 attention and 1 of 6 stressed meows. Flagging recordings that sound unlike the training data, so the app could say "I can't tell", caught only a third of real meows.
 
-**Hissing and yowling.** AudioSet's scores couldn't be fixed by moving thresholds: real hisses scored 0.000–0.036 while ordinary meows reached 0.02, and AudioSet's hiss score at 0.01 fired on 73 of 450 non-cat sounds such as steam and fans. The new detectors ([`benchmark/detectors.py`](benchmark/detectors.py)) are small classifiers on the BEATs embedding, trained on FSD50K's human-labelled cat clips and other sounds, 19 more Freesound fight and mating recordings, and CatMeows. Nothing from an uploader in this test was used, so this stays a clean test. Their threshold was set to 1% false alarms on the training sounds, before scoring this test. They false-alarm on 5 (hiss) and 2 (yowl) of 450 non-cat sounds. A purr detector was built the same way but isn't shipped: 29 of 30 purrs caught against AudioSet's 26, but 15 false alarms instead of 9. With `--encoder ast` (commercial use) the AudioSet scores are still used, because some FSD50K clips are non-commercial.
+**Hissing and yowling.** AudioSet's scores couldn't be fixed by moving thresholds: real hisses scored 0.000–0.036 while ordinary meows reached 0.02, and AudioSet's hiss score at 0.01 fired on 73 of 450 non-cat sounds such as steam and fans. The new detectors ([`benchmark/detectors.py`](benchmark/detectors.py)) are small classifiers on the BEATs embedding, trained on FSD50K's human-labelled cat clips and other sounds, 19 more Freesound fight and mating recordings, and CatMeows. Nothing from an uploader in this test was used, so this stays a clean test. Their threshold was set to 1% false alarms on the training sounds, before scoring this test. They false-alarm on 5 (hiss) and 2 (yowl) of 450 non-cat sounds. A purr detector was built the same way but isn't shipped: 29 of 30 purrs caught against AudioSet's 26, but 15 false alarms instead of 9. With `--encoder ast` (commercial use), a separate yowl detector reads all 527 of AudioSet's scores and was trained only on CC0 and CC BY audio (v0.5.1): it caught 20 of 24 fights and mating calls (AudioSet 12), with 20 false alarms instead of 16. In that mode, hissing and purring stay with AudioSet's scores, because detectors trained the same way didn't beat them on the real-world test (hiss: 2 more caught but 4 more false alarms).
 
 ### Every cat is different
 
@@ -402,7 +402,7 @@ meow serve --encoder ast
 meow predict --encoder ast my-cat.m4a
 ```
 
-The meow code itself is MIT either way. Purring, hissing and yowling always come from AST.
+The meow code itself is MIT either way. Whether a clip is a cat, has a meow, or has talking always comes from AST. The untaught situation guess comes from the pitch contour in both modes. Hissing and yowling come from detectors on BEATs in the default mode; in AST mode, yowling comes from a detector trained only on CC0 and CC BY audio, and purring and hissing from AudioSet's scores.
 
 ## How it works
 
@@ -451,6 +451,7 @@ mkdir -p data/catsound && curl -L -o data/catsound/s.zip "https://zenodo.org/api
 meow train && meow benchmark             # writes weights/beats.npz, used instead of the downloaded weights
 python benchmark/pitch.py                # rebuilds meow_decoder/pitch.npz (the untaught situation guess)
 python benchmark/detectors.py features && python benchmark/detectors.py build   # rebuilds meow_decoder/detectors.npz
+python benchmark/detectors.py build --encoder ast                                # rebuilds detectors_ast.npz
 ```
 
 The detectors need the real-world clips first (`python benchmark/wild.py download`, which needs a free
@@ -469,6 +470,7 @@ meow_decoder/
   static/            the app: index.html, icons, manifest, service worker, demo samples
   pitch.npz          the pitch-contour situation model (untaught cats)
   detectors.npz      hiss and yowl detectors on the BEATs embedding
+  detectors_ast.npz  yowl detector for AST mode, trained only on CC0 / CC BY audio
   NOTICE             credits and licences for the bundled samples and models
 benchmark/
   evaluate.py        the full held-out report  -> report.json
@@ -539,7 +541,7 @@ Ideas and help are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md) and the issue
 - **[FSD50K](https://zenodo.org/records/4060432)** by Fonseca et al. (2022), human-labelled Freesound clips under their own CC licences: training data for the hiss and yowl detectors, with 19 more Freesound recordings listed in [`benchmark/detector_labels.csv`](benchmark/detector_labels.csv). Some FSD50K clips are non-commercial, so `detectors.npz` is used only with the (non-commercial) BEATs encoder.
 - **Real-world test clips** from [Wikimedia Commons](https://commons.wikimedia.org) and [Freesound](https://freesound.org), credited per clip in [`benchmark/wild_labels.csv`](benchmark/wild_labels.csv). The audio is never redistributed.
 - **Pitch-contour idea:** the Meowsic project, Schötz and van de Weijer, "A Study of Human Perception of Intonation in Domestic Cat Meows", Speech Prosody 2014.
-- **Bundled models:** `pitch.npz` (from CatMeows, CC BY 4.0) and `detectors.npz` (non-commercial, as above).
+- **Bundled models:** `pitch.npz` (from CatMeows, CC BY 4.0), `detectors.npz` (non-commercial, as above) and `detectors_ast.npz` (trained only on CC0 and CC BY clips from FSD50K and Freesound plus CatMeows, so commercial use stays open; attribution in [`meow_decoder/NOTICE`](meow_decoder/NOTICE)).
 - [`meow_decoder/NOTICE`](meow_decoder/NOTICE) lists the bundled samples and models with full credits.
 
 If this helps your research, please cite it ([CITATION.cff](CITATION.cff)) along with CatMeows. Thanks to the MeowSense project for an honest benchmark to compare against, and to the reviewer whose audit led to v0.4.0's corrections.

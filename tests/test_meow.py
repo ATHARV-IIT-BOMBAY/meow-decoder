@@ -104,6 +104,13 @@ def test_trained_detectors_replace_audioset_thresholds():
     out = d.rank(hissy, {**QUIET, "Purr": 0.87})  # AudioSet hears a purr; the detectors decide
     assert [s["key"] for s in out["signals"]] == ["Hiss"] and 0.5 < out["signals"][0]["p"] < 1
     assert d.rank(np.zeros(dim), QUIET)["signals"] == []
+    # AST mode: detectors read all 527 AudioSet scores, kept out of the result
+    yowl = {"mean": np.zeros(527), "scale": np.ones(527), "coef": np.eye(527)[3], "intercept": 0.0, "threshold": 0.0}
+    d.detectors = {"features": np.array("audioset")} | {f"Caterwaul_{n}": v for n, v in yowl.items()}
+    loud = {**QUIET, "_audioset": np.where(np.arange(527) == 3, 0.9, 0.01)}
+    out = d.rank(X[0], loud)
+    assert [s["key"] for s in out["signals"]] == ["Caterwaul"] and "_audioset" not in out["sounds"]
+    assert d.rank(X[0], {**QUIET, "_audioset": np.full(527, 0.01)})["signals"] == []
 
 
 def test_segments_find_the_meow():

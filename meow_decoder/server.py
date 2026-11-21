@@ -290,7 +290,7 @@ def share(home: Path, entry: dict, label: str, t: Teach, user_agent: str) -> dic
     import soundfile as sf
 
     sounds = entry["sounds"]
-    if max(v for k, v in sounds.items() if k != "Speech") < 0.05:
+    if max(v for k, v in sounds.items() if k != "Speech" and not k.startswith("_")) < 0.05:
         return {"shared": False, "share_note": "Not shared: it doesn't sound enough like a cat."}
     if sounds.get("Speech", 0) > SPEECH_MAX:
         return {"shared": False, "share_note": "Not shared: there's talking in it. Record the cat on its own."}

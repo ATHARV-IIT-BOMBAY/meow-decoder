@@ -35,3 +35,9 @@ detectors.npz  Hissing and yowling detectors on the BEATs embedding, used only w
       the Freesound recordings listed in benchmark/detector_labels.csv (CC0 or CC BY; uploaders named there);
       CatMeows (CC BY 4.0).
     Because some FSD50K clips are CC BY-NC, treat detectors.npz as non-commercial, like the BEATs encoder it uses.
+
+detectors_ast.npz  Yowl detector for AST mode, on AudioSet's 527 scores. Trained by benchmark/detectors.py
+    --encoder ast only on clips licensed CC0 or CC BY: FSD50K clips with those licences (each clip's licence and
+    uploader are in FSD50K's metadata, https://doi.org/10.5281/zenodo.4060432), the Freesound recordings in
+    benchmark/detector_labels.csv, and CatMeows (CC BY 4.0). CC BY requires attribution: this notice, FSD50K's
+    metadata and detector_labels.csv provide it.

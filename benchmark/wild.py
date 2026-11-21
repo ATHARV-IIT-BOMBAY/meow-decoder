@@ -253,7 +253,9 @@ def evaluate(a):
         "yowl": detector("Caterwaul", ("yowl", "heat"), among=("hiss",)),  # fights and mating calls; hisses often come with a yowl
         "clips_detail": out,
     }
-    Path(__file__).with_name("wild_report.json").write_text(json.dumps(report, indent=1, ensure_ascii=False))
+    Path(__file__).with_name("wild_report.json" if a.encoder == "beats" else f"wild_report_{a.encoder}.json").write_text(
+        json.dumps(report, indent=1, ensure_ascii=False)
+    )
     print(json.dumps({k: v for k, v in report.items() if k != "clips_detail"}, indent=1, default=float))
 
 

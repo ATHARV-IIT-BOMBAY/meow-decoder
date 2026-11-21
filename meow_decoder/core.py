@@ -159,16 +159,18 @@ def embedding(wave: np.ndarray, encoder: str = "beats") -> np.ndarray:
         return ((h[:, 0] + h[:, 1]) / 2).squeeze(0).cpu().numpy()  # AST pooling: mean of CLS + distill tokens
 
 
-def sounds_in(wave: np.ndarray) -> dict[str, float]:
+def sounds_in(wave: np.ndarray) -> dict:
     """AudioSet probability of each cat sound and of speech. AST hears 10.24 s at a time, so this is the
-    maximum over consecutive 10 s windows of the whole clip."""
+    maximum over consecutive 10 s windows of the whole clip. "_audioset" holds all 527 classes (for the AST-mode
+    yowl detector); keys starting with "_" are internal and never returned to callers."""
     import torch
 
     fe, ast, dev, ids = _ast()
     windows = [wave[i : i + 10 * SR] for i in range(0, max(len(wave) - SR // 2, 1), 10 * SR)]  # skip a last sliver under 0.5 s
     with torch.no_grad():
-        logits = torch.cat([ast(**fe(w, sampling_rate=SR, return_tensors="pt").to(dev)).logits[:, ids] for w in windows])
-    return dict(zip(CAT_LABELS + [SPEECH], torch.sigmoid(logits).max(0).values.tolist()))
+        p = torch.cat([ast(**fe(w, sampling_rate=SR, return_tensors="pt").to(dev)).logits for w in windows]).sigmoid().max(0).values
+    p = p.cpu().numpy()
+    return {**dict(zip(CAT_LABELS + [SPEECH], p[ids].tolist())), "_audioset": p}
 
 
 def analyze(wave: np.ndarray, encoder: str = "beats") -> tuple[np.ndarray, dict[str, float]]:
@@ -183,7 +185,10 @@ def analyze(wave: np.ndarray, encoder: str = "beats") -> tuple[np.ndarray, dict[
 
 PITCH_FEATURES = ["rise_st", "slope_st_per_s", "peak_pos"]
 PITCH_MODEL = Path(__file__).with_name("pitch.npz")  # built by benchmark/pitch.py from CatMeows
-DETECTORS = Path(__file__).with_name("detectors.npz")  # purr/hiss/yowl on the BEATs embedding: benchmark/detectors.py
+DETECTORS = {  # hiss/yowl detectors on each encoder's embedding: benchmark/detectors.py
+    "beats": Path(__file__).with_name("detectors.npz"),
+    "ast": Path(__file__).with_name("detectors_ast.npz"),  # trained only on CC0 / CC BY audio, so commercial use stays open
+}
 
 
 def segments(wave: np.ndarray, sr: int = SR, max_len: float = 4.0) -> list[tuple[int, int]]:
@@ -395,7 +400,7 @@ class Decoder:
         if self.head.encoder != encoder:
             raise ValueError(f"weights were trained for the {self.head.encoder!r} encoder, not {encoder!r}")
         self.pitch_head = Head.load(PITCH_MODEL) if PITCH_MODEL.exists() else None
-        self.detectors = dict(np.load(DETECTORS)) if encoder == "beats" and DETECTORS.exists() else None
+        self.detectors = dict(np.load(DETECTORS[encoder])) if DETECTORS[encoder].exists() else None
 
     def wave(self, audio) -> np.ndarray:
         """audio: path, raw bytes, or 16 kHz mono float array."""
@@ -430,7 +435,7 @@ class Decoder:
         has_meow = is_cat and (sounds["Meow"] >= MEOW_MIN or not signals)
         return {
             "is_cat": is_cat,
-            "sounds": {k: round(v, 3) for k, v in sounds.items()},
+            "sounds": {k: round(v, 3) for k, v in sounds.items() if not k.startswith("_")},
             "signals": signals,
             "has_meow": has_meow,
             "results": results,
@@ -443,7 +448,11 @@ class Decoder:
         d = getattr(self, "detectors", None)
         if d is None or f"{key}_coef" not in d:
             return sounds[key] if sounds[key] >= SIGNALS[key][3] else 0.0
-        z = float((np.asarray(emb) - d[f"{key}_mean"]) / d[f"{key}_scale"] @ d[f"{key}_coef"] + d[f"{key}_intercept"])
+        x = np.asarray(emb)
+        if str(d.get("features", "embedding")) == "audioset":  # AST mode: all 527 AudioSet scores, as log-odds
+            p = np.clip(sounds["_audioset"], 1e-6, 1 - 1e-6)
+            x = np.log(p / (1 - p))
+        z = float((x - d[f"{key}_mean"]) / d[f"{key}_scale"] @ d[f"{key}_coef"] + d[f"{key}_intercept"])
         margin = z - float(d[f"{key}_threshold"])
         return 1 / (1 + np.exp(-margin)) if margin > 0 else 0.0
 
