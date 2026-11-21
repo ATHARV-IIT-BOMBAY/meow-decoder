@@ -261,21 +261,29 @@ def pitch_track(
     return f0
 
 
+def contour(event: np.ndarray) -> tuple[np.ndarray, np.ndarray] | None:
+    """One sound event's pitch in semitones (re A4) and its times in seconds, cleaned; None when too little is voiced."""
+    f0 = pitch_track(event)
+    voiced = ~np.isnan(f0)
+    if voiced.sum() < 8:
+        return None
+    st, t = 12 * np.log2(f0[voiced] / 440), np.where(voiced)[0] * 0.01
+    keep = np.abs(st - np.median(st)) < 7  # drop octave errors: a meow doesn't jump an octave in 10 ms
+    st, t = st[keep], t[keep]
+    if len(st) < 8:
+        return None
+    return np.convolve(np.pad(st, 2, mode="edge"), np.ones(5) / 5, "valid"), t  # smooth tracker jitter over 50 ms
+
+
 def pitch_features(wave: np.ndarray) -> np.ndarray:
     """Contour shape of the loudest three sound events, averaged: rise (last third minus first third, semitones),
     slope (semitones per second) and where the peak falls (0 = start, 1 = end). NaN when no meow pitch is found."""
     rows = []
     for a, b in segments(wave)[:3]:
-        f0 = pitch_track(wave[a:b])
-        voiced = ~np.isnan(f0)
-        if voiced.sum() < 8:
+        c = contour(wave[a:b])
+        if c is None:
             continue
-        st, t = 12 * np.log2(f0[voiced] / 440), np.where(voiced)[0] * 0.01
-        keep = np.abs(st - np.median(st)) < 7  # drop octave errors: a meow doesn't jump an octave in 10 ms
-        st, t = st[keep], t[keep]
-        if len(st) < 8:
-            continue
-        st = np.convolve(np.pad(st, 2, mode="edge"), np.ones(5) / 5, "valid")  # smooth tracker jitter over 50 ms
+        st, t = c
         third = max(len(st) // 3, 1)
         rows.append([st[-third:].mean() - st[:third].mean(), np.polyfit(t, st, 1)[0], float(np.argmax(st)) / len(st)])
     return np.mean(rows, 0) if rows else np.full(len(PITCH_FEATURES), np.nan)
@@ -290,6 +298,19 @@ def fit_pitch_head(F: np.ndarray, y: np.ndarray) -> Head:
     Z = np.nan_to_num((F - mean) / scale)
     lr = LogisticRegression(C=0.1, max_iter=2000, class_weight="balanced").fit(Z, y)
     return Head(lr.classes_, mean, scale, lr.coef_, lr.intercept_, F, np.asarray(y), "pitch")
+
+
+def pitch_line(wave: np.ndarray, points: int = 48) -> dict | None:
+    """The loudest meow's pitch for drawing: semitones relative to its start, at most `points` values, and its rise."""
+    for a, b in segments(wave)[:3]:
+        c = contour(wave[a:b])
+        if c is not None:
+            st = c[0] - c[0][0]
+            idx = np.linspace(0, len(st) - 1, min(points, len(st))).round().astype(int)
+            third = max(len(st) // 3, 1)
+            return {"semitones": [round(float(x), 2) for x in st[idx]], "seconds": round(len(st) * 0.01, 2),
+                    "rise": round(float(st[-third:].mean() - st[:third].mean()), 2)}  # fmt: skip
+    return None
 
 
 # ---------- classifier head ----------

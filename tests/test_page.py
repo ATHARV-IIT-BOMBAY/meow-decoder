@@ -84,6 +84,10 @@ def test_unsure_says_its_between_two(page):
     pg, mode = page
     play(pg, mode, "hungry.wav", "unsure")
     assert "It's between" in pg.inner_text("#quote") and pg.is_visible("#opts")
+    # a bundled sample shows the real answer and how the guess did
+    truth, order = pg.inner_text("#truth"), [t.split("\n")[0] for t in pg.locator("#opts .t").all_inner_texts()]
+    expected = ("✅", "🟡", "❌")[min(order.index("Food, please"), 2)]
+    assert "waiting for food" in truth and expected in truth
 
 
 def test_teach_then_undo(page):

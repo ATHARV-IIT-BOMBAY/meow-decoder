@@ -56,6 +56,7 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 
 /* cat switcher */
 .cats { display: flex; gap: 8px; overflow-x: auto; padding: 8px 2px 12px; scrollbar-width: none; }
+.cats.more-right { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 48px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 48px), transparent); }
 .cats::-webkit-scrollbar { display: none; }
 .chip {
   flex: none; display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 4px 16px 4px 4px;
@@ -65,10 +66,11 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .chip .av { width: 34px; height: 34px; border-radius: 50%; background: var(--pad) center/cover; display: grid; place-items: center; font-size: 18px; }
 .chip.add { padding: 4px 16px; border-style: dashed; }
 
-.grid { display: grid; gap: 24px; grid-template-areas: "stage" "side" "more"; }
+.grid { display: grid; gap: 24px; grid-template-areas: "stage" "more" "side"; }  /* phone, nothing heard yet: samples first */
+.grid.heard { grid-template-areas: "stage" "side" "more"; }
 .stage { grid-area: stage; } .side { grid-area: side; } .more { grid-area: more; text-align: center; }
 @media (min-width: 860px) {
-  .grid { grid-template-columns: 1.05fr 1fr; grid-template-areas: "stage side" "more side"; align-items: start; column-gap: 40px; row-gap: 0; }
+  .grid, .grid.heard { grid-template-columns: 1.05fr 1fr; grid-template-rows: auto 1fr; grid-template-areas: "stage side" "more side"; align-items: start; column-gap: 40px; row-gap: 0; }
   .side { padding-top: 24px; }
 }
 
@@ -154,6 +156,13 @@ header { display: flex; align-items: center; justify-content: space-between; gap
 .signal strong { font-size: 18px; }
 .signal p { margin: 2px 0 0; font-size: 15px; opacity: .9; }
 .nomeow { margin: 0 0 16px; }
+.pitch { margin: 12px 0 0; padding-top: 12px; border-top: 1px solid var(--line); }
+.pitch svg { display: block; width: 100%; height: 52px; overflow: visible; }
+.pitch .line { fill: none; stroke: var(--amber); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.pitch .base { stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.pitch p { margin: 6px 0 0; font-size: 14px; color: var(--plum-soft); }
+.truth { display: flex; gap: 10px; align-items: flex-start; background: var(--surface); border: 2px solid var(--line); border-radius: var(--radius-sm); padding: 10px 14px; margin: 0 0 16px; font-size: 15px; }
+.truth strong { display: block; }
 .teach .btn.suggest { border-color: var(--amber); background: var(--amber); color: #2E1A2F; }
 .teach .btn.suggest:disabled { opacity: .45; }
 #shareWhere { min-height: 40px; border-radius: 999px; border: 2px solid var(--line); background: var(--surface); padding: 0 14px; margin: -4px 0 14px 30px; }
@@ -188,6 +197,8 @@ label { display: block; font-weight: 600; font-size: 15px; margin: 12px 0 6px; }
 dialog input[type=text] { width: 100%; min-height: 44px; border-radius: var(--radius-sm); border: 2px solid var(--line); background: var(--paw); padding: 0 14px; }
 .photo { display: flex; align-items: center; gap: 12px; }
 .photo .av { width: 64px; height: 64px; border-radius: 20px; background: var(--pad) center/cover; display: grid; place-items: center; font-size: 30px; flex: none; }
+.photo .btn { display: inline-flex; align-items: center; margin: 0; cursor: pointer; }
+.photo .name { font-size: 14px; color: var(--plum-soft); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 dialog .actions { justify-content: flex-end; margin-top: 20px; }
 .toast {
   position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom)); transform: translate(-50%, 140%);
@@ -247,10 +258,10 @@ dialog .actions { justify-content: flex-end; margin-top: 20px; }
       <div class="samples">
         No cat nearby? Play a sound from the research datasets:
         <div class="actions">
-          <button class="btn" data-sample="hungry.wav">🍗 Hungry cat</button>
-          <button class="btn" data-sample="brushed.wav">😽 Cat being brushed</button>
-          <button class="btn" data-sample="alone.wav">🙀 Cat in a new place</button>
-          <button class="btn" data-sample="purring.mp3">😌 Purring cat</button>
+          <button class="btn" data-sample="hungry.wav" data-truth="F">🍗 Hungry cat</button>
+          <button class="btn" data-sample="brushed.wav" data-truth="B">😽 Cat being brushed</button>
+          <button class="btn" data-sample="alone.wav" data-truth="I">🙀 Cat in a new place</button>
+          <button class="btn" data-sample="purring.mp3" data-truth="Purr">😌 Purring cat</button>
         </div>
       </div>
     </section>
@@ -263,9 +274,10 @@ dialog .actions { justify-content: flex-end; margin-top: 20px; }
       <div id="result" hidden>
         <div id="signals"></div>
         <p class="sub nomeow" id="nomeow" hidden>There's no meow in this clip, so there's no situation to guess.</p>
-        <div class="bubble" id="bubble"><p class="quote" id="quote"></p><p class="sub" id="sub"></p></div>
+        <div class="bubble" id="bubble"><p class="quote" id="quote"></p><p class="sub" id="sub"></p><div class="pitch" id="pitch" hidden></div></div>
         <div class="warn" id="warn" hidden>This doesn't sound much like a cat. Try again closer to the cat, away from fans and traffic.</div>
         <ul class="opts" id="opts"></ul>
+        <div class="truth" id="truth" hidden></div>
         <div class="teach" id="teach"></div>
       </div>
       <div id="mycat"></div>
@@ -279,8 +291,8 @@ dialog .actions { justify-content: flex-end; margin-top: 20px; }
     <p>The decoder learns each cat's voice. Three meows per situation is usually enough to make it noticeably better for that cat.</p>
     <label for="catName">Name</label>
     <input type="text" id="catName" maxlength="40" required placeholder="Biscuit, Hostel C Ginger…" autocomplete="off">
-    <label for="catPhoto">Photo (optional)</label>
-    <div class="photo"><div class="av" id="photoPrev">🐱</div><input type="file" id="catPhoto" accept="image/*"></div>
+    <p style="font-weight:600;margin:12px 0 6px">Photo (optional)</p>
+    <div class="photo"><div class="av" id="photoPrev">🐱</div><label class="btn" for="catPhoto">Choose a photo</label><span class="name" id="photoName"></span><input type="file" id="catPhoto" accept="image/*" class="sr"></div>
     <div class="actions"><button type="button" class="btn" value="cancel" id="addCancel">Cancel</button><button class="btn primary" id="addSave">Add cat</button></div>
   </form>
 </dialog>
@@ -288,7 +300,7 @@ dialog .actions { justify-content: flex-end; margin-top: 20px; }
 <dialog id="aboutDlg">
   <h2>How it works</h2>
   <p>Cats don't speak in sentences, so this doesn't translate. It hears the meow and guesses which situation it sounds like, using a model trained on 440 meows from 21 cats recorded while waiting for food, being brushed, or alone somewhere unfamiliar.</p>
-  <p>Until you teach it your cat, it guesses from the shape of the meow's pitch: meows that rise tend to be about food, meows that fall tend to mean stress (a pattern phoneticians at Lund University found across many cats). On 58 meows that people recorded at home and shared online, that guess was right about half the time and in its top two about 2 times in 3, so it usually says "it's between" two. It can't tell an attention meow apart by pitch. Once you teach it your cat, it learns from the sound of your own cat's meows instead: 3 meows per situation raised its top guess from about 65% to 72% on recordings made another day. Purring, hissing and yowling come from a separate sound model.</p>
+  <p>Until you teach it your cat, it guesses from the shape of the meow's pitch: meows that rise tend to be about food, meows that fall tend to mean stress (a pattern phoneticians at Lund University found across many cats). On 55 meows that people recorded at home and shared online, that guess was right about half the time and in its top two about 2 times in 3, so it usually says "it's between" two. It can't tell an attention meow apart by pitch. Once you teach it your cat, it learns from the sound of your own cat's meows instead: 3 meows per situation raised its top guess from about 65% to 72% on recordings made another day. Purring, hissing and yowling come from a separate sound model.</p>
   <p>It also recognises purring, hissing and yowling directly, using a general sound model trained on thousands of clips. You can teach it more situations, like greeting you or wanting to go out, but those only work for cats you have taught. It can't tell pain from other sounds: in our tests, models that seemed to were recognising the recording, not the cat. If a cat seems hurt or unwell, ask a vet, not an app.</p>
   <p>Meow data: CatMeows by Ludovico et al., CC BY 4.0. Purring sample: Cat Sound Classification V2 by Pandeya et al., CC BY 4.0. Sound model: <span id="encoderInfo">loading…</span>.</p>
   <form method="dialog" class="actions"><button class="btn primary">Got it</button></form>
@@ -304,9 +316,14 @@ const LABELS = { ...CONTEXTS, ...PRESETS };
 const SIGNAL_MOOD = { Purr: "B", Hiss: "I", Caterwaul: "F" };  // cat face for purring, hissing, yowling
 const LEARNED_AFTER = 3;   // a label taught fewer times than this shows "learning" instead of a percentage
 const UNSURE_BELOW = 0.5;  // top answer under this: say it's between the top two
-const UNTAUGHT = "Guessed from the pitch: rising meows lean food, falling ones stress. Right about half the time on real home recordings. Teach it your cat to do better.";  // benchmark/wild.py, v0.4.2
+const UNTAUGHT = "Guessed from the pitch: rising meows lean food, falling ones stress. Right about half the time on real home recordings. Teach it your cat to do better.";  // benchmark/wild.py, v0.5
+const WELL_TAUGHT = 9;  // about 3 per situation; below this a taught cat's percentages are early guesses
+const TRUTH = {  // what was really happening in each bundled sample (meow_decoder/NOTICE)
+  F: "This cat was waiting for food", B: "This cat was being brushed", I: "This cat had just been left somewhere unfamiliar",
+  Purr: "This cat was resting and purring",
+};
 const stored = (() => { try { return localStorage.getItem("catId") || ""; } catch { return ""; } })();
-const state = { cats: [], catId: stored, clip: null, last: null, taught: null, sampleId: null, busy: false, starting: false, share: false, where: "", config: null };
+const state = { cats: [], catId: stored, clip: null, last: null, taught: null, sampleId: null, busy: false, starting: false, share: false, where: "", config: null, truth: null };
 const session = (crypto.randomUUID?.() || String(Math.random()).slice(2)).replace(/-/g, "");  // one per visit, for dataset splits
 const cat = $("#cat"), catBtn = $("#catBtn");
 
@@ -357,8 +374,15 @@ function renderCats() {
   nav.append(mk(null), ...state.cats.map(mk));
   const add = document.createElement("button"); add.className = "chip add"; add.textContent = "+ Add a cat"; add.onclick = openAdd;
   nav.append(add);
+  fadeChips();
   renderMyCat();
 }
+function fadeChips() {  // hint that the cat row scrolls sideways when it doesn't fit
+  const nav = $("#cats");
+  nav.classList.toggle("more-right", nav.scrollLeft + nav.clientWidth < nav.scrollWidth - 4);
+}
+$("#cats").addEventListener("scroll", fadeChips, { passive: true });
+addEventListener("resize", fadeChips);
 function pattern(c) {  // e.g. "Most food meows around 7 pm", from taught meows that carry the local hour
   let best = null;
   for (const label of Object.keys(c.counts)) {
@@ -404,7 +428,7 @@ async function removeSample(c, id) {
 }
 
 let photoData = "";
-function openAdd() { $("#addForm").reset(); photoData = ""; avatar($("#photoPrev"), { photo: "" }); $("#addDlg").showModal(); $("#catName").focus(); }
+function openAdd() { $("#addForm").reset(); photoData = ""; $("#photoName").textContent = ""; avatar($("#photoPrev"), { photo: "" }); $("#addDlg").showModal(); $("#catName").focus(); }
 $("#addCancel").onclick = () => $("#addDlg").close();
 $("#catPhoto").onchange = async (e) => {
   const f = e.target.files[0]; if (!f) return;
@@ -412,7 +436,7 @@ $("#catPhoto").onchange = async (e) => {
   if (!img) return toast("Couldn't open that image");
   const s = Math.min(img.width, img.height), cv = document.createElement("canvas"); cv.width = cv.height = 240;
   cv.getContext("2d").drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, 240, 240);
-  photoData = cv.toDataURL("image/jpeg", 0.8); avatar($("#photoPrev"), { photo: photoData });
+  photoData = cv.toDataURL("image/jpeg", 0.8); avatar($("#photoPrev"), { photo: photoData }); $("#photoName").textContent = f.name;
 };
 $("#addForm").onsubmit = async (e) => {
   e.preventDefault();
@@ -464,10 +488,11 @@ document.querySelectorAll("[data-sample]").forEach((b) => b.onclick = async () =
   if (state.busy || rec) return;
   const blob = await (await fetch(`/samples/${b.dataset.sample}`, { cache: "no-cache" })).blob();
   new Audio(URL.createObjectURL(blob)).play().catch(() => {});
-  analyse(blob);
+  analyse(blob, b.dataset.truth);
 });
 
-async function analyse(blob) {
+async function analyse(blob, truth = null) {
+  state.truth = truth;  // only the bundled samples come with the real answer
   state.busy = true; setMood("thinking"); setStatus("Thinking…", "Comparing this meow with hundreds of others.");
   const fd = new FormData(); fd.append("audio", blob, "meow"); fd.append("cat_id", state.catId);
   try { state.taught = null; state.sampleId = null; state.share = false; show(await api("/api/predict", { method: "POST", body: fd })); }
@@ -476,7 +501,7 @@ async function analyse(blob) {
 }
 async function rerank() {  // the same recording, ranked for the cat just picked
   try { state.taught = null; state.sampleId = null; show(await postJSON("/api/rerank", { clip: state.clip, cat_id: state.catId }), false); }
-  catch { state.clip = null; $("#result").hidden = true; $("#empty").hidden = false; setMood("idle"); setStatus("Tap the cat to listen", "Pick a cat, then record a meow."); }
+  catch { state.clip = null; $("#result").hidden = true; $("#empty").hidden = false; $("main").classList.remove("heard"); setMood("idle"); setStatus("Tap the cat to listen", "Pick a cat, then record a meow."); }
 }
 
 function show(r, scroll = true) {
@@ -494,16 +519,19 @@ function show(r, scroll = true) {
     d.querySelector(".em").textContent = x.emoji; d.querySelector("strong").textContent = `${x.title} heard`; d.querySelector("p").textContent = x.meaning;
     sigBox.append(d);
   }
-  $("#empty").hidden = true; $("#result").hidden = false;
+  $("#empty").hidden = true; $("#result").hidden = false; $("main").classList.add("heard");
   const who = current()?.name;
+  showTruth(r);
   if (unsure) {
     $("#quote").textContent = `It's between ${short(top)} and ${short(second)}.`;
     $("#sub").textContent = r.taught ? `Not sure: ${Math.round(top.p * 100)}% vs ${Math.round(second.p * 100)}%${who ? `. Telling it which one helps it learn ${who}.` : "."}` : UNTAUGHT;
   } else {
     $("#quote").textContent = `“${top.line}”`;
     $("#sub").textContent = learning(top.key) ? `Still learning “${short(top)}” for ${who}: teach it ${LEARNED_AFTER - (current()?.counts[top.key] || 0)} more` :
-      r.taught ? `${Math.round(top.p * 100)}% likely · tuned to ${who}` : UNTAUGHT;
+      !r.taught ? UNTAUGHT : r.taught >= WELL_TAUGHT ? `${Math.round(top.p * 100)}% likely · tuned to ${who}` :
+      `${Math.round(top.p * 100)}% likely, but it has learned ${who} from only ${r.taught} meow${r.taught > 1 ? "s" : ""}. Treat it as a guess until it has about 3 of each.`;
   }
+  showPitch(r);
   $("#warn").hidden = r.is_cat;
   $("#nomeow").hidden = r.has_meow || !r.is_cat;
   $("#bubble").hidden = $("#opts").hidden = !r.has_meow;
@@ -518,6 +546,31 @@ function show(r, scroll = true) {
   }
   renderTeach();
   if (scroll && matchMedia("(max-width: 859px)").matches) catBtn.scrollIntoView({ behavior: "smooth", block: "start" }); // cat's face + quote in view
+}
+
+function showTruth(r) {  // for a bundled sample: what was really happening, and how the guess compares
+  const box = $("#truth"), k = state.truth;
+  box.hidden = !k; if (!k) return;
+  const keys = r.results.map((o) => o.key), heard = r.signals.map((s) => s.key);
+  const verdict = k === "Purr" ? (heard.includes("Purr") ? "✅ It heard the purring." : "❌ It missed the purring.") :
+    !r.has_meow ? "It didn't find a meow to read." : keys[0] === k ? "✅ Its first guess was right." :
+    keys[1] === k ? "🟡 Right answer second. Untaught guesses are right about half the time." : "❌ It missed this one. Untaught guesses are right about half the time.";
+  box.innerHTML = "<span aria-hidden='true'>🔎</span><div><strong class='answer'></strong><span class='verdict'></span></div>";
+  box.querySelector(".answer").textContent = `The real answer: ${TRUTH[k].charAt(0).toLowerCase() + TRUTH[k].slice(1)}.`;
+  box.querySelector(".verdict").textContent = verdict;
+}
+function showPitch(r) {  // the loudest meow's pitch, drawn, when the guess came from it
+  const box = $("#pitch"), line = r.pitch_line;
+  box.hidden = r.guess_from !== "pitch" || !r.has_meow; if (box.hidden) return;
+  if (!line) { box.innerHTML = "<p>It couldn't follow this meow's pitch, so it can't lean either way.</p>"; return; }
+  const v = line.semitones, lo = Math.min(...v, -1), hi = Math.max(...v, 1), W = 300, H = 52;
+  const pts = v.map((y, i) => `${(i / Math.max(v.length - 1, 1)) * W},${H - 4 - ((y - lo) / (hi - lo)) * (H - 8)}`).join(" ");
+  const y0 = H - 4 - ((0 - lo) / (hi - lo)) * (H - 8);
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img"><line class="base" x1="0" x2="${W}" y1="${y0}" y2="${y0}"/><polyline class="line" points="${pts}"/></svg><p></p>`;
+  const rise = line.rise, st = Math.abs(rise).toFixed(1);
+  const text = rise > 1 ? `This meow rose ${st} semitones. Rising meows lean food.` : rise < -1 ? `This meow fell ${st} semitones. Falling meows lean stress.` : "This meow stayed fairly level, so pitch doesn't lean far either way.";
+  box.querySelector("svg").setAttribute("aria-label", text);
+  box.querySelector("p").textContent = text + ` (${line.seconds.toFixed(1)} s, dashed line = where it started)`;
 }
 
 /* ---------- teaching ---------- */

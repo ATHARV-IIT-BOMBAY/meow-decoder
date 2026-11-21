@@ -91,7 +91,7 @@ sudo apt install ffmpeg        # Ubuntu / Debian
 ```
 
 ```bash
-pip install "meow-decoder @ git+https://github.com/ATHARV-IIT-BOMBAY/meow-decoder@v0.5.1"
+pip install "meow-decoder @ git+https://github.com/ATHARV-IIT-BOMBAY/meow-decoder@v0.5.2"
 ```
 
 The first run downloads about 1 GB of models from Hugging Face (AST, the bioacoustic BEATs encoder and the 5 MB classifier weights), then works offline. Every download is pinned to an exact revision, so an install keeps getting the same models. It runs fine on a laptop CPU (on Apple Silicon, AST also uses the GPU). A prediction takes about 0.2 seconds.
@@ -104,8 +104,9 @@ meow serve          # open http://localhost:8000
 
 - **Tap the cat to listen.** It records for up to 8 seconds; tap again to stop early. The cat's ears perk up and its pupils widen with the sound level.
 - **Read the answer.** The cat's face changes with it: an open mouth for food, a happy squint for attention or purring, flattened ears and wide pupils for stress or hissing. A speech bubble shows what the cat might be saying, with bars for every option. Purring, hissing or yowling get their own card explaining what they usually mean.
-- **When it isn't sure,** it says "It's between attention and food" with both percentages, and asks which one it was. Those are the most useful meows to teach.
-- **No cat nearby?** Play a sample: a hungry cat, a cat being brushed, a cat somewhere new, or a purring cat. Or upload any recording or video.
+- **See why it guessed.** Before you've taught it your cat, the answer comes from the meow's pitch, and the app draws the loudest meow's pitch line under the answer: "This meow rose 1.5 semitones. Rising meows lean food."
+- **When it isn't sure,** it says "It's between attention and food" and asks which one it was. Those are the most useful meows to teach. Until a cat has about 3 taught meows of each kind, it says its percentages are still early guesses.
+- **No cat nearby?** Play a sample: a hungry cat, a cat being brushed, a cat somewhere new, or a purring cat. Afterwards it shows what was really happening in that recording and whether its guess was right. Or upload any recording or video.
 - **Add your cats** with a name and an optional photo (it can use your phone camera), then [teach it](#teach-it-your-cat). Switching cats re-ranks the last recording for the cat you picked.
 - **Not a cat?** If a clip doesn't sound like a cat (a fan, traffic, a person talking), it says so instead of guessing.
 - It works on phones and desktops, in light and dark mode, and can be installed to your phone's home screen. Once installed it opens even offline; predictions still need the server. **How it works** in the header explains the accuracy in plain words.

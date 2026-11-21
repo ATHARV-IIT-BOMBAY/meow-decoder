@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.2 (2026-11-21)
+
+App:
+- The bundled samples show the real answer after playing, and whether the guess was first, second or missed.
+- Untaught guesses draw the loudest meow's pitch line with what it means ("rose 1.5 semitones, rising meows lean
+  food"). The server returns it as `pitch_line`.
+- A lightly taught cat no longer reads "tuned to Biscuit · 90%": until about 3 taught meows per situation it says
+  how many it has learned from and to treat the percentages as a guess.
+- Phones: upload and the samples come before the empty result card, so they're on the first screen.
+- Desktop: no more empty gap in the left column after a result.
+- The cat row fades at the edge when more cats are off-screen; the photo picker matches the rest of the design.
+
+Head-to-head with MeowSense on the real-world test (`benchmark/compare.py`), and why Meow-Omni 1 can't be compared:
+see README, "Compared with other projects".
+
 ## 0.5.1 (2026-11-21)
 
 - AST mode (commercial use) gets a yowl detector on AudioSet's 527 scores, trained only on CC0 and CC BY audio

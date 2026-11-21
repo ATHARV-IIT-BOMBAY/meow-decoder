@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 
 from meow_decoder import cli, server
 from meow_decoder.bench import SPLITS, band_limit, benchmark, normalize, segments, teaching_curve
-from meow_decoder.core import PITCH_MODEL, SR, Decoder, Head, decode, pitch_features, pitch_track
+from meow_decoder.core import PITCH_MODEL, SR, Decoder, Head, decode, pitch_features, pitch_line, pitch_track
 
 rng = np.random.default_rng(0)
 QUIET = {"Cat": 0.9, "Meow": 0.8, "Purr": 0.0, "Caterwaul": 0.1, "Hiss": 0.0, "Speech": 0.0}
@@ -84,6 +84,9 @@ def test_pitch_contour_rising_means_food_falling_means_stress():
     h = Head.load(PITCH_MODEL)
     assert h.classes[h.proba_features(rising).argmax()] == "F" and h.classes[h.proba_features(falling).argmax()] == "I"
     assert np.isnan(pitch_features(np.zeros(SR, np.float32))).all()
+    line = pitch_line(glide(500, 800))  # for the app's drawing: semitones from the start, at most 48 points
+    assert line["semitones"][0] == 0 and line["semitones"][-1] > 7 and len(line["semitones"]) <= 48 and line["rise"] > 4
+    assert pitch_line(np.zeros(SR, np.float32)) is None
     assert np.allclose(h.proba_features([np.nan] * 3), 1 / 3, atol=0.05)  # no pitch: no opinion
 
 
@@ -199,7 +202,7 @@ def test_app_flow_teach_undo_relabel_and_rerank(make_client):
     assert t["counts"] == {"out": 1} and t["samples"][0]["hour"] == 19  # a preset's title maps to its key
     again = c.post("/api/teach", json={"cat_id": cat["id"], "clip": r["clip"], "label": "F"}).json()
     assert again["counts"] == {"F": 1}  # the same recording is relabelled, never counted twice
-    assert r["guess_from"] == "pitch"  # untaught: the pitch contour, which carries over to home recordings
+    assert r["guess_from"] == "pitch" and "pitch_line" in r  # untaught: the pitch contour, drawn by the app
     taught = predict(c, cat["id"])
     assert taught["taught"] == 1 and taught["guess_from"] == "taught"
     assert c.post("/api/rerank", json={"clip": r["clip"], "cat_id": ""}).json()["taught"] == 0
