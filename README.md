@@ -339,6 +339,22 @@ Adding real meows looks like a fix and isn't: it learned "sounds like a home rec
 
 **Hissing and yowling.** AudioSet's scores couldn't be fixed by moving thresholds: real hisses scored 0.000–0.036 while ordinary meows reached 0.02, and AudioSet's hiss score at 0.01 fired on 73 of 450 non-cat sounds such as steam and fans. The new detectors ([`benchmark/detectors.py`](benchmark/detectors.py)) are small classifiers on the BEATs embedding, trained on FSD50K's human-labelled cat clips and other sounds, 19 more Freesound fight and mating recordings, and CatMeows. Nothing from an uploader in this test was used, so this stays a clean test. Their threshold was set to 1% false alarms on the training sounds, before scoring this test. They false-alarm on 5 (hiss) and 2 (yowl) of 450 non-cat sounds. A purr detector was built the same way but isn't shipped: 29 of 30 purrs caught against AudioSet's 26, but 15 false alarms instead of 9. With `--encoder ast` (commercial use), a separate yowl detector reads all 527 of AudioSet's scores and was trained only on CC0 and CC BY audio (v0.5.1): it caught 20 of 24 fights and mating calls (AudioSet 12), with 20 false alarms instead of 16. In that mode, hissing and purring stay with AudioSet's scores, because detectors trained the same way didn't beat them on the real-world test (hiss: 2 more caught but 4 more false alarms).
 
+### Compared with other projects
+
+[MeowSense](https://github.com/sbor3937/MeowSense) is the open cat-meow classifier closest to this one, and it also tests on unseen cats. We ran its own code and its best published setup (frozen AST embeddings with its SVM, and its logistic-regression probe), trained on all of CatMeows as it is, on exactly the same real meows ([`benchmark/compare.py`](benchmark/compare.py), [`compare_report.json`](benchmark/compare_report.json)):
+
+| | Real meows, first guess | Hungry meows called "food" | Balanced (each situation equal) | CatMeows, unseen cats |
+|---|---|---|---|---|
+| **Meow Decoder v0.5**, untaught | **45%** | **22 of 47** | 40% | 51% (embedding model 66%) |
+| MeowSense, AST + SVM (its best) | 9% | 1 of 47 | 41% | 60% |
+| MeowSense, AST + logistic regression | 13% | 3 of 47 | 38% | 58% |
+
+MeowSense reproduces its published 60%, and on real recordings it fails the way our old model did: it called 102 of 110 real meows "attention". Our lead is in hungry meows, by far the most common thing people record. Counting each situation equally the two are tied, near chance, but that measure rests on 3 attention and 5 stressed clips. Neither project can claim to read real meows well yet.
+
+[Meow-Omni 1](https://huggingface.co/smgjch/Meow-Omni-1) (2026) reports 71% on MeowBench, but answers a different question: its "intents" are the cat's next physical action from collar sensors (lying, walking, grooming, litter box, eating), with nothing for attention or stress, and it uses video and motion sensors as well as sound. We didn't run it: it needs a ~20 GB GPU, and grading it on why cats meow would test it on a task it wasn't built for. Its Hugging Face copy of the model code also appears not to pass audio to the language model (the class lacks `get_audio_embedding`); the version on its GitHub does.
+
+Commercial translators (MeowTalk, PettiChat and others) report 90–95% from their own tests, with no public model or protocol to check, so they can't be compared.
+
 ### Every cat is different
 
 Accuracy on a single unseen cat ranges from 20% to 95%. Some cats meow the way the training cats did and some don't, which is why [teaching your cat](#teach-it-your-cat) helps.
