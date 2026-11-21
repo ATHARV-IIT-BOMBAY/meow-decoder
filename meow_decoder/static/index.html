@@ -572,7 +572,7 @@ function showPitch(r) {  // the loudest meow's pitch, drawn, when the guess came
   const y0 = H - 4 - ((0 - lo) / (hi - lo)) * (H - 8);
   box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img"><line class="base" x1="0" x2="${W}" y1="${y0}" y2="${y0}"/><polyline class="line" points="${pts}"/></svg><p></p>`;
   const rise = line.rise, st = Math.abs(rise).toFixed(1);
-  const text = rise > 1 ? `This meow rose ${st} semitones. Rising meows lean food.` : rise < -1 ? `This meow fell ${st} semitones. Falling meows lean stress.` : "This meow stayed fairly level, so pitch doesn't lean far either way.";
+  const text = rise > 1 ? `This meow rose ${st} semitones. Rising meows lean food.` : rise < -1 ? `This meow fell ${st} semitones. Falling meows lean stress.` : "This meow stayed fairly level overall; the guess also weighs its slope and where it peaks.";
   box.querySelector("svg").setAttribute("aria-label", text);
   box.querySelector("p").textContent = text + ` (${line.seconds.toFixed(1)} s, dashed line = where it started)`;
 }
