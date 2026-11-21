@@ -19,3 +19,19 @@ purring.mp3   Cat Sound Classification Dataset V2: Resting/cat_coll0106.mp3
 The classifier weights downloaded from https://huggingface.co/AtharvIITB/meow-decoder carry the licence stated
 on that page: beats.npz follows the Earth Species Project encoder (CC BY-NC-SA 4.0, non-commercial);
 ast.npz follows CatMeows (CC BY 4.0).
+
+Two small models ship inside the package:
+
+pitch.npz      Situation guess from pitch-contour shape, for cats nobody has taught yet. Trained on CatMeows
+    (CC BY 4.0, credits above) by benchmark/pitch.py. The approach follows the Meowsic project's finding that
+    food-related meows tend to rise in pitch and vet-related meows to fall: S. Schötz, J. van de Weijer,
+    "A Study of Human Perception of Intonation in Domestic Cat Meows", Speech Prosody 7, 2014.
+
+detectors.npz  Hissing and yowling detectors on the BEATs embedding, used only with the default (non-commercial)
+    BEATs encoder. Trained by benchmark/detectors.py on:
+      FSD50K (E. Fonseca et al., "FSD50K: An Open Dataset of Human-Labeled Sound Events", IEEE/ACM TASLP 2022,
+      https://doi.org/10.5281/zenodo.4060432): cat clips and a sample of other sounds. Each clip keeps its own
+      Freesound licence (CC0, CC BY, CC BY-NC or Sampling+), listed in FSD50K's metadata;
+      the Freesound recordings listed in benchmark/detector_labels.csv (CC0 or CC BY; uploaders named there);
+      CatMeows (CC BY 4.0).
+    Because some FSD50K clips are CC BY-NC, treat detectors.npz as non-commercial, like the BEATs encoder it uses.

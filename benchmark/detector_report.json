@@ -1,0 +1,105 @@
+{
+ "training_clips": {
+  "catmeows": 440,
+  "freesound": 16,
+  "fsd50k": 805
+ },
+ "detectors": {
+  "Purr": {
+   "shipped": false,
+   "threshold": -0.3745731782913253,
+   "real_world_test": {
+    "caught": "29/30",
+    "false_alarms": "15/137",
+    "audioset_rule_caught": "26/30",
+    "audioset_rule_false_alarms": "9/137"
+   },
+   "held_out_uploaders": {
+    "fsd50k": {
+     "caught": "119/122",
+     "false_alarms": "14/683",
+     "audioset_rule_caught": "102/122",
+     "audioset_rule_false_alarms": "4/683"
+    },
+    "freesound": {
+     "caught": "0/0",
+     "false_alarms": "0/16",
+     "audioset_rule_caught": "0/0",
+     "audioset_rule_false_alarms": "0/16"
+    },
+    "catmeows": {
+     "caught": "0/0",
+     "false_alarms": "1/440",
+     "audioset_rule_caught": "0/0",
+     "audioset_rule_false_alarms": "1/440"
+    }
+   },
+   "non_cat_sounds_false_alarms": "2/450",
+   "non_cat_audioset_rule_false_alarms": "0/450"
+  },
+  "Hiss": {
+   "shipped": true,
+   "threshold": -1.926046466827398,
+   "real_world_test": {
+    "caught": "9/13",
+    "false_alarms": "3/136",
+    "audioset_rule_caught": "5/13",
+    "audioset_rule_false_alarms": "0/136"
+   },
+   "held_out_uploaders": {
+    "fsd50k": {
+     "caught": "4/6",
+     "false_alarms": "14/794",
+     "audioset_rule_caught": "1/6",
+     "audioset_rule_false_alarms": "76/794"
+    },
+    "freesound": {
+     "caught": "0/0",
+     "false_alarms": "1/4",
+     "audioset_rule_caught": "0/0",
+     "audioset_rule_false_alarms": "1/4"
+    },
+    "catmeows": {
+     "caught": "0/0",
+     "false_alarms": "0/440",
+     "audioset_rule_caught": "0/0",
+     "audioset_rule_false_alarms": "1/440"
+    }
+   },
+   "non_cat_sounds_false_alarms": "5/450",
+   "non_cat_audioset_rule_false_alarms": "73/450"
+  },
+  "Caterwaul": {
+   "shipped": true,
+   "threshold": -0.506941661834714,
+   "real_world_test": {
+    "caught": "22/24",
+    "false_alarms": "18/130",
+    "audioset_rule_caught": "12/24",
+    "audioset_rule_false_alarms": "16/130"
+   },
+   "held_out_uploaders": {
+    "fsd50k": {
+     "caught": "2/3",
+     "false_alarms": "13/793",
+     "audioset_rule_caught": "2/3",
+     "audioset_rule_false_alarms": "17/793"
+    },
+    "freesound": {
+     "caught": "12/16",
+     "false_alarms": "0/0",
+     "audioset_rule_caught": "9/16",
+     "audioset_rule_false_alarms": "0/0"
+    },
+    "catmeows": {
+     "caught": "0/0",
+     "false_alarms": "1/440",
+     "audioset_rule_caught": "0/0",
+     "audioset_rule_false_alarms": "14/440"
+    }
+   },
+   "non_cat_sounds_false_alarms": "2/450",
+   "non_cat_audioset_rule_false_alarms": "0/450"
+  }
+ }
+}

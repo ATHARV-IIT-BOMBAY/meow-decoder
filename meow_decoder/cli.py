@@ -119,8 +119,9 @@ def predict(a):
             print(f'  {x["p"]:>4.0%}  {x["emoji"]} {x["title"]}: "{x["line"]}"')
     if not a.json:
         print(
-            "\nSituation percentages are from cats recorded in a lab. On real home recordings the first guess was right"
-            " about 1 time in 7 (README: Tested on real recordings). Purring, hissing and yowling are more reliable.",
+            "\nSituation guesses come from the shape of each meow's pitch (rising leans food, falling leans stress). On real home"
+            " recordings they were right about half the time (README: Tested on real recordings). Teach your cat in `meow serve` to do"
+            " better. Purring, hissing and yowling come from a separate sound model.",
             file=sys.stderr,
         )
     if failed:

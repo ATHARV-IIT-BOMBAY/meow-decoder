@@ -13,7 +13,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .core import SR, Head, decode, embedding, load
+from .core import SR, Head, decode, embedding, load, segments  # noqa: F401  (segments re-exported)
 
 AUGMENT = 0  # augmented training copies per clip (see augment()); set from benchmark results
 
@@ -124,48 +124,6 @@ def teaching_curve(X, y, cats, sessions, ks=(0, 1, 2, 3, 4), weight: float = 20,
 # Clean-up steps suggested in review (find the meow, match the 8 kHz training band, fix the level).
 # Tested on the robustness grid and NOT used by the app: each lowered clean accuracy and none raised the
 # average over real-world conditions (see README, "What we tried that didn't help").
-
-
-def segments(wave: np.ndarray, sr: int = SR, max_len: float = 4.0) -> list[tuple[int, int]]:
-    """Sound events (start, end) in samples, loudest first; the whole clip when nothing stands out.
-
-    A frame is active when it is 10 dB above the clip's noise floor (10th percentile) and within 35 dB of
-    its peak. Gaps under 150 ms are merged, events under 0.3 s dropped, 100 ms of padding added, and
-    events longer than `max_len` cut to the loudest `max_len` seconds.
-    """
-    hop, win = sr // 100, sr // 40
-    if len(wave) < win:
-        return [(0, len(wave))]
-    frames = np.lib.stride_tricks.sliding_window_view(wave, win)[::hop]
-    db = 10 * np.log10((frames.astype(np.float64) ** 2).mean(1) + 1e-10)
-    floor, peak = np.percentile(db, 10), db.max()
-    if peak - floor < 10:
-        return [(0, len(wave))]
-    active = db > max(floor + 10, peak - 35)
-    runs, start = [], None
-    for i, a in enumerate(np.r_[active, False]):
-        if a and start is None:
-            start = i
-        elif not a and start is not None:
-            if runs and start - runs[-1][1] < 15:  # merge gaps under 150 ms
-                runs[-1] = (runs[-1][0], i)
-            else:
-                runs.append((start, i))
-            start = None
-    events = []
-    for s, e in runs:
-        if e - s < 30:  # under 0.3 s
-            continue
-        n = int(max_len * 100)
-        if e - s > n:  # keep the loudest max_len seconds
-            sums = np.convolve(db[s:e] - floor, np.ones(n), "valid")
-            s = s + int(sums.argmax())
-            e = s + n
-        a, b = max(0, s * hop - sr // 10), min(len(wave), e * hop + win + sr // 10)
-        events.append((a, b, float(db[s:e].max())))
-    if not events:
-        return [(0, len(wave))]
-    return [(a, b) for a, b, _ in sorted(events, key=lambda t: -t[2])]
 
 
 def band_limit(wave: np.ndarray, sr: int = SR, cutoff: float = 4000.0) -> np.ndarray:

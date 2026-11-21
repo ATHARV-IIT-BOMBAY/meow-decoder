@@ -26,6 +26,10 @@ whole cats (`splits.json` in the code repo), so every test meow comes from a cat
 uploaders said what was happening (45 uploaders), `beats.npz` got the first guess right 14% of the time, and called
 2 of 48 food-begging meows "food". See the code repo's README, "Tested on real recordings from the internet".
 
+Since v0.5.0 the app doesn't use these heads for cats nobody has taught: it guesses from the meow's pitch contour
+(`pitch.npz`, shipped in the package), which got 45% on 55 real meows. These heads are used once a cat is taught,
+refitted with that cat's own meows.
+
 Re-run the benchmark from these files alone, in seconds, with no audio or audio models:
 
 ```bash

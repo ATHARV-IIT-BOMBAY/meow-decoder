@@ -30,7 +30,7 @@ def base_url(tmp_path_factory):
     y = np.array(["F", "B", "I"] * 20)
     X = rng.normal(size=(60, 8)).astype(np.float32) + (y[:, None] == np.array(["F", "B", "I"])).repeat(3, 1)[:, :8] * 2
     d = Decoder.__new__(Decoder)
-    d.encoder, d.head = "beats", Head.fit(X, y)
+    d.encoder, d.head, d.pitch_head = "beats", Head.fit(X, y), None  # UI logic only: guesses come from the fake embedding
     mode = {"next": "confident"}
     d.embed = lambda wave: (
         X[0] if mode["next"] != "unsure" else (X[0] + X[1] + X[2]) / 3,

@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 
 from meow_decoder import cli, server
 from meow_decoder.bench import SPLITS, band_limit, benchmark, normalize, segments, teaching_curve
-from meow_decoder.core import SR, Decoder, Head, decode
+from meow_decoder.core import PITCH_MODEL, SR, Decoder, Head, decode, pitch_features, pitch_track
 
 rng = np.random.default_rng(0)
 QUIET = {"Cat": 0.9, "Meow": 0.8, "Purr": 0.0, "Caterwaul": 0.1, "Hiss": 0.0, "Speech": 0.0}
@@ -25,7 +25,7 @@ def toy_data(n=60, d=8):
 
 def fake_decoder(X, y, sounds=QUIET):
     d = Decoder.__new__(Decoder)  # skip weight download
-    d.encoder, d.head = "beats", Head.fit(X, y)
+    d.encoder, d.head, d.pitch_head = "beats", Head.fit(X, y), Head.load(PITCH_MODEL)
     d.embed = lambda wave: (X[0], dict(sounds))
     return d
 
@@ -67,6 +67,43 @@ def test_signals_presets_and_not_a_cat():
 
 
 # ---------- audio ----------
+
+
+def glide(f_start, f_end, seconds=0.8):
+    t = np.arange(int(seconds * SR)) / SR
+    tone = 0.3 * np.sin(2 * np.pi * np.cumsum(np.linspace(f_start, f_end, len(t))) / SR)
+    quiet = np.zeros(SR // 2)
+    return (np.r_[quiet, tone, quiet] + rng.normal(0, 1e-3, len(t) + SR)).astype(np.float32)
+
+
+def test_pitch_contour_rising_means_food_falling_means_stress():
+    f0 = pitch_track(glide(500, 800)[SR // 2 : -SR // 2])
+    assert np.nanmin(f0) > 480 and np.nanmax(f0) < 820 and np.isnan(f0).mean() < 0.1
+    rising, falling = pitch_features(glide(500, 800)), pitch_features(glide(800, 500))
+    assert rising[0] > 4 and falling[0] < -4  # semitones from first to last third
+    h = Head.load(PITCH_MODEL)
+    assert h.classes[h.proba_features(rising).argmax()] == "F" and h.classes[h.proba_features(falling).argmax()] == "I"
+    assert np.isnan(pitch_features(np.zeros(SR, np.float32))).all()
+    assert np.allclose(h.proba_features([np.nan] * 3), 1 / 3, atol=0.05)  # no pitch: no opinion
+
+
+def test_trained_detectors_replace_audioset_thresholds():
+    X, y = toy_data()
+    d = fake_decoder(X, y)
+    assert [s["key"] for s in d.rank(X[0], {**QUIET, "Purr": 0.87})["signals"]] == ["Purr"]  # no detectors: AudioSet's score
+    dim = X.shape[1]
+    parts = lambda k: {
+        "mean": np.zeros(dim),
+        "scale": np.ones(dim),
+        "coef": np.eye(dim)[0] * (k == "Hiss"),
+        "intercept": 0.0,
+        "threshold": 1.0,
+    }
+    d.detectors = {f"{k}_{n}": v for k in ("Purr", "Hiss", "Caterwaul") for n, v in parts(k).items()}
+    hissy = np.eye(dim)[0] * 3  # first feature well past the hiss threshold
+    out = d.rank(hissy, {**QUIET, "Purr": 0.87})  # AudioSet hears a purr; the detectors decide
+    assert [s["key"] for s in out["signals"]] == ["Hiss"] and 0.5 < out["signals"][0]["p"] < 1
+    assert d.rank(np.zeros(dim), QUIET)["signals"] == []
 
 
 def test_segments_find_the_meow():
@@ -155,7 +192,9 @@ def test_app_flow_teach_undo_relabel_and_rerank(make_client):
     assert t["counts"] == {"out": 1} and t["samples"][0]["hour"] == 19  # a preset's title maps to its key
     again = c.post("/api/teach", json={"cat_id": cat["id"], "clip": r["clip"], "label": "F"}).json()
     assert again["counts"] == {"F": 1}  # the same recording is relabelled, never counted twice
-    assert predict(c, cat["id"])["taught"] == 1
+    assert r["guess_from"] == "pitch"  # untaught: the pitch contour, which carries over to home recordings
+    taught = predict(c, cat["id"])
+    assert taught["taught"] == 1 and taught["guess_from"] == "taught"
     assert c.post("/api/rerank", json={"clip": r["clip"], "cat_id": ""}).json()["taught"] == 0
     undone = c.delete(f"/api/cats/{cat['id']}/samples/{again['sample_id']}").json()
     assert undone["counts"] == {} and c.delete(f"/api/cats/{cat['id']}/samples/{again['sample_id']}").status_code == 404

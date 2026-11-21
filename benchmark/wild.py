@@ -218,9 +218,9 @@ def evaluate(a):
     conf = [o["results"][0][1] for o in scored]
     cats = [o for o in out if o["label"] != "human"]
 
-    def detector(key, label, among=None):  # caught / labelled, and false alarms on clips with other labels
-        pos = [o for o in out if o["label"] == label]
-        neg = [o for o in out if o["label"] not in (label, *(among or ()))]
+    def detector(key, labels, among=()):  # caught / labelled, and false alarms on clips with other labels
+        pos = [o for o in out if o["label"] in labels]
+        neg = [o for o in out if o["label"] not in (*labels, *among)]
         return {"caught": f"{sum(key in o['signals'] for o in pos)}/{len(pos)}",
                 "false_alarms": f"{sum(key in o['signals'] for o in neg)}/{len(neg)}"}  # fmt: skip
 
@@ -248,9 +248,9 @@ def evaluate(a):
         "cat_detected_on_cats": f"{sum(o['is_cat'] for o in cats)}/{len(cats)}",
         "humans_called_cat": f"{sum(o['is_cat'] for o in out if o['label'] == 'human')}/{sum(o['label'] == 'human' for o in out)}",
         "predicted_stressed_share": float(np.mean([o["results"][0][0] == "I" for o in out if o["has_meow"]])),
-        "purr": detector("Purr", "purr"),
-        "hiss": detector("Hiss", "hiss"),
-        "yowl": detector("Caterwaul", "yowl", among=("hiss", "heat")),  # growls and heat calls are yowl-like
+        "purr": detector("Purr", ("purr",)),
+        "hiss": detector("Hiss", ("hiss",)),
+        "yowl": detector("Caterwaul", ("yowl", "heat"), among=("hiss",)),  # fights and mating calls; hisses often come with a yowl
         "clips_detail": out,
     }
     Path(__file__).with_name("wild_report.json").write_text(json.dumps(report, indent=1, ensure_ascii=False))

@@ -18,6 +18,12 @@ Every number here is measured on cats the model has never heard, because that's 
 
 <br clear="right">
 
+## New in v0.5.0
+
+- **Situation guesses that work on real recordings, a bit.** Tested on 179 openly licensed recordings people made at home ([below](#tested-on-real-recordings-from-the-internet)), the old guess was right 14% of the time: it had learned one lab's recording setup. For cats you haven't taught yet, it now guesses from the *shape of the meow's pitch*: rising meows tend to be about food, falling ones about stress, a pattern phoneticians found across many cats. On real recordings: **14% → 45%** first guess, 26% → 66% top two. Still a rough guess, and it says so.
+- **Hissing and yowling detectors trained on real recordings** (FSD50K and Freesound). Real hisses caught **5 → 9 of 13**, fights and mating calls **12 → 22 of 24**, and the hiss detector no longer fires on fans and steam.
+- Once you teach it your cat, it switches to learning from your own cat's meows, as before.
+
 ## Corrections in v0.4.0
 
 An independent review of v0.3.1 tested our own claims harder than we had. What changed:
@@ -26,7 +32,7 @@ An independent review of v0.3.1 tested our own claims harder than we had. What c
 - **Every headline number now has an uncertainty range.** With 21 cats the benchmark is small: 65.9% is really "somewhere between 57% and 74%".
 - **We measured what the app actually hears.** Through a browser microphone's codec it's 61.8%. With heavy background noise it's 59%.
 - **Part of the signal may be the room.** A model that sees only the quietest fifth of each clip, with as little meow as possible, scores 61%. Cutting clips down to just the meow keeps 64%, so the meow carries signal too. This data can't fully separate the two.
-- **On real recordings from the internet, the situation guess doesn't work.** In v0.4.2 we tested it on 58 meows from 45 uploaders on Wikimedia Commons and Freesound, each with a description saying what was happening. Its first guess was right 8 times (14%, worse than guessing at random), and it called 2 of 48 food-begging meows "food". The 66% below holds for CatMeows-style recordings, not for a phone in your kitchen. Purring and hissing detection does carry over. [Details](#tested-on-real-recordings-from-the-internet).
+- **On real recordings from the internet, the situation guess didn't work** (fixed in part in v0.5.0, above). In v0.4.2 we tested it on 58 meows from 45 uploaders on Wikimedia Commons and Freesound, each with a description saying what was happening. Its first guess was right 8 times (14%, worse than guessing at random), and it called 2 of 48 food-begging meows "food". The 66% below holds for CatMeows-style recordings, not for a phone in your kitchen. Purring and hissing detection does carry over. [Details](#tested-on-real-recordings-from-the-internet).
 
 The full analysis is in [How good is it?](#how-good-is-it). The [changelog](CHANGELOG.md) lists every fix.
 
@@ -56,8 +62,8 @@ The full analysis is in [How good is it?](#how-good-is-it). The [changelog](CHAN
 
 | | What | How sure |
 |---|---|---|
-| **Learned for every cat** | 🍗 Food, please · 😽 Enjoying attention · 🙀 Stressed somewhere new On CatMeows recordings of cats it has never heard: first guess right 66% (57–74%), top two 89%. **On 58 real meows from the internet: 14%**, so out of the box it's a guess until you teach it your cat |
-| **Recognised directly** | 😌 Purring · 😾 Hissing · 📢 Yowling | On real recordings from the internet: caught 26 of 30 purrs, 5 of 13 hisses and 10 of 18 fights. Hissing almost never false-alarms (1 in 166); purring sometimes fires on purring-while-begging; yowling also fires on loud, demanding meows |
+| **Guessed for every cat** | 🍗 Food, please · 😽 Enjoying attention · 🙀 Stressed somewhere new | Before you teach it: from the meow's pitch contour. On 55 real meows from the internet, first guess right 45%, top two 66%, so it usually says "it's between" two. It rarely picks out attention meows. After teaching: learned from your cat's own meows |
+| **Recognised directly** | 😌 Purring · 😾 Hissing · 📢 Yowling | On real recordings from the internet: caught 26 of 30 purrs, 9 of 13 hisses and 22 of 24 fights and mating calls. Purring sometimes fires on cats purring while they beg; yowling also fires on loud, demanding meows |
 | **Learned for your cat** | 👋 Saying hello · 🚪 Wants to go out · 🧶 Wants to play · 😾 Annoyed · anything you type | Depends on what you teach it. Shown as "learning" until you've taught it 3 times |
 
 What each sound usually means is shown with it. Purring, for example, usually means relaxed and content, but cats also purr to calm themselves when stressed or hurt. For a clip with no meow in it, like a purr, or one that doesn't sound like a cat at all, it doesn't guess a situation. When its top answer is under 50%, it says "It's between food and attention" instead of picking one.
@@ -85,7 +91,7 @@ sudo apt install ffmpeg        # Ubuntu / Debian
 ```
 
 ```bash
-pip install "meow-decoder @ git+https://github.com/ATHARV-IIT-BOMBAY/meow-decoder@v0.4.3"
+pip install "meow-decoder @ git+https://github.com/ATHARV-IIT-BOMBAY/meow-decoder@v0.5.0"
 ```
 
 The first run downloads about 1 GB of models from Hugging Face (AST, the bioacoustic BEATs encoder and the 5 MB classifier weights), then works offline. Every download is pinned to an exact revision, so an install keeps getting the same models. It runs fine on a laptop CPU (on Apple Silicon, AST also uses the GPU). A prediction takes about 0.2 seconds.
@@ -114,6 +120,8 @@ and open the https link it prints on your phone. The server then requires each b
 
 ## Teach it your cat
 
+Until you teach it, its situation guess comes from the meow's pitch contour (see [real recordings](#tested-on-real-recordings-from-the-internet)). Once you do, it learns from your cat's own meows, recorded on your phone in your home.
+
 Add your cat, record a meow, and tap what was really happening: one of the three main situations, a quick pick (saying hello, wants to go out, wants to play, annoyed) or anything you type. The decoder refits on the base meows plus your cat's, with each of your meows counting 20 times as much. Quick picks and typed reasons become new options for that cat only, shown as "learning" until taught 3 times.
 
 Taught the wrong thing? Tap **Undo**, or remove any taught meow from the cat's card. Teaching the same recording twice changes its label instead of counting it twice.
@@ -128,7 +136,7 @@ How much teaching helps, on cats the model had never heard. Taught meows all com
 | Average confidence it showed | 67% | 68% | 70% | 72% | 72% |
 | *Tested on the same session (optimistic)* | *65.5%* | *77.9%* | *82.9%* | *87.1%* | *83.3%* |
 
-Its percentages stay honest after teaching: confidence tracks accuracy. Most of the gain comes from the first 3 meows per situation. The weight of 20 was chosen on half the cats and held up on the other half.
+Its percentages stay honest after teaching: confidence tracks accuracy. With the same meows played through a simulated room (reverb, distance, noise), the untaught pitch guess got 50% and one taught meow per situation 65%, which is why the app switches to your cat's meows as soon as you teach one. Most of the gain comes from the first 3 meows per situation. The weight of 20 was chosen on half the cats and held up on the other half.
 
 ## Command line
 
@@ -170,6 +178,7 @@ r["signals"]    # purring / hissing / yowling if heard: [{'key': 'Purr', 'title'
 r["has_meow"]   # False when there's no meow to read (a purr, a hiss, or not a cat): ignore r["results"] then
 r["is_cat"]     # False when it doesn't sound like a cat at all
 r["sounds"]     # raw AudioSet scores for Cat, Meow, Purr, Caterwaul, Hiss and Speech
+r["guess_from"] # "pitch" (no cat taught), "taught" (a head you passed), or "embedding" (rank() without pitch)
 ```
 
 Teach it a cat in code:
@@ -181,7 +190,7 @@ biscuit = decoder.head.personalized([(emb1, "out"), (emb2, "out")])   # (embeddi
 decoder.predict("biscuit-new.m4a", head=biscuit)["results"][0]["title"]
 ```
 
-`decoder.embed(audio)` returns `(embedding, sounds)` and `decoder.rank(embedding, sounds, head)` turns them into a result, so you can embed once and rank against several cats. `CONTEXTS`, `PRESETS` and `SIGNALS` hold the labels, emoji and wording. `Head.fit(X, y)` trains a new classifier on your own embeddings, with `.save()` and `Head.load()` for plain `.npz` files. Evaluation lives in `meow_decoder.bench`: `benchmark`, `teaching_curve`, `robustness` and `metrics`.
+`decoder.embed(audio)` returns `(embedding, sounds)` and `decoder.rank(embedding, sounds, head, pitch)` turns them into a result (`pitch` from `pitch_features(wave)`; without a head it guesses from it), so you can embed once and rank against several cats. `CONTEXTS`, `PRESETS` and `SIGNALS` hold the labels, emoji and wording. `Head.fit(X, y)` trains a new classifier on your own embeddings, with `.save()` and `Head.load()` for plain `.npz` files. Evaluation lives in `meow_decoder.bench`: `benchmark`, `teaching_curve`, `robustness` and `metrics`.
 
 ## HTTP API
 
@@ -230,6 +239,8 @@ curl -F audio=@meow.m4a http://localhost:8000/api/predict
 | Same model, on cats it has already heard | 76.1% | | | | |
 
 \*MeowSense uses its own grouped folds, so that comparison is close but not exact. BEATs beats AST by 4.1 points (95% interval 0.3 to 7.7): real, but only just.
+
+These are the embedding models, which the app uses once a cat is taught. The untaught pitch guess scores 51% here (38–65%), below BEATs on these lab recordings but far above it on real ones ([below](#tested-on-real-recordings-from-the-internet)); [`benchmark/pitch.py`](benchmark/pitch.py) reproduces it.
 
 `meow benchmark --from-weights` reproduces the first two rows in seconds from the published weights alone. To add your model, score it with `meow benchmark --predictions your.csv` and [open a benchmark issue](.github/ISSUE_TEMPLATE/benchmark-result.md).
 
@@ -291,45 +302,42 @@ Both halves carry signal, and this dataset can't separate them. Recordings where
 
 CatMeows was recorded in controlled conditions. To see what happens with ordinary recordings, we collected 179 openly licensed clips from Wikimedia Commons (56) and Freesound (123) whose uploaders described what was happening ("begging for food", "scared at the vet", "wants to go out", "purring while being petted", "hissing at a toy"), plus people imitating cats. [`benchmark/wild_labels.csv`](benchmark/wild_labels.csv) lists every clip with its uploader, licence and the words behind its label. These labels come from what an uploader wrote, so this is a test set only, never training data. Several clips often come from one uploader, so usually one cat; the counts below say how many uploaders each result rests on.
 
-| Test | Result |
-|---|---|
-| Recognised as a cat (167 cat recordings) | 153 |
-| People imitating a cat called a cat | 3 of 12 |
-| 😌 Purring | caught 26 of 30; false alarms 9 of 149 (mostly cats purring while begging for food) |
-| 😾 Hissing | caught 5 of 13; false alarms 1 of 166 |
-| 📢 Yowling in fights | caught 10 of 18; false alarms 16 of 142 (loud food and "let me out" meows) |
-| Food / attention / stressed, first guess (58 meows, 45 uploaders) | **8 of 58 (14%)**; top two 26% |
-| … food (48) / attention (4) / stressed (6) | 2 of 48 / 2 of 4 / 4 of 6 |
-| What it called all 121 real meows | stressed 66, attention 50, food 5 |
+| Test | v0.4.3 | v0.5.0 |
+|---|---|---|
+| Food / attention / stressed, first guess (55 meows, 42 uploaders) | 14% | **45%** |
+| … top two | 26% | **66%** |
+| … food (47) / attention (3) / stressed (5) | 2 / 2 / 4 | **22** / 1 / 2 |
+| 😌 Purring caught (30) · false alarms (149) | 26 · 9 | 26 · 9 (unchanged) |
+| 😾 Hissing caught (13) · false alarms (166) | 5 · 1 | **9** · 10 |
+| 📢 Fights and mating calls caught (24) · false alarms (142) | 12 · 16 | **22** · 20 |
+| Recognised as a cat (167 cat recordings) | 153 | 153 |
+| People imitating a cat called a cat | 3 of 12 | 3 of 12 |
 
-**The situation model doesn't transfer.** Begging for food is by far the most common thing people record, and it called 28 of 48 food meows "stressed" and 18 "attention", at 42–84% confidence. Random guessing would get about a third right. The few attention and stressed clips (a cat at the vet, in a carrier, in a car) came out better, but 10 clips can't show that it works. Commons and Freesound agree (1 of 5, 7 of 53).
+Of the hiss detector's 10 false alarms, 4 are people imitating a hiss and 3 are fights, which usually contain hissing. Of the yowl detector's 20, most are loud food and "let me out" meows. (v0.5.0 scores 55 meows rather than 58 because a newly detected hiss or yowl in 3 of them takes priority over the situation guess.)
 
-Our best explanation is the [cat-or-room](#is-it-the-cat-or-the-room) concern. In CatMeows every "food" meow came from the cat's home just before a meal, recorded close up by a collar microphone, and the model seems to have learned that recording setup at least as much as the meow. A phone across the kitchen sounds nothing like that, so it falls back on the other two. This is the strongest case yet for [teaching your cat](#teach-it-your-cat), which learns from your microphone and your room, and for an [open dataset](#help-build-the-open-cat-dataset) recorded on ordinary phones.
+**Why the old situation model failed.** Begging for food is by far the most common thing people record, and it called 28 of 48 food meows "stressed" and 18 "attention". In CatMeows every "food" meow came from the cat's home just before a meal, recorded close up by a collar microphone, and the model seems to have learned that recording setup at least as much as the meow ([cat or room](#is-it-the-cat-or-the-room)). A phone across the kitchen sounds nothing like that.
 
-**What we tried to fix it (v0.4.3).** None of it is good enough to ship. Each was scored on the same 58 meows, so
-these are small numbers, and anything chosen this way would be tuned to the test. Scripts are in
-[`benchmark/probes/`](benchmark/probes/).
+**What fixed some of it: the shape of the pitch.** Phoneticians in Lund's Meowsic project found that food-related meows tend to rise in pitch and vet-related meows to fall ([Schötz & van de Weijer, 2014](https://portal.research.lu.se/en/publications/a-study-of-human-perception-of-intonation-in-domestic-cat-meows/)). Unlike the audio embedding, the shape of a pitch contour doesn't depend much on the microphone or room. The pitch model looks at only three numbers per meow (how much it rises, its slope, where it peaks), trained on CatMeows with the three situations weighted equally. It still calls 17 of 47 food meows "stressed", rarely picks out attention, and its confidence averages 41%, close to the 45% it gets right, so it mostly says "it's between" two.
+
+Treat the 45% with care. Only 5 stressed and 3 attention meows have a clear label, and we built the pitch tracker (removing octave jumps, smoothing) while looking at these clips. As a check we labelled 7 more meows from FSD50K before scoring them: the pitch model got 4 right, the old model 1. That's encouraging but tiny. The [open dataset](#help-build-the-open-cat-dataset) is what will settle it.
+
+**What didn't fix it.** Each was scored on the same real meows. Scripts are in [`benchmark/probes/`](benchmark/probes/).
 
 | Tried | Real meows, first guess | Food meows called food | CatMeows, unseen cats |
 |---|---|---|---|
-| As shipped | 14% | 2 of 48 | 65.9% |
+| Old embedding model | 14% | 2 of 48 | 65.9% |
 | Low-pass real clips to 4 kHz, like the training audio | 14% | 1 of 48 | – |
 | … and cut to the loudest meow | 19% | 5 of 48 | – |
 | Re-centre embeddings on other uploaders' real recordings | 24% | 7 of 48 | – |
-| Train with 2 copies of each meow through simulated rooms (reverb, distance, noise) | 22% | 7 of 48 | 62.7% |
+| Train with 2 copies of each meow through simulated rooms | 22% | 7 of 48 | 62.7% |
 | Commercial-safe AST encoder instead of BEATs | 9% | – | 61.8% |
+| Mix the embedding model with the pitch model (earlier pitch tracker) | 16% | 2 of 48 | 64.3% |
 | Add the real meows to training (tested on uploaders left out) | 79% | 45 of 48 | – |
+| **Pitch contour (shipped)** | **45%** | **22 of 47** | 51% |
 
-The last row looks like a fix and isn't: it learned "sounds like a home recording, so food", and got 0 of 4
-attention and 1 of 6 stressed meows. We also tried flagging recordings that sound unlike the training data, so the
-app could say "I can't tell": it flagged only a third of real meows when set to flag 5% of CatMeows ones.
+Adding real meows looks like a fix and isn't: it learned "sounds like a home recording, so food", and got 0 of 4 attention and 1 of 6 stressed meows. Flagging recordings that sound unlike the training data, so the app could say "I can't tell", caught only a third of real meows.
 
-What does work is teaching. With CatMeows meows played through a simulated room, teaching 3 per situation from one
-session took first-guess accuracy on the cat's other sessions from 48% to 60%. So the app now says, under every
-untaught guess, that it's a rough guess and was right about 1 time in 7 on home recordings, and asks you to teach it.
-`meow predict` prints the same note.
-
-The sound detectors hold up better, because they come from AudioSet, which was trained on millions of YouTube clips rather than one lab's recordings. The hiss threshold changed in v0.4.1 after the first Commons hisses failed; on 9 new Freesound hisses it caught 2, so hissing is still often missed even if it rarely false-alarms. Moving thresholds can't fix hissing or yowling: real hisses score 0.000–0.036 and ordinary meows up to 0.02, and fight yowls score 0.00–0.64 while loud begging meows reach 0.63. Fixing these needs labelled hisses and fights to train on.
+**Hissing and yowling.** AudioSet's scores couldn't be fixed by moving thresholds: real hisses scored 0.000–0.036 while ordinary meows reached 0.02, and AudioSet's hiss score at 0.01 fired on 73 of 450 non-cat sounds such as steam and fans. The new detectors ([`benchmark/detectors.py`](benchmark/detectors.py)) are small classifiers on the BEATs embedding, trained on FSD50K's human-labelled cat clips and other sounds, 19 more Freesound fight and mating recordings, and CatMeows. Nothing from an uploader in this test was used, so this stays a clean test. Their threshold was set to 1% false alarms on the training sounds, before scoring this test. They false-alarm on 5 (hiss) and 2 (yowl) of 450 non-cat sounds. A purr detector was built the same way but isn't shipped: 29 of 30 purrs caught against AudioSet's 26, but 15 false alarms instead of 9. With `--encoder ast` (commercial use) the AudioSet scores are still used, because some FSD50K clips are non-commercial.
 
 ### Every cat is different
 
@@ -403,12 +411,17 @@ flowchart LR
     A[Recording] --> B[ffmpeg: 16 kHz mono]
     B --> C[BEATs encoder<br>768 numbers]
     B --> D[AST AudioSet model<br>every 10 s window]
+    B --> P[Pitch contour<br>of the loudest meows]
+    P --> Q[Pitch model<br>cat not taught yet]
     C --> E[Logistic regression<br>base meows + your cat's]
-    E --> F[Situations, ranked]
-    D --> G[Is it a cat? Is there a meow?<br>Purring / hissing / yowling / talking]
+    Q --> F[Situations, ranked]
+    E --> F
+    C --> H[Hiss and yowl detectors]
+    D --> G[Is it a cat? Is there a meow?<br>Purring / talking]
+    H --> G
 ```
 
-- **Two frozen audio models.** The bioacoustic BEATs encoder turns a clip into 768 numbers, and a small logistic regression ranks the situations. AST, trained on AudioSet's 527 everyday sounds, listens to every 10-second window of the clip for a cat, a meow, purring, hissing, yowling and talking.
+- **Two frozen audio models and a pitch tracker.** The bioacoustic BEATs encoder turns a clip into 768 numbers; small classifiers on those numbers spot hissing and yowling and, once you've taught it your cat, rank the situations. Until then, the situations are ranked from the pitch contour of the loudest meows (a YIN tracker in NumPy, [`pitch_features`](meow_decoder/core.py)). AST, trained on AudioSet's 527 everyday sounds, listens to every 10-second window for a cat, a meow, purring and talking.
 - **A deliberately simple classifier.** With only 440 training meows, a strongly regularised logistic regression is hard to overfit and gives honest probabilities. Its weights are plain NumPy arrays on [Hugging Face](https://huggingface.co/AtharvIITB/meow-decoder), so loading them can't run code (no pickles). They also carry each training meow's embedding and cat ID, which is what makes `--from-weights` possible.
 - **Teaching** keeps the base embeddings alongside the weights and refits in under a second with your cat's meows added.
 - **The app** is a FastAPI server ([`server.py`](meow_decoder/server.py)) and one HTML file ([`index.html`](meow_decoder/static/index.html)) with no build step. The cat is an inline SVG drawing whose face is driven by CSS. Model work runs off the request loop, one prediction at a time, so a slow upload never freezes the page for others.
@@ -427,7 +440,7 @@ Shared meows are CC BY 4.0. To have one removed, open an issue quoting its contr
 ```bash
 git clone https://github.com/ATHARV-IIT-BOMBAY/meow-decoder && cd meow-decoder
 pip install -e ".[dev]"
-pytest                                   # 18 fast tests with no model downloads, plus 4 browser tests:
+pytest                                   # 20 fast tests with no model downloads, plus 4 browser tests:
 python -m playwright install chromium    # once, so tests/test_page.py can run the real page in a browser
 ruff check . && ruff format --check .
 
@@ -436,7 +449,13 @@ mkdir -p data && curl -L -o data/catmeows.zip "https://zenodo.org/records/400829
 mkdir -p data/catsound && curl -L -o data/catsound/s.zip "https://zenodo.org/api/records/4724180/files/CAT_SOUND_DB_SAMPLES.zip/content" && unzip -q data/catsound/s.zip -d data/catsound
 
 meow train && meow benchmark             # writes weights/beats.npz, used instead of the downloaded weights
+python benchmark/pitch.py                # rebuilds meow_decoder/pitch.npz (the untaught situation guess)
+python benchmark/detectors.py features && python benchmark/detectors.py build   # rebuilds meow_decoder/detectors.npz
 ```
+
+The detectors need the real-world clips first (`python benchmark/wild.py download`, which needs a free
+[Freesound API key](https://freesound.org/apiv2/apply/) in `FREESOUND_API_KEY` only for `search`) and fetch FSD50K clips from
+its Hugging Face mirror.
 
 `pip install ".[train]"` adds librosa, which only training and the benchmark scripts need. `requirements.txt` pins the exact library versions the published numbers came from. CI runs the tests on Python 3.11–3.13 plus the browser test on every push, and every Monday it downloads the real models and checks that the published numbers and sample answers still hold. Before changing anything that affects predictions, read [CONTRIBUTING.md](CONTRIBUTING.md): pull requests need `meow benchmark` numbers before and after.
 
@@ -448,12 +467,18 @@ meow_decoder/
   cli.py             the meow command
   splits.json        fixed unseen-cat benchmark folds
   static/            the app: index.html, icons, manifest, service worker, demo samples
-  NOTICE             credits and licences for the bundled samples
+  pitch.npz          the pitch-contour situation model (untaught cats)
+  detectors.npz      hiss and yowl detectors on the BEATs embedding
+  NOTICE             credits and licences for the bundled samples and models
 benchmark/
   evaluate.py        the full held-out report  -> report.json
   sound_types.py     extra sound types and detector false alarms  -> sound_types.json
   wild.py            real recordings from Wikimedia Commons and Freesound: search, download, evaluate  -> wild_report.json
   wild_labels.csv    those clips: source, author, licence, label and the words behind it
+  pitch.py           the pitch-contour situation model  -> meow_decoder/pitch.npz, pitch_report.json
+  detectors.py       hiss and yowl detectors  -> meow_decoder/detectors.npz, detector_report.json
+  detector_labels.csv  extra Freesound fight and mating recordings for the detectors
+  probes/            one-off experiments behind "What didn't fix it"
 notebooks/           the Colab "Try it" notebook
 tests/               model-free tests, plus a browser test of the real page
 hf/model/            the Hugging Face model card
@@ -490,12 +515,12 @@ Use `--encoder ast` for a commercial deployment, and `--no-contrib` if you won't
 - Three learned situations, plus purring, hissing and yowling. It can't detect pain or illness. **If a cat seems unwell, see a vet.**
 - Trained on 21 Maine Coon and European Shorthair pet cats recorded by the University of Milan. Street cats and other breeds may sound different.
 - The training audio is 8 kHz, so the models never heard anything above 4 kHz.
-- Situation accuracy (66%) comes from CatMeows recordings plus simulated real-world conditions. On 58 real meows from the internet it got 14%: it doesn't carry over to ordinary home recordings without teaching.
+- Before you teach it, the situation guess is right about 45% of the time on real home recordings (66% from the embedding model on CatMeows' lab recordings, 14% on real ones). It's a rough guess, built on few clearly labelled real meows, and it rarely recognises an attention meow.
 - Part of what it learned may be the rooms the training meows were recorded in (see [Is it the cat or the room?](#is-it-the-cat-or-the-room)).
 
 ## Roadmap
 
-- **Real phone recordings** of new cats, labelled, to test what the app really does in a hostel or a home.
+- **Real phone recordings** of new cats, labelled by their owners, to test the pitch guess properly (it rests on 5 clearly stressed and 3 attention meows) and to train a situation model that hears phones, not a lab.
 - **More situations for everyone**, starting with the quick picks, as shared meows from enough cats come in.
 - **Pain, fighting, mating and mother calls**, once there's data with many independent recordings per class.
 - **On-device inference** (ONNX in the browser), so audio never leaves your phone and the demo can run anywhere for free.
@@ -511,6 +536,10 @@ Ideas and help are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md) and the issue
 - **[esp-aves2-sl-beats-all](https://huggingface.co/EarthSpeciesProject/esp-aves2-sl-beats-all)** by Earth Species Project, CC BY-NC-SA 4.0.
 - **[AST fine-tuned on AudioSet](https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593)** (Gong et al.), BSD-3-Clause.
 - **Weights:** `beats.npz` follows the BEATs license; `ast.npz` follows CatMeows (CC BY 4.0).
-- [`meow_decoder/NOTICE`](meow_decoder/NOTICE) lists the bundled samples with full credits.
+- **[FSD50K](https://zenodo.org/records/4060432)** by Fonseca et al. (2022), human-labelled Freesound clips under their own CC licences: training data for the hiss and yowl detectors, with 19 more Freesound recordings listed in [`benchmark/detector_labels.csv`](benchmark/detector_labels.csv). Some FSD50K clips are non-commercial, so `detectors.npz` is used only with the (non-commercial) BEATs encoder.
+- **Real-world test clips** from [Wikimedia Commons](https://commons.wikimedia.org) and [Freesound](https://freesound.org), credited per clip in [`benchmark/wild_labels.csv`](benchmark/wild_labels.csv). The audio is never redistributed.
+- **Pitch-contour idea:** the Meowsic project, Schötz and van de Weijer, "A Study of Human Perception of Intonation in Domestic Cat Meows", Speech Prosody 2014.
+- **Bundled models:** `pitch.npz` (from CatMeows, CC BY 4.0) and `detectors.npz` (non-commercial, as above).
+- [`meow_decoder/NOTICE`](meow_decoder/NOTICE) lists the bundled samples and models with full credits.
 
 If this helps your research, please cite it ([CITATION.cff](CITATION.cff)) along with CatMeows. Thanks to the MeowSense project for an honest benchmark to compare against, and to the reviewer whose audit led to v0.4.0's corrections.

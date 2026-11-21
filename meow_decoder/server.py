@@ -25,7 +25,7 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from .core import CONTEXTS, ENCODERS, PRESETS, SR, Decoder, decode
+from .core import CONTEXTS, ENCODERS, PRESETS, SR, Decoder, decode, pitch_features
 
 MAX_UPLOAD = 10 * 2**20
 CLIP_CACHE = 50  # recent recordings kept in memory so "teach" needn't re-upload
@@ -114,7 +114,7 @@ def build_app(decoder: Decoder, home: Path, contrib: bool = True, require_owner:
     def head_for(cid):
         s = samples(cid)
         if not s:
-            return decoder.head
+            return None  # untaught: the decoder guesses from the pitch contour
         sig = tuple((x.get("id"), x["label"]) for x in s)
         if heads.get(cid, (None,))[0] != sig:
             heads[cid] = (sig, decoder.head.personalized([(unpack(x["emb"]), x["label"]) for x in s]))
@@ -127,7 +127,7 @@ def build_app(decoder: Decoder, home: Path, contrib: bool = True, require_owner:
 
     def rank(entry, cid):
         with model_lock:
-            return decoder.rank(entry["emb"], entry["sounds"], head_for(cid))
+            return decoder.rank(entry["emb"], entry["sounds"], head_for(cid), entry.get("pitch"))
 
     app = FastAPI(title="Meow Decoder")
 
@@ -216,10 +216,11 @@ def build_app(decoder: Decoder, home: Path, contrib: bool = True, require_owner:
         def work():
             with model_lock:
                 emb, sounds = decoder.embed(wave)
+            pitch = pitch_features(wave)
             with state_lock:
                 cid = cat_id if mine(cat_id, owner) else ""
                 token = uuid.uuid4().hex
-                clips[token] = {"emb": emb, "sounds": sounds, "wave": wave}
+                clips[token] = {"emb": emb, "sounds": sounds, "wave": wave, "pitch": pitch}
                 while len(clips) > CLIP_CACHE:
                     clips.pop(next(iter(clips)))
                 taught = len(samples(cid))

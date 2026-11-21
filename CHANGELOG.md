@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.5.0 (2026-11-21)
+
+**Situation guess for cats nobody has taught yet now comes from the meow's pitch contour.** On 179 real recordings from
+Wikimedia Commons and Freesound the old guess was right 14% of the time, because it had learned CatMeows' recording
+setup. Following the Meowsic finding that food meows tend to rise and vet meows to fall, a three-number pitch model
+(`meow_decoder/pitch.npz`, `benchmark/pitch.py`) gets 45% first guess and 66% top two on 55 real meows from 42
+uploaders. It rests on few clearly labelled stressed and attention meows, and the pitch tracker was tuned on these
+clips; a fresh check on 7 more FSD50K meows went 4 of 7 (old model 1 of 7). Taught cats use their own meows, as before.
+
+**Hissing and yowling detectors trained on real recordings** (`meow_decoder/detectors.npz`, `benchmark/detectors.py`):
+FSD50K cat clips and other sounds, 19 Freesound fight and mating recordings, and CatMeows, with no uploader from the
+real-world test. Real hisses caught 5 → 9 of 13; fights and mating calls 12 → 22 of 24. Hiss false alarms on non-cat
+sounds (fans, steam) 73 → 5 of 450. With the AST encoder, AudioSet's scores are still used (licences). Purring stays
+with AudioSet: the trained purr detector wasn't clearly better.
+
+- API: results carry `guess_from` ("pitch", "taught" or "embedding"); `Decoder.rank(emb, sounds, head, pitch)`;
+  `pitch_features(wave)`, `pitch_track(wave)`.
+- The real-world yowl score now counts mating calls, as the app's description of yowling does.
+- Tried and not shipped (numbers in README): mixing the embedding and pitch models; counting a detected hiss or
+  yowl as hearing a cat (found 2 more cats, but called 3 more people imitating cats a cat).
+- Online research: FSD50K for detector training; "meow-10k" on Hugging Face not used (unclear origin of its audio).
+
 ## 0.4.3 (2026-11-21)
 
 - The app now says under every untaught situation guess that it's a rough guess (right about 1 time in 7 on real

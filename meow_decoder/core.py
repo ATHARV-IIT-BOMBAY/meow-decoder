@@ -43,12 +43,11 @@ PRESETS = {
     "play": ("🧶", "Wants to play", "Play with me!"),
     "annoyed": ("😾", "Annoyed", "Leave me alone."),
 }
-# Sounds the AudioSet model recognises directly. Thresholds are set on CatMeows' 440 ordinary meows
-# (benchmark/sound_types.py) and checked on real recordings from the internet (benchmark/wild.py):
-# purr 0.3: 0.2% false alarms on ordinary meows; caught 14 of 18 real purrs, 0 false alarms on 38 other clips.
-# hiss 0.01: 0.2% false alarms on ordinary meows. AudioSet scores even clear hisses low (about 0.02), so the
-#   earlier 0.2 never fired; 0.01 caught 3 of 4 real hisses with no false alarms (revised after seeing them).
-# yowl 0.3: 3% false alarms on ordinary meows; caught 4 of 8 real fights, and fires on some loud demanding meows.
+# Purring, hissing and yowling. Purring uses AudioSet's score (0.3: 0.2% false alarms on CatMeows' ordinary meows,
+# 26 of 30 real purrs caught). With the default BEATs encoder, hissing and yowling come from detectors trained on
+# FSD50K and Freesound recordings (meow_decoder/detectors.npz, benchmark/detectors.py): on the real-world test they
+# caught 9 of 13 hisses (AudioSet 5) and 22 of 24 fights and mating calls (AudioSet 12). The AudioSet thresholds
+# below are used in AST mode: hiss 0.01 (AudioSet scores even clear hisses about 0.02), yowl 0.3.
 SIGNALS = {  # AudioSet label -> (emoji, title, meaning, threshold)
     "Purr": (
         "😌",
@@ -177,6 +176,117 @@ def analyze(wave: np.ndarray, encoder: str = "beats") -> tuple[np.ndarray, dict[
     return embedding(wave, encoder), sounds_in(wave)
 
 
+# ---------- pitch contour ----------
+# Meowsic (Schötz et al., Lund University): food-related meows tend to rise in pitch, vet-related ones to fall.
+# Contour shape survives a change of microphone and room far better than the audio embedding does
+# (benchmark/probes/README.md), so it gives the situation guess for cats nobody has taught yet.
+
+PITCH_FEATURES = ["rise_st", "slope_st_per_s", "peak_pos"]
+PITCH_MODEL = Path(__file__).with_name("pitch.npz")  # built by benchmark/pitch.py from CatMeows
+DETECTORS = Path(__file__).with_name("detectors.npz")  # purr/hiss/yowl on the BEATs embedding: benchmark/detectors.py
+
+
+def segments(wave: np.ndarray, sr: int = SR, max_len: float = 4.0) -> list[tuple[int, int]]:
+    """Sound events (start, end) in samples, loudest first; the whole clip when nothing stands out.
+
+    A frame is active when it is 10 dB above the clip's noise floor (10th percentile) and within 35 dB of
+    its peak. Gaps under 150 ms are merged, events under 0.3 s dropped, 100 ms of padding added, and
+    events longer than `max_len` cut to the loudest `max_len` seconds.
+    """
+    hop, win = sr // 100, sr // 40
+    if len(wave) < win:
+        return [(0, len(wave))]
+    frames = np.lib.stride_tricks.sliding_window_view(wave, win)[::hop]
+    db = 10 * np.log10((frames.astype(np.float64) ** 2).mean(1) + 1e-10)
+    floor, peak = np.percentile(db, 10), db.max()
+    if peak - floor < 10:
+        return [(0, len(wave))]
+    active = db > max(floor + 10, peak - 35)
+    runs, start = [], None
+    for i, a in enumerate(np.r_[active, False]):
+        if a and start is None:
+            start = i
+        elif not a and start is not None:
+            if runs and start - runs[-1][1] < 15:  # merge gaps under 150 ms
+                runs[-1] = (runs[-1][0], i)
+            else:
+                runs.append((start, i))
+            start = None
+    events = []
+    for s, e in runs:
+        if e - s < 30:  # under 0.3 s
+            continue
+        n = int(max_len * 100)
+        if e - s > n:  # keep the loudest max_len seconds
+            sums = np.convolve(db[s:e] - floor, np.ones(n), "valid")
+            s = s + int(sums.argmax())
+            e = s + n
+        a, b = max(0, s * hop - sr // 10), min(len(wave), e * hop + win + sr // 10)
+        events.append((a, b, float(db[s:e].max())))
+    if not events:
+        return [(0, len(wave))]
+    return [(a, b) for a, b, _ in sorted(events, key=lambda t: -t[2])]
+
+
+def pitch_track(
+    wave: np.ndarray, sr: int = SR, fmin: float = 200, fmax: float = 2000, hop: int = 160, frame: int = 1024, threshold: float = 0.15
+) -> np.ndarray:
+    """F0 in Hz every `hop` samples (NaN where unvoiced), by YIN (de Cheveigné & Kawahara, 2002)."""
+    if len(wave) < frame:
+        return np.full(0, np.nan)
+    x = np.lib.stride_tricks.sliding_window_view(wave.astype(np.float64), frame)[::hop]
+    tmax, tmin, n = int(sr / fmin), int(sr / fmax), frame - int(sr / fmin)
+    d = np.stack([((x[:, :n] - x[:, t : t + n]) ** 2).sum(1) for t in range(1, tmax + 1)], 1)  # d(tau), tau = 1..tmax
+    cmnd = d * np.arange(1, tmax + 1) / np.maximum(np.cumsum(d, 1), 1e-12)
+    level = x.std(1)
+    loud = level > max(1e-4, 0.03 * level.max())  # silence and faint background have no pitch worth tracking
+    f0 = np.full(len(x), np.nan)
+    for i, row in enumerate(cmnd):
+        if not loud[i]:
+            continue
+        below = np.where(row[tmin - 1 :] < threshold)[0]
+        if not len(below):
+            continue
+        t = below[0] + tmin - 1
+        while t + 1 < tmax and row[t + 1] < row[t]:  # walk down to the local minimum
+            t += 1
+        a, b, c = row[max(t - 1, 0)], row[t], row[min(t + 1, tmax - 1)]
+        shift = float(np.clip(0.5 * (a - c) / (a - 2 * b + c), -1, 1)) if a - 2 * b + c > 0 else 0.0  # parabolic interpolation
+        f0[i] = sr / (t + 1 + shift)
+    return f0
+
+
+def pitch_features(wave: np.ndarray) -> np.ndarray:
+    """Contour shape of the loudest three sound events, averaged: rise (last third minus first third, semitones),
+    slope (semitones per second) and where the peak falls (0 = start, 1 = end). NaN when no meow pitch is found."""
+    rows = []
+    for a, b in segments(wave)[:3]:
+        f0 = pitch_track(wave[a:b])
+        voiced = ~np.isnan(f0)
+        if voiced.sum() < 8:
+            continue
+        st, t = 12 * np.log2(f0[voiced] / 440), np.where(voiced)[0] * 0.01
+        keep = np.abs(st - np.median(st)) < 7  # drop octave errors: a meow doesn't jump an octave in 10 ms
+        st, t = st[keep], t[keep]
+        if len(st) < 8:
+            continue
+        st = np.convolve(np.pad(st, 2, mode="edge"), np.ones(5) / 5, "valid")  # smooth tracker jitter over 50 ms
+        third = max(len(st) // 3, 1)
+        rows.append([st[-third:].mean() - st[:third].mean(), np.polyfit(t, st, 1)[0], float(np.argmax(st)) / len(st)])
+    return np.mean(rows, 0) if rows else np.full(len(PITCH_FEATURES), np.nan)
+
+
+def fit_pitch_head(F: np.ndarray, y: np.ndarray) -> Head:
+    """Logistic regression on contour shape, classes weighted equally (CatMeows is half "stressed" meows).
+    Missing pitch is filled with the training mean, so a clip with no pitch gets a near-even guess."""
+    from sklearn.linear_model import LogisticRegression
+
+    mean, scale = np.nanmean(F, 0), np.nanstd(F, 0)
+    Z = np.nan_to_num((F - mean) / scale)
+    lr = LogisticRegression(C=0.1, max_iter=2000, class_weight="balanced").fit(Z, y)
+    return Head(lr.classes_, mean, scale, lr.coef_, lr.intercept_, F, np.asarray(y), "pitch")
+
+
 # ---------- classifier head ----------
 
 
@@ -215,6 +325,11 @@ class Head:
     def proba(self, X) -> np.ndarray:
         z = ((np.atleast_2d(X) - self.mean) / self.scale) @ self.coef.T + self.intercept
         return softmax(z)
+
+    def proba_features(self, F) -> np.ndarray:
+        """proba() for pitch features, which may be NaN (no pitch found): missing values count as average."""
+        F = np.atleast_2d(np.asarray(F, np.float64))
+        return self.proba(np.where(np.isnan(F), self.mean, F))
 
     def personalized(self, samples: list[tuple[np.ndarray, str]], weight: float = 20) -> Head:
         """Refit on the base meows plus one cat's (embedding, label) pairs, each weighted `weight` times.
@@ -279,24 +394,37 @@ class Decoder:
         self.head = Head.load(weights or weights_path(encoder))
         if self.head.encoder != encoder:
             raise ValueError(f"weights were trained for the {self.head.encoder!r} encoder, not {encoder!r}")
+        self.pitch_head = Head.load(PITCH_MODEL) if PITCH_MODEL.exists() else None
+        self.detectors = dict(np.load(DETECTORS)) if encoder == "beats" and DETECTORS.exists() else None
 
-    def embed(self, audio) -> tuple[np.ndarray, dict[str, float]]:
+    def wave(self, audio) -> np.ndarray:
         """audio: path, raw bytes, or 16 kHz mono float array."""
         if isinstance(audio, (str, Path)):
             audio = Path(audio).read_bytes()
-        wave = decode(audio) if isinstance(audio, bytes) else np.asarray(audio, np.float32)
-        return analyze(wave, self.encoder)
+        return decode(audio) if isinstance(audio, bytes) else np.asarray(audio, np.float32)
 
-    def rank(self, emb, sounds, head: Head | None = None) -> dict:
-        h = head or self.head
-        p = h.proba(emb)[0]
+    def embed(self, audio) -> tuple[np.ndarray, dict[str, float]]:
+        """audio: path, raw bytes, or 16 kHz mono float array."""
+        return analyze(self.wave(audio), self.encoder)
+
+    def rank(self, emb, sounds, head: Head | None = None, pitch=None) -> dict:
+        """Situation guess from `head` (a cat's taught head); without one, from the pitch contour when given,
+        else from the embedding model, which carries over poorly to home recordings (README)."""
+        if head is None and pitch is not None and self.pitch_head is not None:
+            h, p, source = self.pitch_head, self.pitch_head.proba_features(pitch)[0], "pitch"
+        else:
+            h = head or self.head
+            p, source = h.proba(emb)[0], "taught" if head is not None and head is not self.head else "embedding"
         results = [
             dict(zip(["key", "emoji", "title", "line"], [k, *describe(k)]), p=round(float(v), 4))
             for k, v in sorted(zip(h.classes.tolist(), p), key=lambda kv: -kv[1])
         ]
         signals = [
-            dict(key=k, emoji=e, title=t, meaning=m, p=round(sounds[k], 3)) for k, (e, t, m, th) in SIGNALS.items() if sounds[k] >= th
+            dict(key=k, emoji=e, title=t, meaning=m, p=round(p, 3))
+            for k, (e, t, m, _) in SIGNALS.items()
+            if (p := self.heard(k, emb, sounds))
         ]
+        # Not "or a detector fired": that found 2 more real cats but called 3 more people imitating cats a cat.
         is_cat = max(sounds[k] for k in CAT_LABELS) >= CAT_GATE
         # The situation model only knows meows: with no cat, or a purr or hiss with no meow in it, its guess means nothing.
         has_meow = is_cat and (sounds["Meow"] >= MEOW_MIN or not signals)
@@ -306,7 +434,19 @@ class Decoder:
             "signals": signals,
             "has_meow": has_meow,
             "results": results,
+            "guess_from": source,
         }
 
+    def heard(self, key: str, emb, sounds) -> float:
+        """How sure it is that `key` (Purr, Hiss, Caterwaul) is in the clip, or 0 when it isn't. The BEATs detectors
+        (benchmark/detectors.py) caught 12 of 13 real hisses where AudioSet's score caught 5; AST mode keeps AudioSet's."""
+        d = getattr(self, "detectors", None)
+        if d is None or f"{key}_coef" not in d:
+            return sounds[key] if sounds[key] >= SIGNALS[key][3] else 0.0
+        z = float((np.asarray(emb) - d[f"{key}_mean"]) / d[f"{key}_scale"] @ d[f"{key}_coef"] + d[f"{key}_intercept"])
+        margin = z - float(d[f"{key}_threshold"])
+        return 1 / (1 + np.exp(-margin)) if margin > 0 else 0.0
+
     def predict(self, audio, head: Head | None = None) -> dict:
-        return self.rank(*self.embed(audio), head)
+        wave = self.wave(audio)
+        return self.rank(*analyze(wave, self.encoder), head, pitch_features(wave))
