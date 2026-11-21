@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.2 (2026-11-21)
+
+- The real-world test now has 179 clips: 123 more from Freesound (`wild.py search --source freesound`, free API key),
+  labelled the same strict way from what uploaders wrote. Results name how many uploaders they rest on.
+- **The situation model doesn't transfer to ordinary recordings.** On 58 meows from 45 uploaders its first guess was
+  right 8 times (14%); it called 2 of 48 food-begging meows "food". README, app and model card now say so next to
+  the 66% CatMeows score.
+- Purring: caught 26 of 30. Hissing: 5 of 13, 1 false alarm in 166. Yowling: 10 of 18. People imitating cats: 3 of
+  12 called a cat.
+
 ## 0.4.1 (2026-11-19)
 
 - New real-world test: 56 openly licensed cat recordings from Wikimedia Commons, labelled from what their

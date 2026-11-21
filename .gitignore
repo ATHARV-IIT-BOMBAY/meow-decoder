@@ -11,3 +11,5 @@ weights/
 hf/model/*.npz
 # Personal drafts (launch posts, outreach): kept locally, not published
 drafts/
+# Local secrets (API keys): never committed
+.env

@@ -1,38 +1,55 @@
 {
  "encoder": "beats",
- "clips": 56,
+ "clips": 179,
  "situations": {
-  "labelled": 6,
-  "scored": 5,
-  "top1": 0.2,
-  "top2": 0.4,
-  "confidence": 0.57162,
-  "majority": 0.6,
+  "labelled": 62,
+  "scored": 58,
+  "top1": 0.13793103448275862,
+  "top2": 0.25862068965517243,
+  "confidence": 0.6063017241379309,
+  "uploaders": 45,
+  "by_source": {
+   "commons": {
+    "scored": 5,
+    "uploaders": 5,
+    "top1": 0.2,
+    "top2": 0.4
+   },
+   "freesound": {
+    "scored": 53,
+    "uploaders": 40,
+    "top1": 0.1320754716981132,
+    "top2": 0.24528301886792453
+   }
+  },
+  "majority": 0.8275862068965517,
   "by_label": {
-   "F": "0/3",
-   "B": "1/2",
-   "I": "0/0"
+   "F": "2/48",
+   "B": "2/4",
+   "I": "4/6"
   }
  },
- "cat_detected_on_cats": "45/51",
- "humans_called_cat": "0/5",
- "predicted_stressed_share": 0.5172413793103449,
+ "cat_detected_on_cats": "153/167",
+ "humans_called_cat": "3/12",
+ "predicted_stressed_share": 0.5454545454545454,
  "purr": {
-  "caught": "14/18",
-  "false_alarms": "0/38"
+  "caught": "26/30",
+  "false_alarms": "9/149"
  },
  "hiss": {
-  "caught": "3/4",
-  "false_alarms": "0/52"
+  "caught": "5/13",
+  "false_alarms": "1/166"
  },
  "yowl": {
-  "caught": "4/8",
-  "false_alarms": "4/43"
+  "caught": "10/18",
+  "false_alarms": "16/142"
  },
  "clips_detail": [
   {
    "title": "File:Black cat sound begging the foods.flac",
    "label": "F",
+   "uploader": "매일 누군가가 도둑맞을 때마다",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -62,6 +79,8 @@
   {
    "title": "File:Weibliche Britisch Kurzhaar will Futter C1277 MIAUEN.wav",
    "label": "F",
+   "uploader": "PantheraLeo1359531",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -91,6 +110,8 @@
   {
    "title": "File:Rury Feeds the Faculty of Biology Cats.webm",
    "label": "F",
+   "uploader": "Joaquim Baeta",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -120,6 +141,8 @@
   {
    "title": "File:Spring Belly Rub.webm",
    "label": "B",
+   "uploader": "Gatos Gatos",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -149,6 +172,8 @@
   {
    "title": "File:2015-11-24.νιαούρισμα.Νιάου.noise reduced.flac",
    "label": "B",
+   "uploader": "Tsester",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -178,6 +203,8 @@
   {
    "title": "File:Reismand met kat die onraad ruikt en er zo snel mogelijk weer uit wil.ogg",
    "label": "I",
+   "uploader": "Sietske",
+   "source": "commons",
    "is_cat": false,
    "has_meow": false,
    "sounds": {
@@ -207,6 +234,8 @@
   {
    "title": "File:Meow of a pleading cat.oga",
    "label": "out",
+   "uploader": "Heismark",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -236,6 +265,8 @@
   {
    "title": "File:GettingOutImpatient.ogg",
    "label": "out",
+   "uploader": "Heismark",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -267,6 +298,8 @@
   {
    "title": "File:NoTrip.ogg",
    "label": "out",
+   "uploader": "Heismark",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -298,6 +331,8 @@
   {
    "title": "File:Felis silvestris catus meows.ogg",
    "label": "wants_attention",
+   "uploader": "Tobias Puderer",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -327,6 +362,8 @@
   {
    "title": "File:Audio file of cat meowing.ogg",
    "label": "heat",
+   "uploader": "Yair Haklai",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -356,6 +393,8 @@
   {
    "title": "File:Cat making noises at the birds outside.webm",
    "label": "chirp",
+   "uploader": "Ali T",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -385,6 +424,8 @@
   {
    "title": "File:Cat Purring.ogg",
    "label": "purr",
+   "uploader": "Sgerbic",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -416,6 +457,8 @@
   {
    "title": "File:Cat in front of open fire purring.ogg",
    "label": "purr",
+   "uploader": "Parrot of Doom",
+   "source": "commons",
    "is_cat": false,
    "has_meow": false,
    "sounds": {
@@ -445,6 +488,8 @@
   {
    "title": "File:Cat purring (Mimi).ogg",
    "label": "purr",
+   "uploader": "Clément Bucco-Lechat",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -476,6 +521,8 @@
   {
    "title": "File:Cat purring.ogg",
    "label": "purr",
+   "uploader": "Peter Hull",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -507,6 +554,8 @@
   {
    "title": "File:Felis silvestris catus purrs.ogg",
    "label": "purr",
+   "uploader": "Tobias Puderer",
+   "source": "commons",
    "is_cat": false,
    "has_meow": false,
    "sounds": {
@@ -536,6 +585,8 @@
   {
    "title": "File:Gatita (ronroneo).ogg",
    "label": "purr",
+   "uploader": "Luisalvaz",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -567,6 +618,8 @@
   {
    "title": "File:Jupey purring.wav",
    "label": "purr",
+   "uploader": "Pangea1962",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -598,6 +651,8 @@
   {
    "title": "File:Purr (10 sec loopable).ogg",
    "label": "purr",
+   "uploader": "Insanejeff at English Wikipedia",
+   "source": "commons",
    "is_cat": false,
    "has_meow": false,
    "sounds": {
@@ -627,6 +682,8 @@
   {
    "title": "File:Purring cat.oga",
    "label": "purr",
+   "uploader": "Mysid",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -658,6 +715,8 @@
   {
    "title": "File:Purring cat bertie.ogg",
    "label": "purr",
+   "uploader": "jim_mowatt",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -689,6 +748,8 @@
   {
    "title": "File:Ronroneo (Chabelita).ogg",
    "label": "purr",
+   "uploader": "Luisalvaz",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -720,6 +781,8 @@
   {
    "title": "File:Schnurren einer Hauskatze (schnell).ogg",
    "label": "purr",
+   "uploader": "User:Mattes",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -751,6 +814,8 @@
   {
    "title": "File:Whiskers' purr.ogg",
    "label": "purr",
+   "uploader": "Adam Cuerden",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -782,6 +847,8 @@
   {
    "title": "File:Bachgasse Wiki Lina Gebhardt and Anna Muck Cats Purring - Katzenschnurren.ogg",
    "label": "purr",
+   "uploader": "Mrs.Better",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -813,6 +880,8 @@
   {
    "title": "File:猫咪呼噜声.ogg",
    "label": "purr",
+   "uploader": "Felixwuuuu",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -842,6 +911,8 @@
   {
    "title": "File:Purring and meowing.ogg",
    "label": "purr",
+   "uploader": "Barvinok",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -873,6 +944,8 @@
   {
    "title": "File:Amelia -cat purrs and kneads.webm",
    "label": "purr",
+   "uploader": "Paulo O",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -904,6 +977,8 @@
   {
    "title": "File:Orange tabby cat grooming and purring close-up.webm",
    "label": "purr",
+   "uploader": "Brion VIBBER",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -935,6 +1010,8 @@
   {
    "title": "File:Cat hissing - Zabuhailo.wav",
    "label": "hiss",
+   "uploader": "Zabuhailo",
+   "source": "commons",
    "is_cat": false,
    "has_meow": false,
    "sounds": {
@@ -966,6 +1043,8 @@
   {
    "title": "File:Gruñido gato (Chacha).ogg",
    "label": "hiss",
+   "uploader": "Luisalvaz",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -997,6 +1076,8 @@
   {
    "title": "File:Black and white cat growl and hiss.webm",
    "label": "hiss",
+   "uploader": "Abujoy",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -1029,6 +1110,8 @@
   {
    "title": "File:Black and white cat growl and hiss 2.webm",
    "label": "hiss",
+   "uploader": "Abujoy",
+   "source": "commons",
    "is_cat": true,
    "has_meow": false,
    "sounds": {
@@ -1061,6 +1144,8 @@
   {
    "title": "File:Felis silvestris catus, aggressie, 2023-08-19 02h06, a.mp3",
    "label": "yowl",
+   "uploader": "JMK",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1092,6 +1177,8 @@
   {
    "title": "File:Felis silvestris catus, aggressie, 2023-08-19 02h06, b.mp3",
    "label": "yowl",
+   "uploader": "JMK",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1123,6 +1210,8 @@
   {
    "title": "File:Felis silvestris catus, aggressie, 2023-08-19 02h06, c.mp3",
    "label": "yowl",
+   "uploader": "JMK",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1152,6 +1241,8 @@
   {
    "title": "File:Felis silvestris catus, aggressie, 2023-08-19 02h06, d.mp3",
    "label": "yowl",
+   "uploader": "JMK",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1183,6 +1274,8 @@
   {
    "title": "File:Felis silvestris catus, aanval, 2023-08-28 04h39, a.mp3",
    "label": "yowl",
+   "uploader": "JMK",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1212,6 +1305,8 @@
   {
    "title": "File:Tomcat calling.webm",
    "label": "yowl",
+   "uploader": "Drummyfish",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1241,6 +1336,8 @@
   {
    "title": "File:Tomcats conflict.webm",
    "label": "yowl",
+   "uploader": "Drummyfish",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1270,6 +1367,8 @@
   {
    "title": "File:Domestic catfight.webm",
    "label": "yowl",
+   "uploader": "Panini!",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1301,6 +1400,8 @@
   {
    "title": "File:Maullido de gata hembra.ogg",
    "label": "meow",
+   "uploader": "George Miquilena",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1330,6 +1431,8 @@
   {
    "title": "File:Maullido de gata hembra joven.ogg",
    "label": "meow",
+   "uploader": "George Miquilena",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1359,6 +1462,8 @@
   {
    "title": "File:Meow domestic cat.ogg",
    "label": "meow",
+   "uploader": "Smser",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1388,6 +1493,8 @@
   {
    "title": "File:Meow of a Siamese cat - freemaster2.wav",
    "label": "meow",
+   "uploader": "freemaster2",
+   "source": "commons",
    "is_cat": false,
    "has_meow": false,
    "sounds": {
@@ -1417,6 +1524,8 @@
   {
    "title": "File:Meow.ogg",
    "label": "meow",
+   "uploader": "The original uploader was Dcrosby at English Wikipedia .",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1446,6 +1555,8 @@
   {
    "title": "File:Miaulementcornisg.ogg",
    "label": "meow",
+   "uploader": "Ilpleuttoujours",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1477,6 +1588,8 @@
   {
    "title": "File:Siamese Cat 01.flac",
    "label": "meow",
+   "uploader": "Svobodat",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1508,6 +1621,8 @@
   {
    "title": "File:Socks Clinton meow.wav",
    "label": "meow",
+   "uploader": "Unknown author; released by the William J. Clinton Presidential Library &amp; Museum",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1537,6 +1652,8 @@
   {
    "title": "File:Felis silvestris catus.ogg",
    "label": "meow",
+   "uploader": "Jeanot",
+   "source": "commons",
    "is_cat": true,
    "has_meow": true,
    "sounds": {
@@ -1566,6 +1683,8 @@
   {
    "title": "File:De-Miau.ogg",
    "label": "human",
+   "uploader": "Jeuwre",
+   "source": "commons",
    "is_cat": false,
    "has_meow": false,
    "sounds": {
@@ -1595,6 +1714,8 @@
   {
    "title": "File:En-au-meow.ogg",
    "label": "human",
+   "uploader": "Commander Keane",
+   "source": "commons",
    "is_cat": false,
    "has_meow": false,
    "sounds": {
@@ -1624,6 +1745,8 @@
   {
    "title": "File:MeowUSA.wav",
    "label": "human",
+   "uploader": "SalomeCzapiewski",
+   "source": "commons",
    "is_cat": false,
    "has_meow": false,
    "sounds": {
@@ -1653,6 +1776,8 @@
   {
    "title": "File:LL-Q1860 (eng)-Simplificationalizer-meow.wav",
    "label": "human",
+   "uploader": "Speaker: Simplificationalizer Recorder: Simplificationalizer",
+   "source": "commons",
    "is_cat": false,
    "has_meow": false,
    "sounds": {
@@ -1682,6 +1807,8 @@
   {
    "title": "File:LL-Q809 (pol)-Olaf-miau.wav",
    "label": "human",
+   "uploader": "Speaker: Olaf Recorder: Olaf",
+   "source": "commons",
    "is_cat": false,
    "has_meow": false,
    "sounds": {
@@ -1705,6 +1832,3909 @@
     [
      "B",
      0.1674
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 843100: Hungry cat meowing for food",
+   "label": "F",
+   "uploader": "Ñado",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.911,
+    "Meow": 0.698,
+    "Purr": 0.009,
+    "Caterwaul": 0.148,
+    "Hiss": 0.002,
+    "Speech": 0.041
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.7231
+    ],
+    [
+     "B",
+     0.2123
+    ],
+    [
+     "F",
+     0.0646
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 519195: Hungry Furdinand.wav",
+   "label": "F",
+   "uploader": "JustinAmolsch",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.968,
+    "Meow": 0.899,
+    "Purr": 0.008,
+    "Caterwaul": 0.501,
+    "Hiss": 0.001,
+    "Speech": 0.064
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.513
+    ],
+    [
+     "I",
+     0.2965
+    ],
+    [
+     "F",
+     0.1905
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 515689: Adriana Lopez - Cat Meowing",
+   "label": "F",
+   "uploader": "Acekat13X31",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.963,
+    "Meow": 0.735,
+    "Purr": 0.012,
+    "Caterwaul": 0.628,
+    "Hiss": 0.001,
+    "Speech": 0.014
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.6335
+    ],
+    [
+     "F",
+     0.2395
+    ],
+    [
+     "I",
+     0.127
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 684831: Good morning.m4a",
+   "label": "F",
+   "uploader": "egovind",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.757,
+    "Meow": 0.509,
+    "Purr": 0.004,
+    "Caterwaul": 0.07,
+    "Hiss": 0.001,
+    "Speech": 0.01
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.4784
+    ],
+    [
+     "B",
+     0.3461
+    ],
+    [
+     "F",
+     0.1755
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 713653: begging cat",
+   "label": "F",
+   "uploader": "rpnelson",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.749,
+    "Meow": 0.754,
+    "Purr": 0.005,
+    "Caterwaul": 0.03,
+    "Hiss": 0.001,
+    "Speech": 0.033
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.6399
+    ],
+    [
+     "B",
+     0.2197
+    ],
+    [
+     "F",
+     0.1404
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 511448: Cat_meow.wav",
+   "label": "F",
+   "uploader": "cribbler",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.843,
+    "Meow": 0.853,
+    "Purr": 0.002,
+    "Caterwaul": 0.12,
+    "Hiss": 0.001,
+    "Speech": 0.023
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.7441
+    ],
+    [
+     "B",
+     0.1745
+    ],
+    [
+     "F",
+     0.0814
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 737457: 003A_180906_0306_FR_Kitty_waiting_for_food",
+   "label": "F",
+   "uploader": "kevp888",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.963,
+    "Meow": 0.745,
+    "Purr": 0.073,
+    "Caterwaul": 0.457,
+    "Hiss": 0.001,
+    "Speech": 0.057
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.5294
+    ],
+    [
+     "B",
+     0.2966
+    ],
+    [
+     "F",
+     0.174
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 95694: 20100423.hungry.cats.01.wav",
+   "label": "F",
+   "uploader": "dobroide",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.939,
+    "Meow": 0.623,
+    "Purr": 0.141,
+    "Caterwaul": 0.197,
+    "Hiss": 0.001,
+    "Speech": 0.028
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.6067
+    ],
+    [
+     "B",
+     0.2674
+    ],
+    [
+     "F",
+     0.1259
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 95696: 20100423.hungry.cats.03.wav",
+   "label": "F",
+   "uploader": "dobroide",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.898,
+    "Meow": 0.773,
+    "Purr": 0.003,
+    "Caterwaul": 0.119,
+    "Hiss": 0.002,
+    "Speech": 0.097
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.6288
+    ],
+    [
+     "B",
+     0.2117
+    ],
+    [
+     "F",
+     0.1595
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 95697: 20100423.hungry.cats.04.wav",
+   "label": "F",
+   "uploader": "dobroide",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.906,
+    "Meow": 0.909,
+    "Purr": 0.004,
+    "Caterwaul": 0.212,
+    "Hiss": 0.001,
+    "Speech": 0.054
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.7746
+    ],
+    [
+     "B",
+     0.1231
+    ],
+    [
+     "F",
+     0.1023
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 95698: 20100423.hungry.cats.05.wav",
+   "label": "F",
+   "uploader": "dobroide",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.924,
+    "Meow": 0.77,
+    "Purr": 0.003,
+    "Caterwaul": 0.258,
+    "Hiss": 0.001,
+    "Speech": 0.025
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.4481
+    ],
+    [
+     "I",
+     0.3253
+    ],
+    [
+     "F",
+     0.2266
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 110011: cat meow",
+   "label": "F",
+   "uploader": "tuberatanka",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.346,
+    "Meow": 0.708,
+    "Purr": 0.001,
+    "Caterwaul": 0.02,
+    "Hiss": 0.0,
+    "Speech": 0.082
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.8118
+    ],
+    [
+     "B",
+     0.0955
+    ],
+    [
+     "F",
+     0.0927
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 110010: cat meow II",
+   "label": "F",
+   "uploader": "tuberatanka",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.688,
+    "Meow": 0.88,
+    "Purr": 0.001,
+    "Caterwaul": 0.032,
+    "Hiss": 0.0,
+    "Speech": 0.026
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.7429
+    ],
+    [
+     "F",
+     0.1886
+    ],
+    [
+     "B",
+     0.0685
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 828246: ANMLCat_angry hungry meow collar jingles_ECG_FCS2",
+   "label": "F",
+   "uploader": "teffita",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.13,
+    "Meow": 0.025,
+    "Purr": 0.0,
+    "Caterwaul": 0.026,
+    "Hiss": 0.0,
+    "Speech": 0.121
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.5117
+    ],
+    [
+     "B",
+     0.3962
+    ],
+    [
+     "F",
+     0.0921
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 76879: hungrycat.wav",
+   "label": "F",
+   "uploader": "NoiseCollector",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.94,
+    "Meow": 0.774,
+    "Purr": 0.035,
+    "Caterwaul": 0.135,
+    "Hiss": 0.003,
+    "Speech": 0.027
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.5759
+    ],
+    [
+     "B",
+     0.2961
+    ],
+    [
+     "F",
+     0.128
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 169983: Hungry cats",
+   "label": "F",
+   "uploader": "missozzy",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.858,
+    "Meow": 0.87,
+    "Purr": 0.004,
+    "Caterwaul": 0.244,
+    "Hiss": 0.001,
+    "Speech": 0.082
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.7976
+    ],
+    [
+     "F",
+     0.1221
+    ],
+    [
+     "B",
+     0.0803
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 532215: meow (hungry).wav",
+   "label": "F",
+   "uploader": "patchytherat",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.593,
+    "Meow": 0.596,
+    "Purr": 0.005,
+    "Caterwaul": 0.023,
+    "Hiss": 0.0,
+    "Speech": 0.055
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6723
+    ],
+    [
+     "I",
+     0.2433
+    ],
+    [
+     "F",
+     0.0844
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 177770: Cat Meow",
+   "label": "F",
+   "uploader": "benonez2",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.958,
+    "Meow": 0.848,
+    "Purr": 0.011,
+    "Caterwaul": 0.542,
+    "Hiss": 0.004,
+    "Speech": 0.042
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.6896
+    ],
+    [
+     "I",
+     0.2339
+    ],
+    [
+     "F",
+     0.0764
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 725568: Cat eating kibble",
+   "label": "F",
+   "uploader": "Laura_arboricola",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.929,
+    "Meow": 0.53,
+    "Purr": 0.032,
+    "Caterwaul": 0.113,
+    "Hiss": 0.002,
+    "Speech": 0.014
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.5854
+    ],
+    [
+     "I",
+     0.3518
+    ],
+    [
+     "F",
+     0.0628
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 120160: Cat Wants Food",
+   "label": "F",
+   "uploader": "Oneirophile",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.948,
+    "Meow": 0.584,
+    "Purr": 0.017,
+    "Caterwaul": 0.496,
+    "Hiss": 0.001,
+    "Speech": 0.009
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.6224
+    ],
+    [
+     "B",
+     0.2979
+    ],
+    [
+     "F",
+     0.0797
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 569756: cat_begging.wav",
+   "label": "F",
+   "uploader": "gecop",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.062,
+    "Meow": 0.003,
+    "Purr": 0.008,
+    "Caterwaul": 0.027,
+    "Hiss": 0.001,
+    "Speech": 0.05
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.527
+    ],
+    [
+     "I",
+     0.2926
+    ],
+    [
+     "F",
+     0.1804
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 47618: moto(2.1.08).flac",
+   "label": "F",
+   "uploader": "n2p5",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.886,
+    "Meow": 0.644,
+    "Purr": 0.048,
+    "Caterwaul": 0.07,
+    "Hiss": 0.001,
+    "Speech": 0.021
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.772
+    ],
+    [
+     "B",
+     0.1635
+    ],
+    [
+     "F",
+     0.0645
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 706278: Cat meows for food",
+   "label": "F",
+   "uploader": "Sadiquecat",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.68,
+    "Meow": 0.708,
+    "Purr": 0.001,
+    "Caterwaul": 0.057,
+    "Hiss": 0.001,
+    "Speech": 0.043
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.6622
+    ],
+    [
+     "B",
+     0.3171
+    ],
+    [
+     "F",
+     0.0206
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 730099: Cat meowing for food 2",
+   "label": "F",
+   "uploader": "Sadiquecat",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.914,
+    "Meow": 0.342,
+    "Purr": 0.568,
+    "Caterwaul": 0.079,
+    "Hiss": 0.001,
+    "Speech": 0.057
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "I",
+     0.4645
+    ],
+    [
+     "B",
+     0.3691
+    ],
+    [
+     "F",
+     0.1664
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 730101: Cat meowing for food 4",
+   "label": "F",
+   "uploader": "Sadiquecat",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.893,
+    "Meow": 0.085,
+    "Purr": 0.914,
+    "Caterwaul": 0.036,
+    "Hiss": 0.001,
+    "Speech": 0.022
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "I",
+     0.4678
+    ],
+    [
+     "B",
+     0.4514
+    ],
+    [
+     "F",
+     0.0809
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 730103: Cat meowing for food 6",
+   "label": "F",
+   "uploader": "Sadiquecat",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.557,
+    "Meow": 0.228,
+    "Purr": 0.221,
+    "Caterwaul": 0.025,
+    "Hiss": 0.0,
+    "Speech": 0.149
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.4858
+    ],
+    [
+     "I",
+     0.3567
+    ],
+    [
+     "F",
+     0.1576
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 730104: Cat meowing for food 7",
+   "label": "F",
+   "uploader": "Sadiquecat",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.939,
+    "Meow": 0.336,
+    "Purr": 0.423,
+    "Caterwaul": 0.089,
+    "Hiss": 0.001,
+    "Speech": 0.019
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "I",
+     0.5017
+    ],
+    [
+     "B",
+     0.384
+    ],
+    [
+     "F",
+     0.1143
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 196253: Cat Meowing and Purring for Food.wav",
+   "label": "F",
+   "uploader": "lolamadeus",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.928,
+    "Meow": 0.178,
+    "Purr": 0.19,
+    "Caterwaul": 0.177,
+    "Hiss": 0.001,
+    "Speech": 0.016
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.4203
+    ],
+    [
+     "I",
+     0.394
+    ],
+    [
+     "F",
+     0.1858
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 548352: The cat begs for food. Meowing.wav",
+   "label": "F",
+   "uploader": "tosha73",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.869,
+    "Meow": 0.72,
+    "Purr": 0.003,
+    "Caterwaul": 0.136,
+    "Hiss": 0.001,
+    "Speech": 0.007
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.8383
+    ],
+    [
+     "B",
+     0.0992
+    ],
+    [
+     "F",
+     0.0624
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 732521: Begging Meow",
+   "label": "F",
+   "uploader": "Lukey1028",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.725,
+    "Meow": 0.82,
+    "Purr": 0.001,
+    "Caterwaul": 0.064,
+    "Hiss": 0.0,
+    "Speech": 0.019
+   },
+   "signals": [],
+   "results": [
+    [
+     "F",
+     0.4415
+    ],
+    [
+     "I",
+     0.4147
+    ],
+    [
+     "B",
+     0.1439
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 725567: Anoyed cat",
+   "label": "F",
+   "uploader": "Laura_arboricola",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.931,
+    "Meow": 0.742,
+    "Purr": 0.033,
+    "Caterwaul": 0.121,
+    "Hiss": 0.002,
+    "Speech": 0.028
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.5622
+    ],
+    [
+     "B",
+     0.3728
+    ],
+    [
+     "F",
+     0.065
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 178013: Meow for food",
+   "label": "F",
+   "uploader": "ingolyrio",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.956,
+    "Meow": 0.812,
+    "Purr": 0.007,
+    "Caterwaul": 0.475,
+    "Hiss": 0.002,
+    "Speech": 0.119
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.5246
+    ],
+    [
+     "B",
+     0.2981
+    ],
+    [
+     "F",
+     0.1774
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 407671: Soft Cat Meow",
+   "label": "F",
+   "uploader": "Nagwense",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.952,
+    "Meow": 0.761,
+    "Purr": 0.041,
+    "Caterwaul": 0.247,
+    "Hiss": 0.001,
+    "Speech": 0.011
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6382
+    ],
+    [
+     "I",
+     0.1914
+    ],
+    [
+     "F",
+     0.1704
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 727719: Furdinand excited about food, then eating",
+   "label": "F",
+   "uploader": "JustinAmolsch",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.763,
+    "Meow": 0.123,
+    "Purr": 0.024,
+    "Caterwaul": 0.105,
+    "Hiss": 0.005,
+    "Speech": 0.053
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.4646
+    ],
+    [
+     "I",
+     0.4384
+    ],
+    [
+     "F",
+     0.097
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 577458: klaagpoes__mixdown.wav",
+   "label": "F",
+   "uploader": "gecop",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.812,
+    "Meow": 0.393,
+    "Purr": 0.743,
+    "Caterwaul": 0.085,
+    "Hiss": 0.001,
+    "Speech": 0.013
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.4245
+    ],
+    [
+     "I",
+     0.3483
+    ],
+    [
+     "F",
+     0.2272
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 412944: d.wav",
+   "label": "F",
+   "uploader": "mlsx915",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.575,
+    "Meow": 0.103,
+    "Purr": 0.428,
+    "Caterwaul": 0.01,
+    "Hiss": 0.001,
+    "Speech": 0.187
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.6444
+    ],
+    [
+     "I",
+     0.198
+    ],
+    [
+     "F",
+     0.1576
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 170382: cats getting food",
+   "label": "F",
+   "uploader": "finalCrystine",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.694,
+    "Meow": 0.392,
+    "Purr": 0.021,
+    "Caterwaul": 0.067,
+    "Hiss": 0.0,
+    "Speech": 0.027
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6164
+    ],
+    [
+     "I",
+     0.1951
+    ],
+    [
+     "F",
+     0.1885
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 722927: 2024.02.10 Persuasive cat food request medley",
+   "label": "F",
+   "uploader": "TeamEnFil",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.922,
+    "Meow": 0.754,
+    "Purr": 0.013,
+    "Caterwaul": 0.149,
+    "Hiss": 0.003,
+    "Speech": 0.021
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.4538
+    ],
+    [
+     "B",
+     0.4317
+    ],
+    [
+     "F",
+     0.1145
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 757356: The cat asks for food - 1",
+   "label": "F",
+   "uploader": "SpinOpel",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.882,
+    "Meow": 0.726,
+    "Purr": 0.006,
+    "Caterwaul": 0.279,
+    "Hiss": 0.002,
+    "Speech": 0.01
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.6383
+    ],
+    [
+     "B",
+     0.2443
+    ],
+    [
+     "F",
+     0.1174
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 757357: The cat asks for food - 2",
+   "label": "F",
+   "uploader": "SpinOpel",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.938,
+    "Meow": 0.845,
+    "Purr": 0.009,
+    "Caterwaul": 0.447,
+    "Hiss": 0.006,
+    "Speech": 0.031
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.4921
+    ],
+    [
+     "B",
+     0.4689
+    ],
+    [
+     "F",
+     0.039
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 560481: Chorizo y Arepita.m4a",
+   "label": "F",
+   "uploader": "MilaChan7777",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.845,
+    "Meow": 0.843,
+    "Purr": 0.002,
+    "Caterwaul": 0.086,
+    "Hiss": 0.001,
+    "Speech": 0.018
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.6057
+    ],
+    [
+     "B",
+     0.2654
+    ],
+    [
+     "F",
+     0.1289
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 362327: Xoraya begging for fish",
+   "label": "F",
+   "uploader": "vlcikamen",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.829,
+    "Meow": 0.89,
+    "Purr": 0.001,
+    "Caterwaul": 0.137,
+    "Hiss": 0.0,
+    "Speech": 0.113
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6229
+    ],
+    [
+     "I",
+     0.2362
+    ],
+    [
+     "F",
+     0.1409
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 381761: mr spock meow",
+   "label": "F",
+   "uploader": "killumimati",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.716,
+    "Meow": 0.716,
+    "Purr": 0.0,
+    "Caterwaul": 0.074,
+    "Hiss": 0.0,
+    "Speech": 0.05
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.5224
+    ],
+    [
+     "B",
+     0.4306
+    ],
+    [
+     "F",
+     0.047
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 877045: orlock",
+   "label": "F",
+   "uploader": "TerraLlummox",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.173,
+    "Meow": 0.296,
+    "Purr": 0.001,
+    "Caterwaul": 0.035,
+    "Hiss": 0.0,
+    "Speech": 0.019
+   },
+   "signals": [],
+   "results": [
+    [
+     "F",
+     0.4932
+    ],
+    [
+     "B",
+     0.3874
+    ],
+    [
+     "I",
+     0.1195
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 720306: Mr_Mew_Mew_meows",
+   "label": "F",
+   "uploader": "Keskaowl",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.885,
+    "Meow": 0.707,
+    "Purr": 0.006,
+    "Caterwaul": 0.054,
+    "Hiss": 0.003,
+    "Speech": 0.018
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.6249
+    ],
+    [
+     "B",
+     0.28
+    ],
+    [
+     "F",
+     0.0951
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 832053: cats demanding dinner",
+   "label": "F",
+   "uploader": "HOrvi64",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.951,
+    "Meow": 0.725,
+    "Purr": 0.051,
+    "Caterwaul": 0.132,
+    "Hiss": 0.004,
+    "Speech": 0.015
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.4639
+    ],
+    [
+     "I",
+     0.346
+    ],
+    [
+     "F",
+     0.1901
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 521371: My Cat Leah Opines.m4a",
+   "label": "F",
+   "uploader": "DAVIDSUTTON",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.97,
+    "Meow": 0.836,
+    "Purr": 0.051,
+    "Caterwaul": 0.558,
+    "Hiss": 0.002,
+    "Speech": 0.034
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.4745
+    ],
+    [
+     "I",
+     0.4411
+    ],
+    [
+     "F",
+     0.0844
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 18580: grumpy cat.wav",
+   "label": "B",
+   "uploader": "cognito perceptu",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.567,
+    "Meow": 0.005,
+    "Purr": 0.543,
+    "Caterwaul": 0.073,
+    "Hiss": 0.001,
+    "Speech": 0.142
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.8693
+    ],
+    [
+     "I",
+     0.0823
+    ],
+    [
+     "F",
+     0.0484
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 319412: Cat irritated meow",
+   "label": "B",
+   "uploader": "pushkin",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.853,
+    "Meow": 0.822,
+    "Purr": 0.003,
+    "Caterwaul": 0.126,
+    "Hiss": 0.005,
+    "Speech": 0.017
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.8149
+    ],
+    [
+     "B",
+     0.1441
+    ],
+    [
+     "F",
+     0.041
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 807199: Brushing cat - MS RAW",
+   "label": "B",
+   "uploader": "Sadiquecat",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.027,
+    "Meow": 0.0,
+    "Purr": 0.146,
+    "Caterwaul": 0.001,
+    "Hiss": 0.004,
+    "Speech": 0.003
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6778
+    ],
+    [
+     "I",
+     0.2609
+    ],
+    [
+     "F",
+     0.0613
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 133869: cat meowing.wav",
+   "label": "I",
+   "uploader": "Elethorpia",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.512,
+    "Meow": 0.641,
+    "Purr": 0.0,
+    "Caterwaul": 0.056,
+    "Hiss": 0.0,
+    "Speech": 0.032
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.9528
+    ],
+    [
+     "F",
+     0.0278
+    ],
+    [
+     "B",
+     0.0194
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 684833: Cat scared at vet",
+   "label": "I",
+   "uploader": "egovind",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.825,
+    "Meow": 0.788,
+    "Purr": 0.003,
+    "Caterwaul": 0.092,
+    "Hiss": 0.001,
+    "Speech": 0.875
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.8574
+    ],
+    [
+     "B",
+     0.079
+    ],
+    [
+     "F",
+     0.0636
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 649170: cats meow.m4a",
+   "label": "I",
+   "uploader": "Perry130",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.871,
+    "Meow": 0.403,
+    "Purr": 0.035,
+    "Caterwaul": 0.063,
+    "Hiss": 0.001,
+    "Speech": 0.014
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.6887
+    ],
+    [
+     "B",
+     0.2148
+    ],
+    [
+     "F",
+     0.0965
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 721662: Cat meowing",
+   "label": "I",
+   "uploader": "uplaod",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.588,
+    "Meow": 0.294,
+    "Purr": 0.005,
+    "Caterwaul": 0.163,
+    "Hiss": 0.001,
+    "Speech": 0.017
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6097
+    ],
+    [
+     "I",
+     0.3516
+    ],
+    [
+     "F",
+     0.0387
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 686428: Distressed Cat Meowing",
+   "label": "I",
+   "uploader": "magismolv",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.877,
+    "Meow": 0.651,
+    "Purr": 0.036,
+    "Caterwaul": 0.079,
+    "Hiss": 0.001,
+    "Speech": 0.756
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.5088
+    ],
+    [
+     "I",
+     0.4237
+    ],
+    [
+     "F",
+     0.0675
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 655659: Cats asking for attention.wav",
+   "label": "I",
+   "uploader": "221316",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.828,
+    "Meow": 0.705,
+    "Purr": 0.003,
+    "Caterwaul": 0.118,
+    "Hiss": 0.001,
+    "Speech": 0.007
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.7326
+    ],
+    [
+     "F",
+     0.165
+    ],
+    [
+     "B",
+     0.1025
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 463692: Cat Crying",
+   "label": "out",
+   "uploader": "pokoyum",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.921,
+    "Meow": 0.752,
+    "Purr": 0.011,
+    "Caterwaul": 0.105,
+    "Hiss": 0.002,
+    "Speech": 0.015
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.6942
+    ],
+    [
+     "B",
+     0.2405
+    ],
+    [
+     "F",
+     0.0653
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 572655: cat meows and begging to be let into the house",
+   "label": "out",
+   "uploader": "Garuda1982",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.884,
+    "Meow": 0.636,
+    "Purr": 0.01,
+    "Caterwaul": 0.098,
+    "Hiss": 0.002,
+    "Speech": 0.037
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.4975
+    ],
+    [
+     "B",
+     0.3239
+    ],
+    [
+     "F",
+     0.1786
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 537006: 3 month old kitten meowing",
+   "label": "out",
+   "uploader": "RavenWolfProds",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.902,
+    "Meow": 0.91,
+    "Purr": 0.006,
+    "Caterwaul": 0.085,
+    "Hiss": 0.001,
+    "Speech": 0.015
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.5782
+    ],
+    [
+     "B",
+     0.2917
+    ],
+    [
+     "F",
+     0.1301
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 149940: Cat wants something",
+   "label": "out",
+   "uploader": "Jeanine2012",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.945,
+    "Meow": 0.532,
+    "Purr": 0.024,
+    "Caterwaul": 0.471,
+    "Hiss": 0.002,
+    "Speech": 0.022
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.5526
+    ],
+    [
+     "B",
+     0.3978
+    ],
+    [
+     "F",
+     0.0496
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 652490: Cat-Meowing.wav",
+   "label": "out",
+   "uploader": "mshahen",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.894,
+    "Meow": 0.7,
+    "Purr": 0.003,
+    "Caterwaul": 0.165,
+    "Hiss": 0.001,
+    "Speech": 0.014
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.8939
+    ],
+    [
+     "B",
+     0.0628
+    ],
+    [
+     "F",
+     0.0433
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 577879: Cat meowing: \"Let me in! Open the door!\"",
+   "label": "out",
+   "uploader": "unfa",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.963,
+    "Meow": 0.894,
+    "Purr": 0.021,
+    "Caterwaul": 0.522,
+    "Hiss": 0.003,
+    "Speech": 0.036
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.6384
+    ],
+    [
+     "B",
+     0.2505
+    ],
+    [
+     "F",
+     0.1111
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 54508: cat-waiting-at-the-door.wav",
+   "label": "out",
+   "uploader": "klankschap",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.526,
+    "Meow": 0.323,
+    "Purr": 0.012,
+    "Caterwaul": 0.032,
+    "Hiss": 0.001,
+    "Speech": 0.109
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.5777
+    ],
+    [
+     "B",
+     0.3004
+    ],
+    [
+     "F",
+     0.1219
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 459151: Cat.flac",
+   "label": "out",
+   "uploader": "Erdie",
+   "source": "freesound",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.006,
+    "Meow": 0.006,
+    "Purr": 0.0,
+    "Caterwaul": 0.001,
+    "Hiss": 0.0,
+    "Speech": 0.007
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6499
+    ],
+    [
+     "I",
+     0.217
+    ],
+    [
+     "F",
+     0.1331
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 82274: garage cat 01.wav",
+   "label": "wants_attention",
+   "uploader": "Kyster",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.898,
+    "Meow": 0.786,
+    "Purr": 0.003,
+    "Caterwaul": 0.08,
+    "Hiss": 0.001,
+    "Speech": 0.013
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.7279
+    ],
+    [
+     "F",
+     0.1475
+    ],
+    [
+     "B",
+     0.1246
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 82275: garage cat 02.wav",
+   "label": "wants_attention",
+   "uploader": "Kyster",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.871,
+    "Meow": 0.688,
+    "Purr": 0.004,
+    "Caterwaul": 0.055,
+    "Hiss": 0.001,
+    "Speech": 0.012
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.4594
+    ],
+    [
+     "F",
+     0.3136
+    ],
+    [
+     "B",
+     0.2271
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 765997: Male cat meowing for attention 2",
+   "label": "wants_attention",
+   "uploader": "NatashaBirrer",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.762,
+    "Meow": 0.842,
+    "Purr": 0.001,
+    "Caterwaul": 0.062,
+    "Hiss": 0.0,
+    "Speech": 0.009
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.3762
+    ],
+    [
+     "I",
+     0.343
+    ],
+    [
+     "F",
+     0.2807
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 646957: Autumn_Mehs2.wav",
+   "label": "wants_attention",
+   "uploader": "Keskaowl",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.896,
+    "Meow": 0.407,
+    "Purr": 0.048,
+    "Caterwaul": 0.167,
+    "Hiss": 0.0,
+    "Speech": 0.005
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.5117
+    ],
+    [
+     "I",
+     0.3903
+    ],
+    [
+     "F",
+     0.0981
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 757754: Cat asking for petting",
+   "label": "wants_attention",
+   "uploader": "Valerie-Vivegnis",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.957,
+    "Meow": 0.809,
+    "Purr": 0.013,
+    "Caterwaul": 0.372,
+    "Hiss": 0.003,
+    "Speech": 0.458
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.5516
+    ],
+    [
+     "B",
+     0.314
+    ],
+    [
+     "F",
+     0.1344
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 752019: Perran meow for pets 1",
+   "label": "wants_attention",
+   "uploader": "Sadiquecat",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.937,
+    "Meow": 0.413,
+    "Purr": 0.475,
+    "Caterwaul": 0.113,
+    "Hiss": 0.001,
+    "Speech": 0.043
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "I",
+     0.5334
+    ],
+    [
+     "B",
+     0.3298
+    ],
+    [
+     "F",
+     0.1368
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 752020: Perran meow for pets 2",
+   "label": "wants_attention",
+   "uploader": "Sadiquecat",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.922,
+    "Meow": 0.081,
+    "Purr": 0.861,
+    "Caterwaul": 0.091,
+    "Hiss": 0.001,
+    "Speech": 0.04
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.6823
+    ],
+    [
+     "I",
+     0.2108
+    ],
+    [
+     "F",
+     0.1069
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 759416: Cat - Pearl - Meow for pets 2",
+   "label": "wants_attention",
+   "uploader": "Sadiquecat",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.02,
+    "Meow": 0.06,
+    "Purr": 0.0,
+    "Caterwaul": 0.003,
+    "Hiss": 0.0,
+    "Speech": 0.106
+   },
+   "signals": [],
+   "results": [
+    [
+     "F",
+     0.5443
+    ],
+    [
+     "B",
+     0.276
+    ],
+    [
+     "I",
+     0.1796
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 759417: Cat - Pearl - Meow for pets 1",
+   "label": "wants_attention",
+   "uploader": "Sadiquecat",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.406,
+    "Meow": 0.429,
+    "Purr": 0.004,
+    "Caterwaul": 0.081,
+    "Hiss": 0.0,
+    "Speech": 0.084
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.4562
+    ],
+    [
+     "F",
+     0.3917
+    ],
+    [
+     "I",
+     0.1521
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 814364: 250629_Perran greeting meow - MKE600",
+   "label": "greet",
+   "uploader": "Sadiquecat",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.912,
+    "Meow": 0.153,
+    "Purr": 0.732,
+    "Caterwaul": 0.12,
+    "Hiss": 0.002,
+    "Speech": 0.046
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.6094
+    ],
+    [
+     "I",
+     0.3157
+    ],
+    [
+     "F",
+     0.0749
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 833714: Moostacha",
+   "label": "greet",
+   "uploader": "Enchanting_bluecanary",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.933,
+    "Meow": 0.69,
+    "Purr": 0.024,
+    "Caterwaul": 0.327,
+    "Hiss": 0.003,
+    "Speech": 0.065
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.5236
+    ],
+    [
+     "B",
+     0.3837
+    ],
+    [
+     "F",
+     0.0926
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 844502: Pearl mmrrovvv sound",
+   "label": "greet",
+   "uploader": "Sadiquecat",
+   "source": "freesound",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.038,
+    "Meow": 0.016,
+    "Purr": 0.0,
+    "Caterwaul": 0.012,
+    "Hiss": 0.0,
+    "Speech": 0.033
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.7467
+    ],
+    [
+     "F",
+     0.1351
+    ],
+    [
+     "I",
+     0.1181
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 262312: Cat Meow1.wav",
+   "label": "greet",
+   "uploader": "steffcaffrey",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.734,
+    "Meow": 0.826,
+    "Purr": 0.001,
+    "Caterwaul": 0.041,
+    "Hiss": 0.0,
+    "Speech": 0.021
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.4673
+    ],
+    [
+     "F",
+     0.2865
+    ],
+    [
+     "B",
+     0.2462
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 262313: Cat Meow2.wav",
+   "label": "greet",
+   "uploader": "steffcaffrey",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.088,
+    "Meow": 0.227,
+    "Purr": 0.0,
+    "Caterwaul": 0.004,
+    "Hiss": 0.0,
+    "Speech": 0.018
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.7995
+    ],
+    [
+     "F",
+     0.1193
+    ],
+    [
+     "I",
+     0.0811
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 262314: Cat Meow3.wav",
+   "label": "greet",
+   "uploader": "steffcaffrey",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.516,
+    "Meow": 0.546,
+    "Purr": 0.0,
+    "Caterwaul": 0.077,
+    "Hiss": 0.0,
+    "Speech": 0.018
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.722
+    ],
+    [
+     "F",
+     0.1943
+    ],
+    [
+     "I",
+     0.0837
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 262306: Cat_Twit1.wav",
+   "label": "chirp",
+   "uploader": "steffcaffrey",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.013,
+    "Meow": 0.001,
+    "Purr": 0.071,
+    "Caterwaul": 0.002,
+    "Hiss": 0.0,
+    "Speech": 0.008
+   },
+   "signals": [],
+   "results": [
+    [
+     "F",
+     0.4516
+    ],
+    [
+     "B",
+     0.4196
+    ],
+    [
+     "I",
+     0.1289
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 67253: cat in heat.wav",
+   "label": "heat",
+   "uploader": "Noise Cuisine",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.764,
+    "Meow": 0.326,
+    "Purr": 0.011,
+    "Caterwaul": 0.175,
+    "Hiss": 0.001,
+    "Speech": 0.081
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.5672
+    ],
+    [
+     "B",
+     0.2658
+    ],
+    [
+     "F",
+     0.167
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 827534: Cat In Heat",
+   "label": "heat",
+   "uploader": "mijilpamungkas",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.934,
+    "Meow": 0.752,
+    "Purr": 0.005,
+    "Caterwaul": 0.151,
+    "Hiss": 0.001,
+    "Speech": 0.007
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.8321
+    ],
+    [
+     "F",
+     0.0907
+    ],
+    [
+     "B",
+     0.0772
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 429191: CATS IN HEAT",
+   "label": "heat",
+   "uploader": "SamuelGremaud",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.949,
+    "Meow": 0.722,
+    "Purr": 0.005,
+    "Caterwaul": 0.751,
+    "Hiss": 0.002,
+    "Speech": 0.067
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.4477
+    ],
+    [
+     "B",
+     0.4054
+    ],
+    [
+     "F",
+     0.1468
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 659181: cat in heat, distant.wav",
+   "label": "heat",
+   "uploader": "realliansel",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.301,
+    "Meow": 0.211,
+    "Purr": 0.006,
+    "Caterwaul": 0.126,
+    "Hiss": 0.001,
+    "Speech": 0.031
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.5696
+    ],
+    [
+     "I",
+     0.3948
+    ],
+    [
+     "F",
+     0.0356
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 841930: FX_Gata_en_celo_noche_Ambiente_+20db_RX11__260113",
+   "label": "heat",
+   "uploader": "Dani_S.T.",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.97,
+    "Meow": 0.665,
+    "Purr": 0.013,
+    "Caterwaul": 0.632,
+    "Hiss": 0.003,
+    "Speech": 0.011
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.5721
+    ],
+    [
+     "I",
+     0.3958
+    ],
+    [
+     "F",
+     0.0321
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 500798: Cat in heat - meow - angry, in heat, annoyed",
+   "label": "human",
+   "uploader": "khenshom",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.867,
+    "Meow": 0.742,
+    "Purr": 0.02,
+    "Caterwaul": 0.21,
+    "Hiss": 0.001,
+    "Speech": 0.108
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.5306
+    ],
+    [
+     "I",
+     0.3829
+    ],
+    [
+     "F",
+     0.0865
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 500800: Cat's meow while in heat or crying",
+   "label": "human",
+   "uploader": "khenshom",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.182,
+    "Meow": 0.566,
+    "Purr": 0.001,
+    "Caterwaul": 0.007,
+    "Hiss": 0.0,
+    "Speech": 0.216
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6479
+    ],
+    [
+     "I",
+     0.3105
+    ],
+    [
+     "F",
+     0.0416
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 819958: Cat hissing",
+   "label": "human",
+   "uploader": "rickismyname",
+   "source": "freesound",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.001,
+    "Meow": 0.0,
+    "Purr": 0.0,
+    "Caterwaul": 0.0,
+    "Hiss": 0.02,
+    "Speech": 0.033
+   },
+   "signals": [
+    "Hiss"
+   ],
+   "results": [
+    [
+     "B",
+     0.7606
+    ],
+    [
+     "I",
+     0.1716
+    ],
+    [
+     "F",
+     0.0679
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 826834: Cat hissing #2",
+   "label": "human",
+   "uploader": "rickismyname",
+   "source": "freesound",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.002,
+    "Meow": 0.001,
+    "Purr": 0.0,
+    "Caterwaul": 0.0,
+    "Hiss": 0.004,
+    "Speech": 0.074
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.7514
+    ],
+    [
+     "F",
+     0.1458
+    ],
+    [
+     "I",
+     0.1028
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 455495: Cat Growl into Hiss.aif",
+   "label": "human",
+   "uploader": "Wrenasmir",
+   "source": "freesound",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.031,
+    "Meow": 0.016,
+    "Purr": 0.0,
+    "Caterwaul": 0.004,
+    "Hiss": 0.003,
+    "Speech": 0.083
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.7885
+    ],
+    [
+     "I",
+     0.1682
+    ],
+    [
+     "F",
+     0.0433
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 346310: cat hiss yowl.wav",
+   "label": "human",
+   "uploader": "taure",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.055,
+    "Meow": 0.046,
+    "Purr": 0.001,
+    "Caterwaul": 0.006,
+    "Hiss": 0.004,
+    "Speech": 0.905
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.862
+    ],
+    [
+     "I",
+     0.1166
+    ],
+    [
+     "F",
+     0.0214
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 656229: hissing with the mouth.wav",
+   "label": "human",
+   "uploader": "cocochanel7",
+   "source": "freesound",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.001,
+    "Meow": 0.001,
+    "Purr": 0.0,
+    "Caterwaul": 0.0,
+    "Hiss": 0.002,
+    "Speech": 0.063
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.87
+    ],
+    [
+     "I",
+     0.1161
+    ],
+    [
+     "F",
+     0.0139
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 485952: Cat Hissing",
+   "label": "hiss",
+   "uploader": "aunrea",
+   "source": "freesound",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.001,
+    "Meow": 0.0,
+    "Purr": 0.0,
+    "Caterwaul": 0.0,
+    "Hiss": 0.003,
+    "Speech": 0.02
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.7093
+    ],
+    [
+     "F",
+     0.1761
+    ],
+    [
+     "I",
+     0.1146
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 620962: Cat Hiss",
+   "label": "hiss",
+   "uploader": "cdonahueucsd",
+   "source": "freesound",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.001,
+    "Meow": 0.0,
+    "Purr": 0.0,
+    "Caterwaul": 0.0,
+    "Hiss": 0.0,
+    "Speech": 0.031
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.9046
+    ],
+    [
+     "F",
+     0.077
+    ],
+    [
+     "I",
+     0.0183
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 679954: Cat Growling and Hissing",
+   "label": "hiss",
+   "uploader": "dinoroki",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.563,
+    "Meow": 0.068,
+    "Purr": 0.006,
+    "Caterwaul": 0.227,
+    "Hiss": 0.003,
+    "Speech": 0.01
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.8917
+    ],
+    [
+     "I",
+     0.0946
+    ],
+    [
+     "F",
+     0.0137
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 532225: cat hiss.wav",
+   "label": "hiss",
+   "uploader": "patchytherat",
+   "source": "freesound",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.001,
+    "Meow": 0.0,
+    "Purr": 0.001,
+    "Caterwaul": 0.0,
+    "Hiss": 0.003,
+    "Speech": 0.008
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.7732
+    ],
+    [
+     "I",
+     0.1957
+    ],
+    [
+     "F",
+     0.0311
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 363103: Kitten Hiss and Growl",
+   "label": "hiss",
+   "uploader": "TheWoodlandNomad",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.11,
+    "Meow": 0.002,
+    "Purr": 0.074,
+    "Caterwaul": 0.01,
+    "Hiss": 0.002,
+    "Speech": 0.197
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.8591
+    ],
+    [
+     "I",
+     0.0952
+    ],
+    [
+     "F",
+     0.0457
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 363105: Kitten Growl and Hiss",
+   "label": "hiss",
+   "uploader": "TheWoodlandNomad",
+   "source": "freesound",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.008,
+    "Meow": 0.001,
+    "Purr": 0.007,
+    "Caterwaul": 0.001,
+    "Hiss": 0.001,
+    "Speech": 0.011
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.7067
+    ],
+    [
+     "I",
+     0.2013
+    ],
+    [
+     "F",
+     0.092
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 725181: Cat hissing",
+   "label": "hiss",
+   "uploader": "egovind",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.054,
+    "Meow": 0.002,
+    "Purr": 0.018,
+    "Caterwaul": 0.013,
+    "Hiss": 0.036,
+    "Speech": 0.056
+   },
+   "signals": [
+    "Hiss"
+   ],
+   "results": [
+    [
+     "B",
+     0.644
+    ],
+    [
+     "I",
+     0.3376
+    ],
+    [
+     "F",
+     0.0183
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 874259: House Cats - Hiss, Medium Perspective",
+   "label": "hiss",
+   "uploader": "TheKingOfGeeks360",
+   "source": "freesound",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.002,
+    "Meow": 0.001,
+    "Purr": 0.0,
+    "Caterwaul": 0.0,
+    "Hiss": 0.013,
+    "Speech": 0.058
+   },
+   "signals": [
+    "Hiss"
+   ],
+   "results": [
+    [
+     "B",
+     0.5263
+    ],
+    [
+     "I",
+     0.3352
+    ],
+    [
+     "F",
+     0.1385
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 67444: Cat Angry Hissing 01.wav",
+   "label": "hiss",
+   "uploader": "promete",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.931,
+    "Meow": 0.327,
+    "Purr": 0.072,
+    "Caterwaul": 0.681,
+    "Hiss": 0.006,
+    "Speech": 0.235
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.8107
+    ],
+    [
+     "I",
+     0.1692
+    ],
+    [
+     "F",
+     0.0201
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 23721: catfight2.mp3",
+   "label": "yowl",
+   "uploader": "bebops",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.198,
+    "Meow": 0.164,
+    "Purr": 0.001,
+    "Caterwaul": 0.049,
+    "Hiss": 0.001,
+    "Speech": 0.762
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6656
+    ],
+    [
+     "I",
+     0.2593
+    ],
+    [
+     "F",
+     0.0752
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 383478: Cats fighting on a summer day, suburban neighborhood, pigeons, some traffic.wav",
+   "label": "yowl",
+   "uploader": "Daphne_in_Wonderland",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.759,
+    "Meow": 0.416,
+    "Purr": 0.001,
+    "Caterwaul": 0.288,
+    "Hiss": 0.002,
+    "Speech": 0.247
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.5795
+    ],
+    [
+     "I",
+     0.2571
+    ],
+    [
+     "F",
+     0.1634
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 316914: Cats Fighting",
+   "label": "yowl",
+   "uploader": "Rudmer_Rotteveel",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.954,
+    "Meow": 0.637,
+    "Purr": 0.01,
+    "Caterwaul": 0.551,
+    "Hiss": 0.007,
+    "Speech": 0.023
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.6961
+    ],
+    [
+     "I",
+     0.2722
+    ],
+    [
+     "F",
+     0.0317
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 23578: 061010_19-30catfight.mp3",
+   "label": "yowl",
+   "uploader": "ermine",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.941,
+    "Meow": 0.678,
+    "Purr": 0.007,
+    "Caterwaul": 0.382,
+    "Hiss": 0.007,
+    "Speech": 0.024
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.4705
+    ],
+    [
+     "B",
+     0.4678
+    ],
+    [
+     "F",
+     0.0617
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 100111: catfight_unedited.mp3",
+   "label": "yowl",
+   "uploader": "NoiseCollector",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.958,
+    "Meow": 0.742,
+    "Purr": 0.009,
+    "Caterwaul": 0.447,
+    "Hiss": 0.004,
+    "Speech": 0.08
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.6093
+    ],
+    [
+     "I",
+     0.2882
+    ],
+    [
+     "F",
+     0.1026
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 465330: Cats fighting at night",
+   "label": "yowl",
+   "uploader": "cdrk",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.942,
+    "Meow": 0.692,
+    "Purr": 0.002,
+    "Caterwaul": 0.434,
+    "Hiss": 0.005,
+    "Speech": 0.139
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "I",
+     0.5322
+    ],
+    [
+     "B",
+     0.3841
+    ],
+    [
+     "F",
+     0.0837
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 455155: Catfight with birds chirping",
+   "label": "yowl",
+   "uploader": "L83",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.216,
+    "Meow": 0.138,
+    "Purr": 0.001,
+    "Caterwaul": 0.036,
+    "Hiss": 0.001,
+    "Speech": 0.238
+   },
+   "signals": [],
+   "results": [
+    [
+     "I",
+     0.5218
+    ],
+    [
+     "B",
+     0.4165
+    ],
+    [
+     "F",
+     0.0617
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 623779: cats fighting distant",
+   "label": "yowl",
+   "uploader": "fluctuating_frequency",
+   "source": "freesound",
+   "is_cat": false,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.001,
+    "Meow": 0.0,
+    "Purr": 0.0,
+    "Caterwaul": 0.001,
+    "Hiss": 0.001,
+    "Speech": 0.015
+   },
+   "signals": [],
+   "results": [
+    [
+     "B",
+     0.6395
+    ],
+    [
+     "I",
+     0.288
+    ],
+    [
+     "F",
+     0.0726
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 202114: Cats Growling by the Sea",
+   "label": "yowl",
+   "uploader": "timsc",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": true,
+   "sounds": {
+    "Cat": 0.909,
+    "Meow": 0.661,
+    "Purr": 0.003,
+    "Caterwaul": 0.348,
+    "Hiss": 0.005,
+    "Speech": 0.626
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.6637
+    ],
+    [
+     "I",
+     0.3056
+    ],
+    [
+     "F",
+     0.0307
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 546030: Cat Howl/Growl (2)",
+   "label": "yowl",
+   "uploader": "RICHERlandTV",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.815,
+    "Meow": 0.182,
+    "Purr": 0.03,
+    "Caterwaul": 0.337,
+    "Hiss": 0.001,
+    "Speech": 0.011
+   },
+   "signals": [
+    "Caterwaul"
+   ],
+   "results": [
+    [
+     "B",
+     0.9634
+    ],
+    [
+     "I",
+     0.0308
+    ],
+    [
+     "F",
+     0.0058
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 764963: Petting a cat with it purring",
+   "label": "purr",
+   "uploader": "Christian.Combrinck",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.593,
+    "Meow": 0.005,
+    "Purr": 0.86,
+    "Caterwaul": 0.008,
+    "Hiss": 0.002,
+    "Speech": 0.01
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.9243
+    ],
+    [
+     "I",
+     0.0432
+    ],
+    [
+     "F",
+     0.0324
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 766299: ANMLCat_Sound of a cat purring while being petted_KearaP_OWI",
+   "label": "purr",
+   "uploader": "241051",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.744,
+    "Meow": 0.014,
+    "Purr": 0.925,
+    "Caterwaul": 0.014,
+    "Hiss": 0.001,
+    "Speech": 0.03
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.7745
+    ],
+    [
+     "I",
+     0.1352
+    ],
+    [
+     "F",
+     0.0903
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 824828: cat pur",
+   "label": "purr",
+   "uploader": "drdock",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.814,
+    "Meow": 0.006,
+    "Purr": 0.928,
+    "Caterwaul": 0.026,
+    "Hiss": 0.001,
+    "Speech": 0.012
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.878
+    ],
+    [
+     "F",
+     0.0675
+    ],
+    [
+     "I",
+     0.0545
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 680655: Cat Purr",
+   "label": "purr",
+   "uploader": "Sotiris_Laskaris",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.627,
+    "Meow": 0.006,
+    "Purr": 0.842,
+    "Caterwaul": 0.017,
+    "Hiss": 0.001,
+    "Speech": 0.005
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.8788
+    ],
+    [
+     "F",
+     0.07
+    ],
+    [
+     "I",
+     0.0511
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 376378: Misha purrs",
+   "label": "purr",
+   "uploader": "AstronautDown",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.608,
+    "Meow": 0.005,
+    "Purr": 0.971,
+    "Caterwaul": 0.012,
+    "Hiss": 0.001,
+    "Speech": 0.68
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.7764
+    ],
+    [
+     "F",
+     0.1358
+    ],
+    [
+     "I",
+     0.0878
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 627748: Petting a cat - purring",
+   "label": "purr",
+   "uploader": "ValentinPetiteau",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.644,
+    "Meow": 0.004,
+    "Purr": 0.967,
+    "Caterwaul": 0.01,
+    "Hiss": 0.003,
+    "Speech": 0.003
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.9256
+    ],
+    [
+     "I",
+     0.057
+    ],
+    [
+     "F",
+     0.0174
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 727552: Cat Purring, and Sneezes",
+   "label": "purr",
+   "uploader": "RICHERlandTV",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.895,
+    "Meow": 0.019,
+    "Purr": 0.964,
+    "Caterwaul": 0.048,
+    "Hiss": 0.001,
+    "Speech": 0.015
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.9505
+    ],
+    [
+     "I",
+     0.0315
+    ],
+    [
+     "F",
+     0.018
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 648078: Calming Cat Noise 192khz 32bit float - 220823",
+   "label": "purr",
+   "uploader": "TSP-Talk",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.768,
+    "Meow": 0.006,
+    "Purr": 0.961,
+    "Caterwaul": 0.007,
+    "Hiss": 0.001,
+    "Speech": 0.013
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.7923
+    ],
+    [
+     "I",
+     0.1619
+    ],
+    [
+     "F",
+     0.0458
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 186670: cat purr - raw recording",
+   "label": "purr",
+   "uploader": "fordps3",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.717,
+    "Meow": 0.007,
+    "Purr": 0.912,
+    "Caterwaul": 0.031,
+    "Hiss": 0.002,
+    "Speech": 0.019
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.7071
+    ],
+    [
+     "I",
+     0.2292
+    ],
+    [
+     "F",
+     0.0637
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 213951: Purrrrrr.WAV",
+   "label": "purr",
+   "uploader": "klangstrand",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.558,
+    "Meow": 0.004,
+    "Purr": 0.935,
+    "Caterwaul": 0.007,
+    "Hiss": 0.001,
+    "Speech": 0.004
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.8052
+    ],
+    [
+     "I",
+     0.1413
+    ],
+    [
+     "F",
+     0.0534
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 859516: sweet little gray cat purring",
+   "label": "purr",
+   "uploader": "flubblemolubble_",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.832,
+    "Meow": 0.007,
+    "Purr": 0.935,
+    "Caterwaul": 0.041,
+    "Hiss": 0.003,
+    "Speech": 0.028
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.8456
+    ],
+    [
+     "F",
+     0.1014
+    ],
+    [
+     "I",
+     0.053
+    ]
+   ]
+  },
+  {
+   "title": "Freesound 807183: Cat purring under blanket",
+   "label": "purr",
+   "uploader": "ArcticWanderer",
+   "source": "freesound",
+   "is_cat": true,
+   "has_meow": false,
+   "sounds": {
+    "Cat": 0.543,
+    "Meow": 0.004,
+    "Purr": 0.867,
+    "Caterwaul": 0.016,
+    "Hiss": 0.001,
+    "Speech": 0.003
+   },
+   "signals": [
+    "Purr"
+   ],
+   "results": [
+    [
+     "B",
+     0.7818
+    ],
+    [
+     "F",
+     0.1346
+    ],
+    [
+     "I",
+     0.0836
     ]
    ]
   }

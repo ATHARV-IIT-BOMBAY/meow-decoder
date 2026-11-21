@@ -22,6 +22,10 @@ Always guessing the most common situation scores 50.2% (macro recall 33%). Score
 whole cats (`splits.json` in the code repo), so every test meow comes from a cat the head never saw. The range is a
 95% interval from resampling cats: with 21 cats, the benchmark is small.
 
+**These scores don't carry over to other recordings.** On 58 meows from Wikimedia Commons and Freesound whose
+uploaders said what was happening (45 uploaders), `beats.npz` got the first guess right 14% of the time, and called
+2 of 48 food-begging meows "food". See the code repo's README, "Tested on real recordings from the internet".
+
 Re-run the benchmark from these files alone, in seconds, with no audio or audio models:
 
 ```bash

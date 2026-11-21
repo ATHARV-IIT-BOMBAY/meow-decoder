@@ -1,12 +1,18 @@
 """Real-world test set: openly licensed cat recordings from the internet, labelled from what the uploader said.
 
-    python benchmark/wild.py search     # list candidate files on Wikimedia Commons -> data/wild/candidates.json
+    python benchmark/wild.py search                      # Wikimedia Commons -> data/wild/candidates.json
+    python benchmark/wild.py search --source freesound   # Freesound -> data/wild/freesound_candidates.json
     python benchmark/wild.py download   # fetch the clips labelled in benchmark/wild_labels.csv -> data/wild/audio/
     python benchmark/wild.py evaluate   # score the decoder on them -> benchmark/wild_report.json
 
-Only openly licensed sources are used (Wikimedia Commons: CC0, public domain, CC BY, CC BY-SA). Audio is never
-committed: wild_labels.csv records each file's source, author, licence and the words in its description that
-justify the label, and `download` streams the first 30 s of audio from the source.
+Only openly licensed sources are used: Wikimedia Commons (CC0, public domain, CC BY, CC BY-SA) and Freesound
+(CC0, CC BY, CC BY-NC; this is non-commercial research and no audio is redistributed). Freesound needs a free API
+key in FREESOUND_API_KEY (environment or a .env file). Audio is never committed: wild_labels.csv records each
+clip's source, uploader, licence and the words in its description that justify the label, and `download` streams
+the first 30 s of audio (Freesound's public MP3 preview) from the source.
+
+Several clips often come from one uploader, so usually one cat; `evaluate` reports how many uploaders each result
+rests on.
 
 These labels are weaker than CatMeows': they come from what an uploader wrote, not from a controlled setup, so
 this is a test set only, never training data.
@@ -18,6 +24,7 @@ import json
 import re
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 import zlib
@@ -44,6 +51,17 @@ QUERIES = [
     "cat crying",
     "cat fight",
 ]
+FREESOUND = "https://freesound.org/apiv2/search/text/"
+FREESOUND_QUERIES = [  # situations first: few uploaders say why a cat meowed, so ask for it directly
+    "cat hungry", "cat food meow", "cat begging", "cat feeding time", "cat breakfast", "cat dinner", "cat demanding food",
+    "cat petting", "cat purring petting", "cat brushing", "cat cuddle", "cat attention", "cat belly rub",
+    "cat vet", "cat carrier", "cat car", "cat travel", "cat new home", "cat moving", "cat shelter", "cat scared",
+    "cat door", "cat wants out", "cat wants in", "cat outside", "cat locked", "cat window",
+    "cat hiss", "cat growl", "cat fight", "cat yowl", "tomcat", "cat in heat", "cat mating",
+    "cat purr", "cat meow", "kitten meow", "kitten crying", "cat chirp", "cat trill", "cat greeting", "cat play",
+    "cat crying", "cat calling", "cat lonely", "cat alone", "cat morning", "cat annoyed",
+]  # fmt: skip
+LICENSES = [("publicdomain/zero", "CC0"), ("licenses/by-nc", "CC BY-NC"), ("licenses/by/", "CC BY"), ("sampling+", "Sampling+")]
 LABELS = Path(__file__).with_name("wild_labels.csv")
 WILD = Path("data/wild")
 
@@ -59,7 +77,48 @@ def api(**params):
     raise RuntimeError(f"Commons API failed for {params}")
 
 
-def search(_):
+def freesound_key():
+    import os
+
+    key = os.environ.get("FREESOUND_API_KEY")
+    env = Path(".env")
+    if not key and env.exists():
+        key = dict(line.strip().split("=", 1) for line in env.read_text().splitlines() if "=" in line).get("FREESOUND_API_KEY")
+    if not key:
+        sys.exit("Set FREESOUND_API_KEY (get a free key at https://freesound.org/apiv2/apply/).")
+    return key.strip().strip("'\"")
+
+
+def search_freesound():
+    key, found = freesound_key(), {}
+    fields = "id,name,description,tags,license,username,duration,url,previews"
+    for q in FREESOUND_QUERIES:
+        for page in range(1, 4):
+            url = FREESOUND + "?" + urllib.parse.urlencode({"query": q, "page": page, "page_size": 150, "fields": fields})
+            req = urllib.request.Request(url, headers={"Authorization": f"Token {key}", "User-Agent": UA})
+            try:
+                d = json.load(urllib.request.urlopen(req, timeout=30))
+            except urllib.error.HTTPError as e:
+                if e.code == 404:  # past the last page
+                    break
+                raise
+            for r in d["results"]:
+                lic = next((short for part, short in LICENSES if part in r["license"].lower()), r["license"])
+                found[r["id"]] = {"title": f"Freesound {r['id']}: {r['name']}", "url": r["previews"]["preview-hq-mp3"], "page": r["url"],
+                                  "license": lic, "artist": r["username"], "description": re.sub(r"\s+", " ", r["description"])[:1500],
+                                  "categories": " ".join(r["tags"])[:600], "seconds": r["duration"], "source": "freesound"}  # fmt: skip
+            time.sleep(1.1)  # Freesound allows 60 requests a minute
+            if not d.get("next"):
+                break
+        print(f"{q!r}: {len(found)} clips so far", flush=True)
+    WILD.mkdir(parents=True, exist_ok=True)
+    (WILD / "freesound_candidates.json").write_text(json.dumps(list(found.values()), indent=1, ensure_ascii=False))
+    print(f"{len(found)} Freesound candidates -> {WILD / 'freesound_candidates.json'}")
+
+
+def search(a):
+    if a.source == "freesound":
+        return search_freesound()
     titles = set()
     for cat in CATEGORIES:
         cont = {}
@@ -136,7 +195,7 @@ def download(_):
                 break
             time.sleep(30 * (attempt + 1))  # rate-limited: back off
         print("downloaded" if r.returncode == 0 else f"FAILED ({r.stderr.strip()[-120:]})", dest.name, flush=True)
-        time.sleep(4)  # Wikimedia rate-limits fast downloaders
+        time.sleep(4 if "wikimedia" in row["url"] else 0.5)  # Wikimedia rate-limits fast downloaders
 
 
 def evaluate(a):
@@ -148,7 +207,9 @@ def evaluate(a):
     rows, out = labelled(), []
     for row in rows:
         r = d.predict(WILD / "audio" / local_name(row))
-        out.append({"title": row["title"], "label": row["label"], "is_cat": r["is_cat"], "has_meow": r["has_meow"], "sounds": r["sounds"],
+        out.append({"title": row["title"], "label": row["label"], "uploader": row["artist"],
+                    "source": "freesound" if "freesound.org" in row["page"] else "commons",
+                    "is_cat": r["is_cat"], "has_meow": r["has_meow"], "sounds": r["sounds"],
                     "signals": [s["key"] for s in r["signals"]], "results": [(x["key"], x["p"]) for x in r["results"]]})  # fmt: skip
     situation = [o for o in out if o["label"] in ("F", "B", "I")]
     scored = [o for o in situation if o["has_meow"]]
@@ -163,6 +224,11 @@ def evaluate(a):
         return {"caught": f"{sum(key in o['signals'] for o in pos)}/{len(pos)}",
                 "false_alarms": f"{sum(key in o['signals'] for o in neg)}/{len(neg)}"}  # fmt: skip
 
+    def situations(scored):
+        hit = [o["results"][0][0] == o["label"] for o in scored]
+        return {"scored": len(scored), "uploaders": len({o["uploader"] for o in scored}), "top1": float(np.mean(hit)) if hit else None,
+                "top2": float(np.mean([o["label"] in dict(o["results"][:2]) for o in scored])) if scored else None}  # fmt: skip
+
     report = {
         "encoder": a.encoder,
         "clips": len(out),
@@ -172,6 +238,8 @@ def evaluate(a):
             "top1": float(np.mean(hit)) if hit else None,
             "top2": float(np.mean(top2)) if top2 else None,
             "confidence": float(np.mean(conf)) if conf else None,
+            "uploaders": len({o["uploader"] for o in scored}),
+            "by_source": {src: situations([o for o in scored if o["source"] == src]) for src in ("commons", "freesound")},
             "majority": max((np.mean([o["label"] == c for o in scored]) for c in "FBI"), default=None),
             "by_label": {
                 c: f"{sum(h for o, h in zip(scored, hit) if o['label'] == c)}/{sum(o['label'] == c for o in scored)}" for c in "FBI"
@@ -192,7 +260,8 @@ def evaluate(a):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("search")
+    s = sub.add_parser("search")
+    s.add_argument("--source", choices=["commons", "freesound"], default="commons")
     sub.add_parser("download")
     e = sub.add_parser("evaluate")
     e.add_argument("--encoder", default="beats")
