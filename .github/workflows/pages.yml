@@ -21,7 +21,7 @@ jobs:
         run: |
           mkdir _site
           cp -R meow_decoder/static/. _site/
-          cp web/engine.js web/dsp.js web/model.json _site/
+          cp web/engine.js web/dsp.js web/worker.js web/model.json _site/
           sed -i 's|<head>|<head><script>window.MEOW_LOCAL = true</script>|' _site/index.html
           grep -q "window.MEOW_LOCAL = true" _site/index.html
       - uses: actions/configure-pages@v5

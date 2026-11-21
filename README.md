@@ -72,7 +72,7 @@ What each sound usually means is shown with it. Purring, for example, usually me
 
 ## Try it without installing
 
-**[atharv-iit-bombay.github.io/meow-decoder](https://atharv-iit-bombay.github.io/meow-decoder/)** runs the whole app in your browser, on GitHub Pages. There's no server: the AudioSet model ([Xenova's quantized copy](https://huggingface.co/Xenova/ast-finetuned-audioset-10-10-0.4593), about 90 MB, downloaded once) runs through [transformers.js](https://github.com/huggingface/transformers.js), the pitch model and teaching run in plain JavaScript ([`web/`](web/)), and your cats are saved in that browser only. Recordings never leave the device, so the share-to-dataset option is off there.
+**[atharv-iit-bombay.github.io/meow-decoder](https://atharv-iit-bombay.github.io/meow-decoder/)** runs the whole app in your browser, on GitHub Pages. There's no server: the AudioSet model ([Xenova's ONNX copy](https://huggingface.co/Xenova/ast-finetuned-audioset-10-10-0.4593), downloaded once) runs through [transformers.js](https://github.com/huggingface/transformers.js) in a background worker, so the page and the cat keep moving while it thinks. On browsers with WebGPU (recent Chrome, Edge and Safari) it runs on the graphics chip, about 0.25 s a meow after a 174 MB download; elsewhere, or with Save-Data on, an 8-bit 91 MB copy runs on the CPU in a few seconds. the pitch model and teaching run in plain JavaScript ([`web/`](web/)), and your cats are saved in that browser only. Recordings never leave the device, so the share-to-dataset option is off there.
 
 How it compares with the full app (`meow serve`):
 
@@ -81,6 +81,7 @@ How it compares with the full app (`meow serve`):
 | Situation guess before teaching | Pitch contour, same code: 45% on real meows | same |
 | Purring / hissing / yowling caught on real recordings | 25 of 30 / 5 of 13 / 21 of 24 | 26 of 30 / 9 of 13 / 22 of 24 |
 | Teaching, CatMeows across sessions | 59% → 65% after 3 per situation | 65% → 72% |
+| Time per meow | ~0.25 s with WebGPU, a few seconds without | ~0.3 s |
 | Where it runs | your phone or laptop | a server you run |
 
 [`tests/test_web.py`](tests/test_web.py) checks the JavaScript against the Python code (meow finding exactly, pitch within 0.001, teaching within 0.02), and [`benchmark/export_web.py`](benchmark/export_web.py) rebuilds `web/model.json`.
@@ -104,7 +105,7 @@ sudo apt install ffmpeg        # Ubuntu / Debian
 ```
 
 ```bash
-pip install "meow-decoder @ git+https://github.com/ATHARV-IIT-BOMBAY/meow-decoder@v0.6.0"
+pip install "meow-decoder @ git+https://github.com/ATHARV-IIT-BOMBAY/meow-decoder@v0.6.1"
 ```
 
 The first run downloads about 1 GB of models from Hugging Face (AST, the bioacoustic BEATs encoder and the 5 MB classifier weights), then works offline. Every download is pinned to an exact revision, so an install keeps getting the same models. It runs fine on a laptop CPU (on Apple Silicon, AST also uses the GPU). A prediction takes about 0.2 seconds.

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.1 (2026-11-21)
+
+- The browser version answers in about 0.25 s instead of 2–5 s on browsers with WebGPU: the AudioSet model runs on
+  the graphics chip in fp16 (matches the full model: Cat 0.457 vs 0.477 on a CatMeows clip). Without WebGPU, or with
+  Save-Data on, the 8-bit model still runs on the CPU (8-bit on WebGPU measured 18 s, 4-bit drifted to 0.63).
+- The model, the pitch contour and teaching run in a background worker (`web/worker.js`), so the page never freezes.
+  The model starts loading as soon as you start recording, and at page load if it's already downloaded.
+- While it works, the cat thinks: a thought bubble of pulsing dots, eyes searching, an ear twitch and a glowing halo,
+  with each real step shown ("Got 2.0 seconds of sound", "Reading the pitch…", "Listening for a cat…").
+
 ## 0.6.0 (2026-11-21)
 
 - **The app runs in the browser, on GitHub Pages**: https://atharv-iit-bombay.github.io/meow-decoder/. No server:

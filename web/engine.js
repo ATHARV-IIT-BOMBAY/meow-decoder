@@ -1,47 +1,33 @@
 // Meow Decoder running entirely in the browser (the GitHub Pages version). It answers the same /api/... calls as
 // meow_decoder/server.py, so index.html works unchanged. Audio never leaves the device: the AudioSet model runs here
 // through transformers.js, cats are kept in this browser's storage, and nothing is shared.
-import { SR, fitHead, headProba, pitchFeatures, pitchLine, unpackColumns } from "./dsp.js";
+import { SR, headProba } from "./dsp.js";
 
-const TRANSFORMERS = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.2";
 const STORE = "meowCats";
 const MAX_CATS = 20, MAX_SAMPLES = 200;
 
 const model = fetch(new URL("model.json", import.meta.url)).then((r) => r.json());
-let base = null;  // CatMeows features for teaching, unpacked once
 const clips = new Map();  // recent recordings: token -> {feat, sounds, pitch, line, audioset}
 const heads = new Map();  // cat id -> [samples signature, fitted head]
 const status = (text) => dispatchEvent(new CustomEvent("meowstatus", { detail: text }));
 
-/* ---------- the AudioSet model ---------- */
-let ast = null;
-async function loadAst() {
-  if (ast) return ast;
-  ast = (async () => {
-    const m = await model, t = await import(TRANSFORMERS);
-    t.env.allowLocalModels = false;
-    const progress = (p) => { if (p.status === "progress" && p.file?.endsWith(".onnx")) status(`Downloading the sound model, once: ${Math.round(p.progress)}%`); };
-    const opts = { revision: m.ast.revision, progress_callback: progress };
-    const [processor, net] = await Promise.all([
-      t.AutoProcessor.from_pretrained(m.ast.id, opts),
-      t.AutoModelForAudioClassification.from_pretrained(m.ast.id, { ...opts, dtype: m.ast.dtype }),
-    ]);
-    return { processor, net };
-  })();
-  try { return await ast; } catch (e) { ast = null; throw e; }
-}
-
-/** AudioSet probabilities for all 527 classes: the maximum over consecutive 10 s windows (core.sounds_in). */
-async function audioset(wave) {
-  const { processor, net } = await loadAst();
-  let best = null;
-  for (let i = 0; i < Math.max(wave.length - SR / 2, 1); i += 10 * SR) {
-    const { logits } = await net(await processor(wave.subarray(i, i + 10 * SR)));
-    const p = Array.from(logits.data, (z) => 1 / (1 + Math.exp(-z)));
-    best = best ? best.map((v, k) => Math.max(v, p[k])) : p;
+/* ---------- the heavy work, in web/worker.js ---------- */
+let worker = null, calls = 0;
+const pending = new Map();
+function call(msg, transfer = []) {
+  if (!worker) {
+    worker = new Worker(new URL("worker.js", import.meta.url), { type: "module" });
+    worker.onmessage = ({ data }) => {
+      if (data.type === "status") return status(data.text);
+      const p = pending.get(data.id); pending.delete(data.id);
+      if (p) (data.ok ? p.resolve(data.result) : p.reject(new Error(data.error || "Something went wrong. Try again.")));
+    };
   }
-  return best;
+  const id = ++calls;
+  return new Promise((resolve, reject) => { pending.set(id, { resolve, reject }); worker.postMessage({ ...msg, id }, transfer); });
 }
+/** Start loading the sound model before it's needed (while recording, or at once if it's already on this device). */
+export function warm(ifCached = false) { call({ type: "warm", ifCached }).catch(() => {}); }
 
 /* ---------- audio ---------- */
 async function decode(blob) {  // any audio the browser can play -> 16 kHz mono, first 30 s (core.decode)
@@ -58,7 +44,7 @@ async function decode(blob) {  // any audio the browser can play -> 16 kHz mono,
   if (audio.sampleRate !== SR) {
     const off = new OfflineAudioContext(1, Math.ceil(Math.min(audio.duration, 30) * SR), SR), src = off.createBufferSource();
     src.buffer = audio; src.connect(off.destination); src.start();
-    return (await off.startRendering()).getChannelData(0);
+    return (await off.startRendering()).getChannelData(0).slice();  // a copy we can hand to the worker
   }
   const n = Math.min(audio.length, 30 * SR), out = new Float32Array(n);  // mono: the average of the channels, like ffmpeg -ac 1
   for (let c = 0; c < audio.numberOfChannels; c++) { const d = audio.getChannelData(c); for (let i = 0; i < n; i++) out[i] += d[i] / audio.numberOfChannels; }
@@ -77,12 +63,7 @@ async function headFor(m, cat) {
   if (!cat?.samples.length) return null;
   const sig = cat.samples.map((s) => `${s.id}:${s.label}`).join(",");
   if (heads.get(cat.id)?.[0] === sig) return heads.get(cat.id)[1];
-  base ??= unpackColumns(m.teach.X);
-  const X = [...base, ...cat.samples.map((s) => unpack(s.feat))], y = [...m.teach.y, ...cat.samples.map((s) => s.label)];
-  const w = [...base.map(() => 1), ...cat.samples.map(() => m.teach.weight)];
-  status("Learning from your cat's meows…");
-  await new Promise((r) => setTimeout(r, 20));  // let the status paint before the fit
-  const h = fitHead(X, y, w, m.teach.C);
+  const h = await call({ type: "fit", samples: cat.samples.map((s) => ({ feat: unpack(s.feat), label: s.label })) });
   heads.set(cat.id, [sig, h]);
   return h;
 }
@@ -154,9 +135,9 @@ export async function api(path, opts = {}) {
   }
   if (path === "/api/predict") {
     const wave = await decode(body.get("audio"));
-    status("Listening to the meow…");
-    const A = await audioset(wave), pitch = pitchFeatures(wave);
-    const token = newId(24), entry = { audioset: A, pitch, line: pitchLine(wave), feat: features(m, A, pitch) };
+    status(`Got ${(wave.length / SR).toFixed(1)} seconds of sound`);
+    const { audioset: A, pitch, line } = await call({ type: "analyse", wave }, [wave.buffer]);
+    const token = newId(24), entry = { audioset: A, pitch, line, feat: features(m, A, pitch) };
     clips.set(token, entry); if (clips.size > 50) clips.delete(clips.keys().next().value);
     const cat = withId(cats, body.get("cat_id"));
     return { clip: token, taught: cat?.samples.length || 0, ...(await rank(entry, cat)) };
