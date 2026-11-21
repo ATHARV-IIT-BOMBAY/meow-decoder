@@ -2,7 +2,7 @@
   "name": "Meow Decoder",
   "short_name": "Meow",
   "description": "Guess what a cat's meow is about, with honest percentages.",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#F7D9DC",
   "theme_color": "#F7D9DC",

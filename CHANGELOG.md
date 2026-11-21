@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.0 (2026-11-21)
+
+- **The app runs in the browser, on GitHub Pages**: https://atharv-iit-bombay.github.io/meow-decoder/. No server:
+  `web/engine.js` answers the app's API calls on the device. AudioSet's AST runs through transformers.js (Xenova's
+  quantized ONNX copy, pinned), the pitch model and teaching run in `web/dsp.js`, cats are kept in the browser, and
+  recordings never leave it. Teaching there learns from AudioSet scores plus pitch (59% -> 65% on CatMeows across
+  sessions, against 65% -> 72% with BEATs).
+- `tests/test_web.py` runs the JavaScript under Node against the Python code; `benchmark/export_web.py` builds
+  `web/model.json`.
+- Audio is decoded straight at 16 kHz in the browser: resampling through 44.1 kHz moved AudioSet's "Cat" score on an
+  8 kHz clip from 0.48 to 0.12.
+- Asset paths and the service worker are relative, so the app works under a sub-path.
+
 ## 0.5.2 (2026-11-21)
 
 App:

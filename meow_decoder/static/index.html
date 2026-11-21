@@ -342,12 +342,16 @@ const owner = (() => {
   const make = () => (crypto.randomUUID?.() || String(Math.random()).slice(2)).replace(/-/g, "");
   try { let o = localStorage.getItem("meowOwner"); if (!o) { o = make(); localStorage.setItem("meowOwner", o); } return o; } catch { return make(); }
 })();
+// On GitHub Pages there is no server: web/engine.js answers the same calls in the browser.
+const LOCAL = window.MEOW_LOCAL === true || location.hostname.endsWith("github.io");
 async function api(path, opts = {}) {
+  if (LOCAL) return (await import("./engine.js")).api(path, opts);
   const r = await fetch(path, { ...opts, headers: { ...(opts.headers || {}), "X-Meow-Owner": owner } });
   const body = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(body.detail || "Something went wrong. Try again.");
   return body;
 }
+addEventListener("meowstatus", (e) => { if (state.busy) setStatus(e.detail, LOCAL ? "The first time takes a minute. After that it's quick, and it all stays on this device." : ""); });
 const postJSON = (path, data) => api(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
 
 /* ---------- cats ---------- */
@@ -486,7 +490,7 @@ catBtn.onclick = () => (rec ? stopRecording() : !state.busy && startRecording())
 $("#file").onchange = (e) => { const f = e.target.files[0]; if (f) analyse(f); e.target.value = ""; };
 document.querySelectorAll("[data-sample]").forEach((b) => b.onclick = async () => {
   if (state.busy || rec) return;
-  const blob = await (await fetch(`/samples/${b.dataset.sample}`, { cache: "no-cache" })).blob();
+  const blob = await (await fetch(`samples/${b.dataset.sample}`, { cache: "no-cache" })).blob();
   new Audio(URL.createObjectURL(blob)).play().catch(() => {});
   analyse(blob, b.dataset.truth);
 });
